@@ -1,2 +1,1 @@
-# RideShare
-RideShare App for Revature Associates and Employees to car pool to common points of interest.
+Welcome to RideShare. Started on 7/5/17 by Genesis Bonds
