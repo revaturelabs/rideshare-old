@@ -43,6 +43,7 @@ public class SampleController {
 		ArrayList<String> names = new ArrayList<String>();
 		for(User u:users){
 			String temp = u.getFirstName() + " " + u.getLastName();
+			System.out.println("hello " + temp);
 			names.add(temp);
 		}
 		return names;

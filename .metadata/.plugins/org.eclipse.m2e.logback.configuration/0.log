@@ -1180,3 +1180,188 @@ org.eclipse.core.runtime.CoreException: Could not resolve artifact org.hibernate
 2017-07-07 10:12:54,023 [Worker-63] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
 2017-07-07 10:12:54,044 [Worker-63] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
 2017-07-07 10:12:54,044 [Worker-63] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:29:26,424 [Worker-78] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:29:26,424 [Worker-78] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:29:26,440 [Worker-78] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:29:26,456 [Worker-78] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:29:26,456 [Worker-78] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:29:38,736 [Worker-66] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:29:38,752 [Worker-66] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:29:38,752 [Worker-66] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:29:38,752 [Worker-66] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:29:38,752 [Worker-66] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:34:46,949 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:34:46,949 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:34:46,953 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:34:46,953 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:34:46,965 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:35:13,554 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:35:13,559 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:35:13,559 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:35:13,575 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:35:13,575 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:35:24,430 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:35:24,445 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:35:24,445 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:35:24,468 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:35:24,468 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:35:36,293 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:35:36,309 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:35:36,309 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:35:36,331 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:35:36,331 [Worker-82] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:36:51,847 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:36:51,847 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:36:51,851 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:36:51,851 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:36:51,851 [Worker-81] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:37:01,240 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:37:01,240 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:37:01,240 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:37:01,260 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:37:01,260 [Worker-79] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:39:54,871 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:39:54,871 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:39:54,875 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:39:54,879 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:39:54,883 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:40:10,177 [Worker-83] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:40:10,177 [Worker-83] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:40:10,177 [Worker-83] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:40:10,193 [Worker-83] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:40:10,193 [Worker-83] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:40:38,324 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:40:38,341 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:40:38,341 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:40:38,341 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:40:38,357 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:40:50,255 [Worker-87] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:40:50,270 [Worker-87] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:40:50,270 [Worker-87] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:40:50,270 [Worker-87] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:40:50,270 [Worker-87] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:41:58,916 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:41:58,932 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:41:58,947 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:41:58,947 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:41:58,963 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:44:40,157 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:44:40,173 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:44:40,173 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:44:40,173 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:44:40,173 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:45:19,897 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:45:19,897 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:45:19,913 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:45:19,913 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:45:19,913 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:45:30,044 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:45:30,044 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:45:30,044 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:45:30,061 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:45:30,061 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:46:28,960 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:46:28,960 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:46:28,976 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:46:28,991 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:46:28,991 [Worker-85] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:46:41,913 [Worker-77] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2017-07-07 10:46:44,455 [Worker-77] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.revature:rideshare:0.0.1-SNAPSHOT @ C:\Users\Genesis\my_git_repos\RideShare\rideshare\pom.xml.
+2017-07-07 10:46:46,040 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /rideshare/src/main/java
+2017-07-07 10:46:46,057 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/main/resources
+2017-07-07 10:46:46,063 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/main/resources
+2017-07-07 10:46:46,069 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /rideshare/src/test/java
+2017-07-07 10:46:46,069 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/test/resources
+2017-07-07 10:46:46,255 [Worker-77] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 4 sec
+2017-07-07 10:46:48,221 [Worker-91] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:46:48,221 [Worker-91] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:46:48,241 [Worker-91] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:46:48,256 [Worker-91] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:46:48,256 [Worker-91] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:47:47,079 [Worker-90] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.revature:rideshare:0.0.1-SNAPSHOT @ C:\Users\Genesis\my_git_repos\RideShare\rideshare\pom.xml.
+2017-07-07 10:47:47,199 [Worker-90] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:47:47,468 [Worker-90] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:47:47,471 [Worker-90] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:47:47,478 [Worker-90] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:47:47,480 [Worker-90] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:47:47,486 [Worker-90] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:47:50,225 [Worker-95] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:47:50,267 [Worker-95] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:47:50,286 [Worker-95] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:47:50,301 [Worker-95] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:47:50,317 [Worker-95] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:47:50,317 [Worker-95] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:47:54,490 [Worker-77] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2017-07-07 10:47:54,791 [Worker-77] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.revature:rideshare:0.0.1-SNAPSHOT @ C:\Users\Genesis\my_git_repos\RideShare\rideshare\pom.xml.
+2017-07-07 10:47:54,897 [Worker-77] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:47:55,067 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /rideshare/src/main/java
+2017-07-07 10:47:55,067 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/main/resources
+2017-07-07 10:47:55,067 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/main/resources
+2017-07-07 10:47:55,067 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /rideshare/src/test/java
+2017-07-07 10:47:55,071 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/test/resources
+2017-07-07 10:47:55,255 [Worker-77] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 0 sec
+2017-07-07 10:47:57,241 [Worker-86] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:47:57,294 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:47:57,294 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:47:57,309 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:47:57,325 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:47:57,325 [Worker-86] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:49:32,496 [Worker-94] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:49:32,496 [Worker-94] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:49:32,496 [Worker-94] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:49:32,496 [Worker-94] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:49:32,496 [Worker-94] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:49:42,272 [Worker-104] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2017-07-07 10:49:42,664 [Worker-104] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.revature:rideshare:0.0.1-SNAPSHOT @ C:\Users\Genesis\my_git_repos\RideShare\rideshare\pom.xml.
+2017-07-07 10:49:42,789 [Worker-104] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:49:42,929 [Worker-104] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /rideshare/src/main/java
+2017-07-07 10:49:42,929 [Worker-104] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/main/resources
+2017-07-07 10:49:42,933 [Worker-104] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/main/resources
+2017-07-07 10:49:42,933 [Worker-104] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /rideshare/src/test/java
+2017-07-07 10:49:42,937 [Worker-104] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/test/resources
+2017-07-07 10:49:43,041 [Worker-104] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 0 sec
+2017-07-07 10:49:45,283 [Worker-105] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:49:45,332 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:49:45,338 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:49:45,358 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:49:45,374 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:49:45,374 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:51:43,944 [Worker-104] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.revature:rideshare:0.0.1-SNAPSHOT @ C:\Users\Genesis\my_git_repos\RideShare\rideshare\pom.xml.
+2017-07-07 10:51:44,103 [Worker-104] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:51:44,303 [Worker-104] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:51:44,303 [Worker-104] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:51:44,303 [Worker-104] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:51:44,303 [Worker-104] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:51:44,303 [Worker-104] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:51:48,126 [Worker-91] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:51:48,411 [Worker-77] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.revature:rideshare:0.0.1-SNAPSHOT @ C:\Users\Genesis\my_git_repos\RideShare\rideshare\pom.xml.
+2017-07-07 10:51:48,510 [Worker-77] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:51:48,776 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:51:48,776 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:51:48,776 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:51:48,776 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:51:48,792 [Worker-77] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:52:10,367 [Worker-91] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:52:18,484 [Worker-77] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2017-07-07 10:52:18,718 [Worker-77] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.revature:rideshare:0.0.1-SNAPSHOT @ C:\Users\Genesis\my_git_repos\RideShare\rideshare\pom.xml.
+2017-07-07 10:52:18,785 [Worker-77] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:52:18,986 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /rideshare/src/main/java
+2017-07-07 10:52:19,002 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/main/resources
+2017-07-07 10:52:19,002 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/main/resources
+2017-07-07 10:52:19,002 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /rideshare/src/test/java
+2017-07-07 10:52:19,002 [Worker-77] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /rideshare/src/test/resources
+2017-07-07 10:52:19,253 [Worker-77] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 0 sec
+2017-07-07 10:52:21,295 [Worker-106] WARN  o.e.m.c.i.embedder.EclipseLogger - The POM for com.oracle.ojdbc:ojdbc:jar:12.1.0.1 is missing, no dependency information available
+2017-07-07 10:52:21,326 [Worker-106] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:52:21,326 [Worker-106] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 10:52:21,341 [Worker-106] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 10:52:21,341 [Worker-106] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 10:52:21,341 [Worker-106] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2017-07-07 11:10:11,791 [Worker-86] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot/1.0.2.RELEASE/spring-boot-1.0.2.RELEASE-sources.jar
+2017-07-07 11:10:12,097 [Worker-86] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot/1.0.2.RELEASE/spring-boot-1.0.2.RELEASE-sources.jar
+2017-07-07 11:10:12,255 [Worker-86] INFO  o.e.m.j.internal.DownloadSourcesJob - Downloaded sources for org.springframework.boot:spring-boot:1.0.2.RELEASE
+2017-07-07 11:10:12,607 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 11:10:12,620 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 11:10:12,630 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2017-07-07 11:10:12,631 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2017-07-07 11:10:12,649 [Worker-105] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource

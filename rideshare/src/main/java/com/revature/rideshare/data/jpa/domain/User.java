@@ -9,7 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -34,8 +34,7 @@ public class User implements Serializable {
 	@Column(name="LAST_NAME")
 	private String lastName;
 	
-	@OneToMany(mappedBy="pointofinterest", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	@Column(name="MAIN_POI")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private PointOfInterest mainPOI;
 	
 	@Column(name="EMAIL")
