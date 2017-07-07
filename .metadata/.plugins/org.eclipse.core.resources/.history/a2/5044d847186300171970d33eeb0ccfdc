@@ -1,0 +1,5 @@
+package com.revature.rideshare.data.jpa.dao;
+
+public interface UserRepository {
+
+}

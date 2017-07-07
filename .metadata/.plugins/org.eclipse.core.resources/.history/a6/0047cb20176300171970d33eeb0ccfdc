@@ -1,0 +1,7 @@
+package com.revature.rideshare.data.jpa.dao;
+
+import org.springframework.data.repository.Repository;
+
+public interface PointOfInterestType extends Repository<PointOfInterestTypeRepository, Long> {
+
+}

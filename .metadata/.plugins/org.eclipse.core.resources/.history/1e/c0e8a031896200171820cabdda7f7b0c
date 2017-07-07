@@ -1,0 +1,31 @@
+package com.revature.rideshare.data.jpa.domain;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+
+@Entity
+@Table(name="CARS")
+public class Car implements Serializable  {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8165384680317463511L;
+
+	private long carId;
+
+	private User user;
+
+	private String plate;
+
+	private String brand;
+	
+	private String model;
+
+	private String color;
+
+	private boolean smokeFree;
+
+	private String notes;
+}

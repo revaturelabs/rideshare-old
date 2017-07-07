@@ -1,0 +1,57 @@
+package com.revature.rideshare.data.jpa.domain;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="POINTS_OF_INTEREST")
+public class PointOfInterest implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1610039859397834102L;
+
+	@Id
+	@Column(name="POI_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "POI_ID_SEQUENCE")
+	@SequenceGenerator(name="POI_ID_SEQUENCE", sequenceName="POI_ID_SEQUENCE")
+	private int poiId;
+	
+	@Column(name="NAME")
+	private String poiName;
+	
+	@Column(name="ADDRESS_1")
+	private String addressLine1;
+	
+	@Column(name="ADDRESS_2")
+	private String addressLine2;
+	
+	@Column(name="CITY")
+	private String city;
+	
+	@Column(name="STATE")
+	private String state;
+	
+	@Column(name="ZIP")
+	private short zipCode;
+	
+	@Column(name="LATITUDE")
+	private BigDecimal latitude;
+	
+	@Column(name="LONGITUDE")
+	private BigDecimal longitude;
+	
+	@Column(name="TYPE_ID")
+	@OneToMany(mappedBy="pointofinteresttype")
+	private PointOfInterestType type;
+}

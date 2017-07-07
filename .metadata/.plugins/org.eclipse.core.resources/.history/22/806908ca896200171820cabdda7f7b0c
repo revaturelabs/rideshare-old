@@ -1,0 +1,52 @@
+package com.revature.rideshare.data.jpa.domain;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="CARS")
+public class Car implements Serializable  {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8165384680317463511L;
+
+	@Id
+	@Column(name="CAR_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CAR_ID_SEQUENCE")
+	@SequenceGenerator(name="CAR_ID_SEQUENCE", sequenceName="CAR_ID_SEQUENCE")
+	private long carId;
+
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="USER_ID")
+	private User user;
+
+	@Column(name="LICENSE_PLATE")
+	private String licensePlate;
+	
+	@Column(name="CAR_BRAND")
+	private String brand;
+	
+	@Column(name="CAR_MODEL")
+	private String model;
+
+	@Column(name="CAR_COLOR")
+	private String color;
+
+	@Column(name="IS_SMOKE_FREE")
+	private boolean smokeFree;
+
+	@Column(name="CAR_NOTES")
+	private String notes;
+}

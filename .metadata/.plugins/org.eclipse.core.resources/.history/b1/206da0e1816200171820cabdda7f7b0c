@@ -1,0 +1,38 @@
+package com.revature.rideshare.data.jpa.domain;
+
+import java.io.Serializable;
+import java.sql.Date;
+import java.sql.Time;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="AVAILABLE_RIDES")
+public class AvailableRide implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5753230302496991697L;
+
+	@Id
+	private long availRideId;
+	
+	private Car car;
+	
+	private PointOfInterest pickupPOI;
+	
+	private PointOfInterest dropoffPOI;
+	
+	private short seatsAvailable;
+	
+	private Date day;
+	
+	private Time time;
+	
+	private String notes;
+	
+
+}

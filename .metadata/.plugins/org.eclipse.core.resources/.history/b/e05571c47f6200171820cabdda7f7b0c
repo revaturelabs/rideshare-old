@@ -1,0 +1,15 @@
+package com.revature.rideshare.data.jpa.domain;
+
+import java.io.Serializable;
+
+public class PointOfInterestType implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1609658818097998686L;
+
+	private int typeId;
+	
+	private String typeName;
+}

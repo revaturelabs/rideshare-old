@@ -1,0 +1,7 @@
+package com.revature.rideshare.data.jpa.domain;
+
+import java.io.Serializable;
+
+public class Car implements Serializable  {
+
+}

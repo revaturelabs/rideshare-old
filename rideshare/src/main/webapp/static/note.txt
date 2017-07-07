@@ -1,0 +1,1 @@
+Where spring looks for html files
