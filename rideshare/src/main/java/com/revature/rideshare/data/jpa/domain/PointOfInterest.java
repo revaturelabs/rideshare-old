@@ -3,11 +3,14 @@ package com.revature.rideshare.data.jpa.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -51,8 +54,7 @@ public class PointOfInterest implements Serializable {
 	@Column(name="LONGITUDE")
 	private BigDecimal longitude;
 	
-	@Column(name="TYPE_ID")
-	@OneToMany(mappedBy="pointofinteresttype")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
 	private PointOfInterestType type;
 	
 	public PointOfInterest(){}

@@ -1,7 +1,6 @@
 package com.revature.rideshare.data.jpa.domain;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -11,7 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -32,15 +31,13 @@ public class RideRequest implements Serializable{
 	@SequenceGenerator(name="RR_ID_SEQUENCE", sequenceName="RR_ID_SEQUENCE")
 	private long requestId;
 	
-	@OneToMany(mappedBy="user", fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private User user;
 	
-	@OneToMany(mappedBy="pointofinterest", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
-	@Column(name="PICKUP_ID")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
 	private PointOfInterest pickupLocation;
 	
-	@OneToMany(mappedBy="pointofinterest", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
-	@Column(name="DROPOFF_ID")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
 	private PointOfInterest dropOffLocation;
 	
 	@Temporal(TemporalType.DATE)

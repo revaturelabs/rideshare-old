@@ -28,11 +28,9 @@ public class Ride implements Serializable{
 	private long rideId;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@Column(name="AVAILABLE_RIDE_ID")
 	private AvailableRide availRide;
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@Column(name="RIDE_REQUEST_ID")
 	private RideRequest request;
 	
 	@Column(name="DRIVER_RATING")

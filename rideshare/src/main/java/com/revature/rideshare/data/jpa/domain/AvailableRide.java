@@ -1,7 +1,7 @@
 package com.revature.rideshare.data.jpa.domain;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -31,16 +32,13 @@ public class AvailableRide implements Serializable{
 	@SequenceGenerator(name="AR_ID_SEQUENCE", sequenceName="AR_ID_SEQUENCE")
 	private long availRideId;
 	
-	@OneToMany(mappedBy = "car", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
-	@Column(name="CAR_ID")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL )
 	private Car car;
 	
-	@OneToMany(mappedBy="pointofinterest", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
-	@Column(name="PICKUP_ID")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private PointOfInterest pickupPOI;
 	
-	@OneToMany(mappedBy="pointofinterest", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
-	@Column(name="DROPOFF_ID")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL )
 	private PointOfInterest dropoffPOI;
 	
 	@Column(name="AVAILABLE_SEATS")
