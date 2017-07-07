@@ -56,3 +56,5 @@ stashed-config
 *.ini
 # Unignored Files (that's what the "!" does)
 !ojdbc7.jar
+rideshare/.project
+rideshare/target
