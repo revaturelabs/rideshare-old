@@ -16,25 +16,44 @@
 
 package com.revature.rideshare.data.jpa.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.rideshare.data.jpa.service.CityService;
+import com.revature.rideshare.data.jpa.domain.User;
+import com.revature.rideshare.data.jpa.service.UserService;
 
-@Controller
+@RestController
+@RequestMapping("sample")
 public class SampleController {
 
 	@Autowired
-	private CityService cityService;
+	private UserService userService;
 
-	@RequestMapping("/")
-	@ResponseBody
 	@Transactional(readOnly = true)
-	public String helloWorld() {
-		return this.cityService.getCity("Bath", "UK").getName();
+	@GetMapping
+	public ArrayList<String> helloWorld() {
+		List<User> users = 	userService.getAll();
+		ArrayList<String> names = new ArrayList<String>();
+		for(User u:users){
+			String temp = u.getFirstName() + " " + u.getLastName();
+			System.out.println("hello " + temp);
+			names.add(temp);
+		}
+		return names;	
+	}
+	
+	@PostMapping
+	public void addUser(@RequestBody User u){
+		System.out.println(u.toString());
+		userService.addUser(u);
 	}
 	
 }
