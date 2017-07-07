@@ -16,25 +16,37 @@
 
 package com.revature.rideshare.data.jpa.web;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.revature.rideshare.data.jpa.service.CityService;
+import com.revature.rideshare.data.jpa.domain.User;
+import com.revature.rideshare.data.jpa.service.UserService;
 
 @Controller
 public class SampleController {
 
 	@Autowired
-	private CityService cityService;
+	private UserService userService;
 
 	@RequestMapping("/")
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public String helloWorld() {
-		return this.cityService.getCity("Bath", "UK").getName();
+	public ArrayList<String> helloWorld() {
+		
+		Page<User> users = 	userService.getAll();
+		ArrayList<String> names = new ArrayList<String>();
+		for(User u:users){
+			String temp = u.getFirstName() + " " + u.getLastName();
+			names.add(temp);
+		}
+		return names;
+		
 	}
 	
 }
