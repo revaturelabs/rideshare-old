@@ -1,9 +1,0 @@
-package com.revature.rideshare.data.jpa.domain;
-
-public class PointOfInterest {
-
-	private int poiId;
-	
-	private String poiName;
-	
-}
