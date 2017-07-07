@@ -21,9 +21,6 @@ import javax.persistence.TemporalType;
 @Table(name="AVAILABLE_RIDES")
 public class AvailableRide implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5753230302496991697L;
 
 	@Id
@@ -32,7 +29,7 @@ public class AvailableRide implements Serializable{
 	@SequenceGenerator(name="AR_ID_SEQUENCE", sequenceName="AR_ID_SEQUENCE")
 	private long availRideId;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL )
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Car car;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -41,11 +38,11 @@ public class AvailableRide implements Serializable{
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL )
 	private PointOfInterest dropoffPOI;
 	
-	@Column(name="AVAILABLE_SEATS")
+	@Column(name="AVAILABLE_SEATS", nullable=false)
 	private short seatsAvailable;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name="TIME")
+	@Column(name="TIME", nullable=false)
 	private Date time;
 	
 	@Column(name="NOTES")

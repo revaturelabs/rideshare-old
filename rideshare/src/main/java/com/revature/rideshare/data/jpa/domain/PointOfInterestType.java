@@ -12,9 +12,6 @@ import javax.persistence.SequenceGenerator;
 @Entity
 public class PointOfInterestType implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1609658818097998686L;
 
 	@Id
@@ -23,7 +20,7 @@ public class PointOfInterestType implements Serializable {
 	@SequenceGenerator(name="TYPE_ID_SEQUENCE", sequenceName="TYPE_ID_SEQUENCE")
 	private int typeId;
 	
-	@Column(name="TYPE_NAME")
+	@Column(name="TYPE_NAME", nullable=false)
 	private String typeName;
 
 	public PointOfInterestType(){}
