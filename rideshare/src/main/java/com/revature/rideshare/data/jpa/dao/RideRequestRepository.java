@@ -4,6 +4,6 @@ import org.springframework.data.repository.Repository;
 
 import com.revature.rideshare.data.jpa.domain.*;
 
-public interface PointOfInterestRepository extends Repository<PointOfInterest, Long> {
+public interface RideRequestRepository extends Repository<RideRequest, Long>{
 
 }
