@@ -1,7 +1,8 @@
 package com.revature.rideshare.data.jpa.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +21,13 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public Page<User> getAll() {
-			return this.userRepo.findAll();
+	public List<User> getAll() {
+			return userRepo.findAll();
+	}
+
+	@Override
+	public void addUser(User u) {
+		userRepo.saveAndFlush(u);
 	}
 	
 }

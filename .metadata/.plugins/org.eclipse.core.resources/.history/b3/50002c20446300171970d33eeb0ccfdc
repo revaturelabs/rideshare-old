@@ -1,0 +1,26 @@
+//var = function scope
+//const and let = block scope 
+
+const app = angular.module('app', ['ui.router']);
+
+
+app.config(function($stateProvider, $urlRouteProvider){
+	
+	$urlRouterProvider.otherwise('/home');
+	
+	$stateProvider
+	
+		.state('home',{
+			url: '/home',
+			templateUrl : 'partials/landingsample.html',
+			controller : function($scope, $http){
+				$scope.user = {};
+				$scope.addUser = function(){
+					$http.post('/')
+					
+				}
+			}
+		} )
+	
+	
+})

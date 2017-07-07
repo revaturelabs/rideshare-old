@@ -115,5 +115,12 @@ public class User implements Serializable {
 	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", mainPOI=" + mainPOI
+				+ ", email=" + email + ", password=" + password + ", isAdmin=" + isAdmin + "]";
+	}
+	
 	
 }

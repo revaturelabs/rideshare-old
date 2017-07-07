@@ -7,7 +7,18 @@
 <fullyQualifiedTypeName name="javax.persistence.Entity"/>
 <fullyQualifiedTypeName name="javax.persistence.Temporal"/>
 <fullyQualifiedTypeName name="javax.persistence.FetchType"/>
-<fullyQualifiedTypeName name="javax.persistence.Table"/>
 <fullyQualifiedTypeName name="javax.persistence.CascadeType"/>
+<fullyQualifiedTypeName name="javax.persistence.Table"/>
 <fullyQualifiedTypeName name="javax.persistence.Id"/>
+<fullyQualifiedTypeName name="com.revature.rideshare.data.jpa.domain.Car"/>
+<fullyQualifiedTypeName name="com.revature.rideshare.data.jpa.domain.AvailableRide"/>
+<fullyQualifiedTypeName name="com.revature.rideshare.data.jpa.domain.PointOfInterestType"/>
+<fullyQualifiedTypeName name="com.revature.rideshare.data.jpa.domain.Ride"/>
+<fullyQualifiedTypeName name="org.springframework.data.repository.Repository"/>
+<fullyQualifiedTypeName name="com.revature.rideshare.data.jpa.domain.RideRequest"/>
+<fullyQualifiedTypeName name="org.springframework.data.domain.Pageable"/>
+<fullyQualifiedTypeName name="com.revature.rideshare.data.jpa.domain.User"/>
+<fullyQualifiedTypeName name="com.revature.rideshare.data.jpa.dao.UserRepository"/>
+<fullyQualifiedTypeName name="org.springframework.data.jpa.repository.JpaRepository"/>
+<fullyQualifiedTypeName name="java.util.List"/>
 </qualifiedTypeNameHistroy>
