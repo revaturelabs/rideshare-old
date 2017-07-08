@@ -1,3 +1,5 @@
+import { landingSampleController } from './js/controllers/landingSample.controller.js';
+
 //var = function scope
 //const and let = block scope 
 
@@ -13,25 +15,12 @@ app.config(function($stateProvider, $urlRouterProvider){
 		.state('home',{
 			url: '/home',
 			templateUrl : 'partials/landingsample.html',
-			controller : function($scope, $http, $state){
-				$scope.user = {};
-				$scope.addUser = function(){
-					$http.post('sample', $scope.user).then(
-							(formResponse)=>{
-								$state.go('success');
-								
-							}, 
-							(failedResponse)=>{
-								alert('Failure');
-							}
-					)
-				}
-			}
+			controller : landingSampleController
 		}	)
 		.state('success',{
 			url: '/success',
 			templateUrl: 'partials/successSample.html',
-			controller  : function($scope, $http){
+			controller: function($scope, $http){
 			}
 		})
 		

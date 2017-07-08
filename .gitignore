@@ -68,3 +68,5 @@ rideshare/.vscode/launch.json
 rideshare/.vscode/extensions.json
 Servers*
 /rideshare-slack-api-tokens.txt
+/rideshare/node_modules
+/rideshare/**/index.js
