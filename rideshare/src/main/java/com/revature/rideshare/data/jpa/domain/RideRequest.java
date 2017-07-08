@@ -20,9 +20,6 @@ import javax.persistence.TemporalType;
 @Table(name="RIDE_REQUEST")
 public class RideRequest implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7337880503973485600L;
 
 	@Id
@@ -41,7 +38,7 @@ public class RideRequest implements Serializable{
 	private PointOfInterest dropOffLocation;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name="TIME")
+	@Column(name="TIME", nullable=false)
 	private Date time;
 	
 	@Column(name="NOTES")
