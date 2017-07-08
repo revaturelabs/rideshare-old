@@ -1,8 +1,8 @@
-package com.revature.rideshare.data.jpa.service;
+package com.revature.rideshare.service;
 
 import java.util.List;
 
-import com.revature.rideshare.data.jpa.domain.User;
+import com.revature.rideshare.domain.User;
 
 public interface UserService {
 
