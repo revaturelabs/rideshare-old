@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.revature.rideshare.data.jpa;
+package com.revature.rideshare;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

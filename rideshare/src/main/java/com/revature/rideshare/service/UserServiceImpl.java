@@ -1,4 +1,4 @@
-package com.revature.rideshare.data.jpa.service;
+package com.revature.rideshare.service;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.revature.rideshare.data.jpa.dao.UserRepository;
-import com.revature.rideshare.data.jpa.domain.User;
+import com.revature.rideshare.dao.UserRepository;
+import com.revature.rideshare.domain.User;
 
 @Component("userService")
 @Transactional
