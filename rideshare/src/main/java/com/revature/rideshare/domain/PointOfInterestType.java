@@ -1,4 +1,4 @@
-package com.revature.rideshare.data.jpa.domain;
+package com.revature.rideshare.domain;
 
 import java.io.Serializable;
 
