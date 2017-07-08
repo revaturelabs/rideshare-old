@@ -1,9 +1,9 @@
 package com.revature.rideshare.dao;
 
-import org.springframework.data.repository.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.revature.rideshare.domain.*;
+import com.revature.rideshare.domain.AvailableRide;
 
-public interface AvailableRideRepository extends Repository<AvailableRide, Long>{
+public interface AvailableRideRepository extends JpaRepository<AvailableRide, Long>{
 
 }
