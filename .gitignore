@@ -56,3 +56,17 @@ stashed-config
 *.ini
 # Unignored Files (that's what the "!" does)
 !ojdbc7.jar
+rideshare/.project
+rideshare/.settings
+rideshare/target
+rideshare/.idea
+rideshare/.vscode
+rideshare/.vscode/*
+rideshare/.vscode/settings.json
+rideshare/.vscode/tasks.json
+rideshare/.vscode/launch.json
+rideshare/.vscode/extensions.json
+Servers*
+/rideshare-slack-api-tokens.txt
+/rideshare/node_modules
+/rideshare/**/index.js
