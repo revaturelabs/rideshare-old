@@ -17,9 +17,6 @@ import javax.persistence.Table;
 @Table(name="CARS")
 public class Car implements Serializable  {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8165384680317463511L;
 
 	@Id
@@ -32,22 +29,22 @@ public class Car implements Serializable  {
 	@JoinColumn(name="USER_ID")
 	private User user;
 
-	@Column(name="LICENSE_PLATE")
+	@Column(name="LICENSE_PLATE", nullable=false)
 	private String licensePlate;
 	
-	@Column(name="CAR_BRAND")
+	@Column(name="CAR_BRAND", nullable=false)
 	private String brand;
 	
-	@Column(name="CAR_MODEL")
+	@Column(name="CAR_MODEL", nullable=false)
 	private String model;
 
-	@Column(name="CAR_COLOR")
+	@Column(name="CAR_COLOR", nullable=false)
 	private String color;
 
-	@Column(name="IS_SMOKE_FREE")
+	@Column(name="IS_SMOKE_FREE", nullable=false)
 	private boolean smokeFree;
 
-	@Column(name="CAR_NOTES")
+	@Column(name="CAR_NOTES", nullable=false)
 	private String notes;
 	
 	public Car(){}

@@ -19,9 +19,6 @@ import javax.persistence.Table;
 @Table(name="POINTS_OF_INTEREST")
 public class PointOfInterest implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1610039859397834102L;
 
 	@Id
@@ -30,28 +27,28 @@ public class PointOfInterest implements Serializable {
 	@SequenceGenerator(name="POI_ID_SEQUENCE", sequenceName="POI_ID_SEQUENCE")
 	private int poiId;
 	
-	@Column(name="NAME")
+	@Column(name="NAME", nullable=false)
 	private String poiName;
 	
-	@Column(name="ADDRESS_1")
+	@Column(name="ADDRESS_1", nullable=false)
 	private String addressLine1;
 	
 	@Column(name="ADDRESS_2")
 	private String addressLine2;
 	
-	@Column(name="CITY")
+	@Column(name="CITY", nullable=false)
 	private String city;
 	
-	@Column(name="STATE")
+	@Column(name="STATE", nullable=false)
 	private String state;
 	
-	@Column(name="ZIP")
+	@Column(name="ZIP", nullable=false)
 	private short zipCode;
 	
-	@Column(name="LATITUDE")
+	@Column(name="LATITUDE", nullable=false)
 	private BigDecimal latitude;
 	
-	@Column(name="LONGITUDE")
+	@Column(name="LONGITUDE", nullable=false)
 	private BigDecimal longitude;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )

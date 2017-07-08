@@ -17,9 +17,6 @@ import javax.persistence.Table;
 @Table(name="USERS")
 public class User implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2923889374579038772L;
 
 	@Id
@@ -28,22 +25,22 @@ public class User implements Serializable {
 	@SequenceGenerator(name="USER_ID_SEQUENCE", sequenceName="USER_ID_SEQUENCE")
 	private long userId;
 	
-	@Column(name="FIRST_NAME")
+	@Column(name="FIRST_NAME", nullable=false)
 	private String firstName;
 	
-	@Column(name="LAST_NAME")
+	@Column(name="LAST_NAME", nullable=false)
 	private String lastName;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private PointOfInterest mainPOI;
 	
-	@Column(name="EMAIL")
+	@Column(name="EMAIL", nullable=false)
 	private String email;
 	
-	@Column(name="PASSWORD")
+	@Column(name="PASSWORD", nullable=false)
 	private String password;
 	
-	@Column(name="IS_ADMIN")
+	@Column(name="IS_ADMIN", nullable=false)
 	private boolean isAdmin;
 
 	public User(){}
