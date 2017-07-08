@@ -45,10 +45,10 @@ public class PointOfInterest implements Serializable {
 	@Column(name="ZIP", nullable=false)
 	private short zipCode;
 	
-	@Column(name="LATITUDE", nullable=false)
+	@Column(name="LATITUDE", nullable=false, scale=6)
 	private BigDecimal latitude;
 	
-	@Column(name="LONGITUDE", nullable=false)
+	@Column(name="LONGITUDE", nullable=false, scale=6)
 	private BigDecimal longitude;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
