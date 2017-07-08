@@ -34,13 +34,13 @@ RemoteSystemsTempFiles/
 *.launch
 .settings/
 *.sublime-workspace
-.vscode
+rideshare/.vscode
 # IDE - VSCode
-# .vscode/*
-# !.vscode/settings.json
-# !.vscode/tasks.json
-# !.vscode/launch.json
-# !.vscode/extensions.json
+rideshare/.vscode/*
+rideshare/.vscode/settings.json
+rideshare/.vscode/tasks.json
+rideshare/.vscode/launch.json
+rideshare/.vscode/extensions.json
 # misc
 /.sass-cache
 /connect.lock
@@ -60,4 +60,6 @@ rideshare/.project
 rideshare/.settings
 rideshare/target
 rideshare/.idea
+Servers*
 
+/rideshare-slack-api-tokens.txt
