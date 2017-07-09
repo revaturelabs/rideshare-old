@@ -66,6 +66,11 @@ public class RideController {
 		return rideService.getOffersForUser(u);
 	}
 
+	@GetMapping("/offer/open")
+	public List<AvailableRide> getOpenOffers() {
+		return rideService.getOpenOffers();
+	}
+
 	@GetMapping("/offer/active")
 	public List<Ride> getActiveOffersForCurrentUser(Authentication authentication) {
 		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();

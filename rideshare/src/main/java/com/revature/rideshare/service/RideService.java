@@ -30,9 +30,18 @@ public class RideService {
 			return rideRepo.findAll();
 	}
 	
+	
+	// REQUESTS
 	public List<RideRequest> getOpenRequests() {
+//		List<Ride> openRides = rideRepo.findAllByRequestNotNullAndAvailRideNull();
+//		List<RideRequest> openReqs = new ArrayList<RideRequest>();
+//		
+//		for (Ride r : openRides) {
+//			openReqs.add(r.getRequest());
+//		}
+//
+//		return openReqs;
 		return rideReqRepo.findOpen();
-
 	}
 
 	public List<Ride> getHistoryForUser(User u) {
@@ -71,11 +80,23 @@ public class RideService {
 
 	
 	
-	
+	// OFFERS
 	public List<AvailableRide> getOffersForUser(User u) {
 		return availRideRepo.findByCarUser(u);
 	}
 
+	public List<AvailableRide> getOpenOffers() {
+//		List<Ride> openRides = rideRepo.findAllByAvailRideNotNullAndRequestNull();
+//		List<AvailableRide> openOffers = new ArrayList<AvailableRide>();
+//		
+//		for (Ride r : openRides) {
+//			openOffers.add(r.getAvailRide());
+//		}
+//
+//		return openOffers;
+		return availRideRepo.findOpen();
+	}
+	
 	public List<Ride> getActiveOffersForUser(User u) {
 		List<Ride> allRides = rideRepo.findByAvailRideCarUser(u);
 		List<Ride> activeRides = new ArrayList<Ride>();
