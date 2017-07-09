@@ -67,7 +67,7 @@ public class AuthController {
 			//TODO:update user information
 			if(u==null){
 				u = new User();
-				u.setFirstName(userName);
+				u.setFullName(userName);
 				u.setSlackId(userId);
 				userService.addUser(u);
 			}
