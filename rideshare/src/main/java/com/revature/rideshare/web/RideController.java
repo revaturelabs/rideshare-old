@@ -41,6 +41,11 @@ public class RideController {
 		return rideService.getRequestsForUser(u);
 	}
 
+	@GetMapping("/request/open")
+	public List<RideRequest> getOpenRequests() {
+		return rideService.getOpenRequests();
+	}
+
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(Authentication authentication) {
 		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();

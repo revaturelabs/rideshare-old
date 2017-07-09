@@ -30,6 +30,11 @@ public class RideService {
 			return rideRepo.findAll();
 	}
 	
+	public List<RideRequest> getOpenRequests() {
+		return rideReqRepo.findOpen();
+
+	}
+
 	public List<Ride> getHistoryForUser(User u) {
 		return rideRepo.findByAvailRideCarUserOrRequestUser(u, u);
 	}
