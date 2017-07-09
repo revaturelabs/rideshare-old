@@ -32,7 +32,7 @@ import com.revature.rideshare.service.UserService;
 
 @RestController
 @RequestMapping("sample")
-public class SampleController {
+public class UserController {
 
 	@Autowired
 	private UserService userService;

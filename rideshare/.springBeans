@@ -8,6 +8,7 @@
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
 		<config>java:com.revature.rideshare.Application</config>
+		<config>src/main/webapp/static/partials/Application.java</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

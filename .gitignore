@@ -70,3 +70,4 @@ Servers*
 /rideshare-slack-api-tokens.txt
 /rideshare/node_modules
 /rideshare/**/index.js
+/slack-testapp-tokens.txt
