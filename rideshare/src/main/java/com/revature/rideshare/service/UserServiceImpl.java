@@ -35,4 +35,9 @@ public class UserServiceImpl implements UserService{
 		return userRepo.getOne(id);
 	}
 	
+	@Override
+	public User getUserBySlackId(String slackId){
+		return userRepo.findBySlackId(slackId);
+	}
+	
 }
