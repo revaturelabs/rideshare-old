@@ -5,7 +5,6 @@ import { historyController } from './js/controllers/history.controller.js';
 import { slackLoginController } from './js/controllers/slackLogin.controller.js';
 import { addCarController } from './js/controllers/addCar.controller.js';
 
-
 //var = function scope
 //const and let = block scope 
 
@@ -14,22 +13,15 @@ const app = angular.module('app', ['ui.router']);
 
 app.config(function($stateProvider, $urlRouterProvider){
 	
-	$urlRouterProvider.otherwise('/login');
+	$urlRouterProvider.otherwise('/passenger');
 	
 	$stateProvider
 	
-		.state('login',{
-			url: '/login',
-			templateUrl : 'partials/slackLogin.html',
-			controller : slackLoginController
-		})
-
-		.state('success',{
-			url: '/success',
-			templateUrl: 'partials/successSample.html',
-			controller: function($scope, $http){
-			}
-		})
+		// .state('login',{
+		// 	url: '/login',
+		// 	templateUrl : 'partials/slackLogin.html',
+		// 	controller : slackLoginControllerx
+		// })
 
 		.state('passenger',{
 			url: '/passenger',
