@@ -30,21 +30,20 @@ public class Ride implements Serializable{
 	@OneToOne(fetch=FetchType.LAZY)
 	private RideRequest request;
 	
-	@Column(name="DRIVER_RATING")
-	private short driverRating;
+	@Column(name="WAS_SUCCESSFUL")
+	private Boolean wasSuccessful;
 	
-	@Column(name="RIDER_RATING")
-	private short riderRating;
-
+	@Column(name="COMPLAINT")
+	private String complaint;
+	
 	public Ride(){}
 	
-	public Ride(long rideId, AvailableRide availRide, RideRequest request, short driverRating, short riderRating) {
-		super();
+	public Ride(long rideId, AvailableRide availRide, RideRequest request, Boolean wasSuccessful, String complaint) {
 		this.rideId = rideId;
 		this.availRide = availRide;
 		this.request = request;
-		this.driverRating = driverRating;
-		this.riderRating = riderRating;
+		this.wasSuccessful = wasSuccessful;
+		this.complaint = complaint;
 	}
 
 	public long getRideId() {
@@ -71,21 +70,19 @@ public class Ride implements Serializable{
 		this.request = request;
 	}
 
-	public short getDriverRating() {
-		return driverRating;
+	public Boolean getWasSuccessful() {
+		return wasSuccessful;
 	}
 
-	public void setDriverRating(short driverRating) {
-		this.driverRating = driverRating;
+	public void setWasSuccessful(Boolean wasSuccessful) {
+		this.wasSuccessful = wasSuccessful;
 	}
 
-	public short getRiderRating() {
-		return riderRating;
+	public String getComplaint() {
+		return complaint;
 	}
 
-	public void setRiderRating(short riderRating) {
-		this.riderRating = riderRating;
+	public void setComplaint(String complaint) {
+		this.complaint = complaint;
 	}
-	
-	
 }
