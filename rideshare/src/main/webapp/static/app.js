@@ -12,22 +12,15 @@ const app = angular.module('app', ['ui.router']);
 
 app.config(function($stateProvider, $urlRouterProvider){
 	
-	$urlRouterProvider.otherwise('/login');
+	$urlRouterProvider.otherwise('/passenger');
 	
 	$stateProvider
 	
 		// .state('login',{
 		// 	url: '/login',
 		// 	templateUrl : 'partials/slackLogin.html',
-		// 	controller : slackLoginController
+		// 	controller : slackLoginControllerx
 		// })
-
-		.state('success',{
-			url: '/success',
-			templateUrl: 'partials/successSample.html',
-			controller: function($scope, $http){
-			}
-		})
 
 		.state('passenger',{
 			url: '/passenger',
