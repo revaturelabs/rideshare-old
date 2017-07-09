@@ -13,4 +13,9 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 	List<Ride> findByRequestUser(User u);
 
 	List<Ride> findByAvailRideCarUserOrRequestUser(User u, User u2);
+
+	List<Ride> findAllByRequestNotNullAndAvailRideNull();
+
+	List<Ride> findAllByAvailRideNotNullAndRequestNull();
+
 }

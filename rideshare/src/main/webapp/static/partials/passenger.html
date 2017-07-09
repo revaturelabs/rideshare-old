@@ -1,7 +1,13 @@
 <h3>Bind: {{test}}</h3>
 
 <div id="map" style="height: 400px;width: 600px;"></div>
-
+<button type="button" ng-click="getPrincipal()">Get Principal</button>
+<!--<a href="https://slack.com/oauth/authorize?scope=identity.basic&client_id=184219023015.209820937091">
+  <img alt="Sign in with Slack" height="40" width="172"
+    src="https://platform.slack-edge.com/img/sign_in_with_slack.png"
+    srcset="https://platform.slack-edge.com/img/sign_in_with_slack.png 1x, 
+            https://platform.slack-edge.com/img/sign_in_with_slack@2x.png 2x"/>
+</a>-->
 <script src="../js/googleMapAPI/markerclusterer.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_mhIdxsdRfwiAHVm8qPufCklQ0iMOt6A&callback=initMap"></script>
 <script>
