@@ -41,7 +41,8 @@ public class RideService {
 //		}
 //
 //		return openReqs;
-		return rideReqRepo.findOpen();
+//		return rideReqRepo.findOpen();
+		return null;
 	}
 
 	public List<Ride> getHistoryForUser(User u) {
@@ -94,7 +95,8 @@ public class RideService {
 //		}
 //
 //		return openOffers;
-		return availRideRepo.findOpen();
+//		return availRideRepo.findOpen();
+		return null;
 	}
 	
 	public List<Ride> getActiveOffersForUser(User u) {

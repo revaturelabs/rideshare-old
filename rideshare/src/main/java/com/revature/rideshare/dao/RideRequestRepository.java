@@ -12,6 +12,6 @@ import com.revature.rideshare.domain.User;
 public interface RideRequestRepository extends JpaRepository<RideRequest, Long>{
 	List<RideRequest> findByUser(User u);
 
-	 @Query("HQL GOES HERE")
-	 public List<RideRequest> findOpen();
+//	 @Query("HQL GOES HERE")
+//	 public List<RideRequest> findOpen();
 }
