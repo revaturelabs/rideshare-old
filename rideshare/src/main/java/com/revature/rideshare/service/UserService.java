@@ -11,8 +11,11 @@ public interface UserService {
 
 	void addUser(User u);
 
+
+	void updateUser(User user); 
+	User getUser(long id);
 	User getUserBySlackId(String slackId);
 
-	User getUser(long id);
 	
+	void removeUser(User user);
 }

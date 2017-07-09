@@ -1,5 +1,9 @@
 package com.revature.rideshare.data.jpa;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +17,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.revature.rideshare.Application;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.revature.rideshare.domain.Car;
+import com.revature.rideshare.domain.User;
+import com.revature.rideshare.service.CarService;
+import com.revature.rideshare.service.UserService;
 
 /**
  * Integration test to run the application.
@@ -45,5 +49,23 @@ public class ApplicationTests {
 
 		this.mvc.perform(get("/")).andExpect(status().isOk())
 				.andExpect(content().string("Bath"));
+
+    UserService us = (UserService)this.context.getBean("UserServiceImpl");
+    User user = new User(1, "Chicken", "Little", null, "user@email.com", false); 
+    us.addUser(user); 
+    
+    user.setAdmin(true);
+    
+    us.updateUser(user); 
+    us.removeUser(user); 
+
+    CarService cs = (CarService)this.context.getBean("CarServiceImpl");
+    Car car = new Car(); 
+    cs.addCar(car);
+
+    car.setBrand("Honda");
+
+    cs.updateCar(car); 
+    cs.removeCar(car);
 	}
 }
