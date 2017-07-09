@@ -19,7 +19,7 @@ public class CarServiceImpl implements CarService{
 	}
 	
 	@Override
-	public void addUser(Car c) {
+	public void addCar(Car c) {
 		carRepo.saveAndFlush(c);
 		
 	}

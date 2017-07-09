@@ -4,5 +4,5 @@ import com.revature.rideshare.domain.Car;
 
 public interface CarService {
 
-	void addUser(Car c);
+	void addCar(Car c);
 }

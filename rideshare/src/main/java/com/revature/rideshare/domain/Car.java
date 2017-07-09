@@ -49,11 +49,10 @@ public class Car implements Serializable  {
 	
 	public Car(){}
 
-	public Car(long carId, User user, String licensePlate, String brand, String model, String color, boolean smokeFree,
-			String notes) {
+	public Car(String licensePlate, String brand, String model, String color, boolean smokeFree, String notes) {
 		super();
-		this.carId = carId;
-		this.user = user;
+		//this.carId = carId;
+		//this.user = user;
 		this.licensePlate = licensePlate;
 		this.brand = brand;
 		this.model = model;
