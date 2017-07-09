@@ -7,21 +7,38 @@ import org.springframework.transaction.annotation.Transactional;
 import com.revature.rideshare.dao.CarRepository;
 import com.revature.rideshare.domain.Car;
 
+import java.util.List;
+
 @Component("carService")
 @Transactional
-public class CarServiceImpl implements CarService{
+public class CarServiceImpl implements CarService {
 	
-	private final CarRepository carRepo;
-
 	@Autowired
-	public CarServiceImpl(CarRepository carRepo){
+	private CarRepository carRepo;
+
+	public CarServiceImpl(){}
+
+	public void setCarRepo(CarRepository carRepo){
 		this.carRepo = carRepo;
 	}
-	
+
 	@Override
-	public void addCar(Car c) {
-		carRepo.saveAndFlush(c);
-		
+	public List<Car> getAll(){
+		return carRepo.findAll();
 	}
 
+	@Override
+	public void addCar(Car car){
+		carRepo.saveAndFlush(car);
+	}
+
+	@Override
+	public void removeCar(Car car){
+		carRepo.delete(car);
+	}
+
+	@Override
+	public void updateCar(Car car){
+		carRepo.saveAndFlush(car);
+	}
 }
