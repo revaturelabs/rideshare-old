@@ -28,6 +28,12 @@ public class RideController {
 	}
 
 	
+	@GetMapping("/history")
+	public List<Ride> getHistoryForCurrentUser(Authentication authentication) {
+		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+		return rideService.getHistoryForUser(u);
+	}
+
 	// REQUESTS
 	@GetMapping("/request")
 	public List<RideRequest> getRequestsForCurrentUser(Authentication authentication) {
