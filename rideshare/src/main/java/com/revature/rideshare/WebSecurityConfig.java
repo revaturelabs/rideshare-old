@@ -14,21 +14,10 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        requiresChannel()
+//      http.requiresChannel()
 //        	.antMatchers("/**")
 //        		.requiresSecure()
-//        	.and()
-//        	http
-//        		.authorizeRequests()
-//        		.formLogin()
-//        		.loginPage("/#/login")
-//        		.loginProcessingUrl("/auth")
-//        		.defaultSuccessUrl("/#/passenger")
-//        		.failureUrl("/#/login?error=true")
-//        		.permitAll()
-//        	.and()
-//        	.exceptionHandling()
-//        		.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/#/login"));
+//        	.and()cationEntryPoint(new LoginUrlAuthenticationEntryPoint("/#/login"));
     	http.antMatcher("/**").authorizeRequests()
     		.antMatchers("/**")
     			.permitAll()

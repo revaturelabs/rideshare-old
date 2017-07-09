@@ -2,6 +2,8 @@ package com.revature.rideshare.web;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -37,22 +39,21 @@ public class AuthController {
 	}
 	
 	@RequestMapping("auth/getCode") //@GetMapping("/code")
-	public String loginUser(@RequestParam("code") String code) {
+	public void loginUser(@RequestParam("code") String code, HttpServletResponse response) {
+		String destination = "/login?error=true";
 		String url = "https://slack.com/api/oauth.access?client_id=" + slackAppId
 				+ "&client_secret=" + slackAppSecret 
 				+ "&code=" + code;
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		ResponseEntity<String> accessResponse = restTemplate.getForEntity(url, String.class);
 		System.out.println(response);
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root;
 		try {
-			root = mapper.readTree(response.getBody());
+			root = mapper.readTree(accessResponse.getBody());
 			Boolean isOk = root.path("ok").asBoolean();
 			System.out.println(isOk);
 			String accessToken = root.path("access_token").asText();
-//			String[] scopes = root.path("scope").as;
-//			String teamId = root.path("team_id").asText();
 			String tokenUrl = "https://slack.com/api/users.identity?token=" + accessToken;
 			RestTemplate requestTemplate = new RestTemplate();
 			ResponseEntity<String> tokenResponse = requestTemplate.getForEntity(tokenUrl, String.class);
@@ -63,7 +64,7 @@ public class AuthController {
 			String userId = tokenRoot.path("user").path("id").asText();
 			System.out.println("userName: " + userName + ", userId: " + userId);
 			User u = userService.getUserBySlackId(userId);
-			//TODO:update user information
+			//TODO:update user information here
 			if(u==null){
 				u = new User();
 				u.setFullName(userName);
@@ -73,10 +74,15 @@ public class AuthController {
 			Authentication authentication = new PreAuthenticatedAuthenticationToken(u,
 					"blahblahblah"); // can include authorities as third parameter
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			return "redirect:/";
+			destination = "/";
+			response.sendRedirect(destination);
 		} catch (IOException e) {
 			e.printStackTrace(); // TODO: change this when logging is set up
-			return "redirect:/login?error=true";
+			try {
+				response.sendRedirect(destination);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 	

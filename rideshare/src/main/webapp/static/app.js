@@ -2,7 +2,6 @@ import { landingSampleController } from './js/controllers/landingSample.controll
 import { passengerController } from './js/controllers/passenger.controller.js';
 import { driverController } from './js/controllers/driver.controller.js';
 import { historyController } from './js/controllers/history.controller.js';
-import { slackLoginController } from './js/controllers/slackLogin.controller.js';
 
 
 //var = function scope
@@ -17,11 +16,11 @@ app.config(function($stateProvider, $urlRouterProvider){
 	
 	$stateProvider
 	
-		.state('login',{
-			url: '/login',
-			templateUrl : 'partials/slackLogin.html',
-			controller : slackLoginController
-		})
+		// .state('login',{
+		// 	url: '/login',
+		// 	templateUrl : 'partials/slackLogin.html',
+		// 	controller : slackLoginController
+		// })
 
 		.state('success',{
 			url: '/success',
