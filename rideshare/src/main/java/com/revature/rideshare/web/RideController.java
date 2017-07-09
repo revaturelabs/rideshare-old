@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.rideshare.domain.Ride;
+import com.revature.rideshare.domain.RideRequest;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.RideService;
 
@@ -17,21 +18,23 @@ import com.revature.rideshare.service.RideService;
 @RequestMapping("ride")
 public class RideController {
 
-
 	@Autowired
 	private RideService rideService;
 
 	@GetMapping
 	public List<Ride> getAllRides() {
-		List<Ride> rides = 	rideService.getAll();
-		
-		return rides;
+		return rideService.getAll();
 	}
-	
-	@GetMapping("/ridesForCurrentUser")
-	public List<Ride> getRidesForCurrentUser(Authentication authentication) {
+
+	@GetMapping("/activeRides")
+	public List<Ride> getActiveRidesForCurrentUser(Authentication authentication) {
 		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
 		return rideService.getActiveRidesForUser(u);
 	}
-	
+
+	@GetMapping("/rideRequests")
+	public List<RideRequest> getRideRequestsForCurrentUser(Authentication authentication) {
+		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+		return rideService.getRideRequestsForUser(u);
+	}
 }
