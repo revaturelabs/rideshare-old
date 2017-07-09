@@ -25,31 +25,43 @@ public class User implements Serializable {
 	@SequenceGenerator(name="USER_ID_SEQUENCE", sequenceName="USER_ID_SEQUENCE")
 	private long userId;
 	
-	@Column(name="FIRST_NAME", nullable=false)
+	@Column(name="FIRST_NAME")
 	private String firstName;
 	
-	@Column(name="LAST_NAME", nullable=false)
+	@Column(name="LAST_NAME")
 	private String lastName;
+	
+	@Column(name="FULL_NAME", nullable=false)
+	private String fullName;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private PointOfInterest mainPOI;
 	
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private PointOfInterest workPOI;
+	
 	@Column(name="EMAIL")
 	private String email;
+	
+	@Column(name="SLACK_ID", nullable=false)
+	private String slackId;
 	
 	@Column(name="IS_ADMIN", nullable=false)
 	private boolean isAdmin;
 
 	public User(){}
 	
-	public User(long userId, String firstName, String lastName, PointOfInterest mainPOI, String email,
-			boolean isAdmin) {
+	public User(long userId, String firstName, String lastName, String fullName, PointOfInterest mainPOI, 
+			PointOfInterest workPOI, String email, String slackId, boolean isAdmin) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.fullName = fullName;
 		this.mainPOI = mainPOI;
+		this.workPOI = workPOI;
 		this.email = email;
+		this.slackId = slackId;
 		this.isAdmin = isAdmin;
 	}
 
@@ -77,6 +89,14 @@ public class User implements Serializable {
 		this.lastName = lastName;
 	}
 
+	public String getFullName() {
+		return fullName;
+	}
+	
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	
 	public PointOfInterest getMainPOI() {
 		return mainPOI;
 	}
@@ -85,6 +105,14 @@ public class User implements Serializable {
 		this.mainPOI = mainPOI;
 	}
 
+	public PointOfInterest getWorkPOI() {
+		return workPOI;
+	}
+	
+	public void setWorkPOI(PointOfInterest workPOI) {
+		this.workPOI = workPOI;
+	}
+	
 	public String getEmail() {
 		return email;
 	}
@@ -93,6 +121,14 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
+	public String getSlackId() {
+		return slackId;
+	}
+	
+	public void setSlackId(String slackId) {
+		this.slackId = slackId;
+	}
+	
 	public boolean isAdmin() {
 		return isAdmin;
 	}
@@ -103,8 +139,8 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", mainPOI=" + mainPOI
-				+ ", email=" + email + ", isAdmin=" + isAdmin + "]";
+		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", fullName=" + fullName 
+				+ ", mainPOI=" + mainPOI + ", workPOI=" + workPOI + ", email=" + email + ", slackId=" + slackId + ", isAdmin=" + isAdmin + "]";
 	}
 	
 	
