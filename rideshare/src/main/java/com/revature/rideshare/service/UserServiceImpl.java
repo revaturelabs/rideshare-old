@@ -30,4 +30,9 @@ public class UserServiceImpl implements UserService{
 		userRepo.saveAndFlush(u);
 	}
 	
+	@Override
+	public User getUserBySlackId(String slackId){
+		return userRepo.findBySlackId(slackId);
+	}
+	
 }
