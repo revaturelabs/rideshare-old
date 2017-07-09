@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,8 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.UserService;
 
-@RestController
-@RequestMapping("auth")
+@Controller
 public class AuthController {
 //	@Value("#{systemEnvironment['TESTAPP_ID']}")
 	private static String slackAppId = "184219023015.209820937091";
@@ -37,8 +36,8 @@ public class AuthController {
 		this.userService = userService;
 	}
 	
-	@RequestMapping("/getCode") //@GetMapping("/code")
-	public void loginUser(@RequestParam("code") String code) {
+	@RequestMapping("auth/getCode") //@GetMapping("/code")
+	public String loginUser(@RequestParam("code") String code) {
 		String url = "https://slack.com/api/oauth.access?client_id=" + slackAppId
 				+ "&client_secret=" + slackAppSecret 
 				+ "&code=" + code;
@@ -74,8 +73,10 @@ public class AuthController {
 			Authentication authentication = new PreAuthenticatedAuthenticationToken(u,
 					"blahblahblah"); // can include authorities as third parameter
 			SecurityContextHolder.getContext().setAuthentication(authentication);
+			return "redirect:/";
 		} catch (IOException e) {
 			e.printStackTrace(); // TODO: change this when logging is set up
+			return "redirect:/login?error=true";
 		}
 	}
 	
