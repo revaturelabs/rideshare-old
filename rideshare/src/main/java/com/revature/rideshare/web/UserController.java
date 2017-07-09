@@ -14,10 +14,10 @@ import com.revature.rideshare.service.UserService;
 public class UserController {
 	@Autowired
 	private UserService userService;
-	
-	@RequestMapping("/getUser/{id}")
-	public @ResponseBody User getUser(@PathVariable(value="id") long id){
+
+	@RequestMapping("/id/{id}")
+	public @ResponseBody User getUser(@PathVariable(value = "id") long id) {
 		return userService.getUser(id);
 	}
-	
+
 }
