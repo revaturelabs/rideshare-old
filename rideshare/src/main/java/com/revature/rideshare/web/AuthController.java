@@ -3,36 +3,25 @@ package com.revature.rideshare.web;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.rideshare.service.UserService;
 
-@Controller
+@RestController
 public class AuthController {
-//	@Value("#{systemEnvironment['TESTAPP_ID']}")
-	private static String slackAppId = "184219023015.209820937091";
-//	@Value("#{systemEnvironment['TESTAPP_SECRET']}")
-	private static String slackAppSecret = "f69b998afcc9b1043adfa2ffdab49308";
-//	@Value("#{systemEnvironment['TESTAPP_TOKEN']}")
-//	private static String slackAppToken = "xER6r1Zrr0nxUBdSz7Fyq5UU";
-//	@Value("#{systemEnvironment['TESTAPP_TEAM']}")
-//	private static String slackTeamId;
 	
 	@Autowired
 	UserService userService;
-
+	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 	
-	@GetMapping("auth/currentUser") @ResponseBody
-	public Principal getCurrentUser(Authentication authentication) {
-		authentication = (PreAuthenticatedAuthenticationToken) authentication;
-		return (Principal) authentication.getPrincipal();
+	@RequestMapping("/auth")
+	public Principal getPrincipal(Principal principal) {
+		System.out.println(principal);
+		return principal;
 	}
 	
 //	@RequestMapping("auth/getCode")
