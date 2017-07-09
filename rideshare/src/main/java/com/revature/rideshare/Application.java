@@ -1,33 +1,51 @@
-/*
- * Copyright 2012-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.revature.rideshare;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-@ComponentScan
-@EnableAutoConfiguration
-public class Application {
-
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(Application.class, args);
-	}
-
-}
+//package com.revature.rideshare;
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.autoconfigure.SpringBootApplication;
+//import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+//import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+//import org.springframework.boot.context.properties.ConfigurationProperties;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.ComponentScan.Filter;
+//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+//import org.springframework.security.oauth2.client.OAuth2ClientContext;
+//import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+//import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+//import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
+//import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+//import org.springframework.web.bind.annotation.RestController;
+//
+//@SpringBootApplication
+//@EnableOAuth2Client
+//@RestController
+//public class Application3 extends WebSecurityConfigurerAdapter {
+//	
+//	@Autowired
+//	OAuth2ClientContext oauth2ClientContext;
+//	
+//	private Filter ssoFilter() {
+//	    OAuth2ClientAuthenticationProcessingFilter slackFilter = new OAuth2ClientAuthenticationProcessingFilter(
+//	            "/login/slack");
+//	    OAuth2RestTemplate slackTemplate = new OAuth2RestTemplate(slack(), oauth2ClientContext);
+//	    slackFilter.setRestTemplate(slackTemplate);
+//	    UserInfoTokenServices tokenServices = new UserInfoTokenServices(slackResource().getUserInfoUri(),
+//	            slack().getClientId());
+//	    tokenServices.setRestTemplate(slackTemplate);
+//	    slackFilter.setTokenServices(
+//	            new UserInfoTokenServices(slackResource().getUserInfoUri(), slack().getClientId()));
+//	    return (Filter) slackFilter;
+//	}
+//
+//	@Bean
+//	@ConfigurationProperties("slack.client")
+//	public AuthorizationCodeResourceDetails slack() {
+//	    return new AuthorizationCodeResourceDetails();
+//	}
+//
+//	@Bean
+//	@ConfigurationProperties("slack.resource")
+//	public ResourceServerProperties slackResource() {
+//	    return new ResourceServerProperties();
+//	}
+//
+//}
