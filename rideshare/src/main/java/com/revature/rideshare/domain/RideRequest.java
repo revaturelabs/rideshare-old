@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -44,10 +46,20 @@ public class RideRequest implements Serializable{
 	@Column(name="NOTES")
 	private String notes;
 	
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name="STATUS", nullable=false)
+	private RequestStatus status;
+	
+	public enum RequestStatus {
+		OPEN,			// User currently looking for ride
+		SATISFIED,		// User has found a ride
+		STALE			// User has not found a ride in a reasonable amount of time
+	}
+	
 	public RideRequest(){}
 
 	public RideRequest(long requestId, User user, PointOfInterest pickupLocation, PointOfInterest dropOffLocation,
-			Date time, String notes) {
+			Date time, String notes, RequestStatus status) {
 		super();
 		this.requestId = requestId;
 		this.user = user;
@@ -55,6 +67,7 @@ public class RideRequest implements Serializable{
 		this.dropOffLocation = dropOffLocation;
 		this.time = time;
 		this.notes = notes;
+		this.status = status;
 	}
 
 	public long getRequestId() {
@@ -105,7 +118,11 @@ public class RideRequest implements Serializable{
 		this.notes = notes;
 	}
 	
+	public RequestStatus getStatus() {
+		return status;
+	}
 	
-	
-	
+	public void setStatus(RequestStatus status) {
+		this.status = status;
+	}
 }
