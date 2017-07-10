@@ -22,16 +22,4 @@ public class AdminController {
 	 @Autowired
 	 private UserService userService;
 	
-	 //
-	@GetMapping
-	public List<Ride> getAllRides() {
-		return rideService.getAll();
-	}
-	
-	@GetMapping
-    public List<User> getAll(){
-        return userService.getAll();
-    }
-	
-	
 }
