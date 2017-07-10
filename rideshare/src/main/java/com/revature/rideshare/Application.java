@@ -19,6 +19,7 @@ public class Application extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+
 //		http//.requiresChannel().antMatchers("/**").requiresSecure()
 //			.antMatcher("/**")
 //			.authorizeRequests()
@@ -26,17 +27,14 @@ public class Application extends WebSecurityConfigurerAdapter {
 //				.permitAll()
 //			.anyRequest()
 //				.authenticated();
-		
-		http
-		.antMatcher("/**")
-		            .authorizeRequests()
-		                .antMatchers("/login**", "/index.js", "/css", "/images", "/partials")
-		                .permitAll()
-		            .anyRequest()
-		                .authenticated()
-		            .and().logout().logoutSuccessUrl("/").permitAll()
-		            .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-		
+		http//.requiresChannel().antMatchers("/**").requiresSecure()
+			.antMatcher("/**")
+			.authorizeRequests()
+				.antMatchers("/login")
+				.permitAll()
+			.anyRequest()
+				.authenticated()
+		           .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 	}
 	
 
