@@ -57,10 +57,10 @@ public class RideController {
 		return rideService.getRequestsForUser(u);
 	}
 
-	@GetMapping("/request/open")
-	public List<RideRequest> getOpenRequests() {
-		return rideService.getOpenRequests();
-	}
+//	@GetMapping("/request/open")
+//	public List<RideRequest> getOpenRequests() {
+//		return rideService.getOpenRequests();
+//	}
 
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(Principal principal) {
@@ -88,6 +88,11 @@ public class RideController {
 		return rideService.getOffersForUser(u);
 	}
 
+//	@RequestMapping("/offer/accept/{id}")
+//	public @ResponseBody User getUser(@PathVariable(value = "id") long id) {
+//		return userService.getUser(id);
+//	}
+    
     @PostMapping("/offer/add")
     public void addOffer(@RequestBody AvailableRide offer){
         rideService.addOffer(offer);
@@ -113,5 +118,4 @@ public class RideController {
 		User u = userService.getUser(1);
 		return rideService.getOfferHistoryForUser(u);
 	}
-
 }
