@@ -32,6 +32,10 @@ public class RideService {
 	
 	
 	// REQUESTS
+	public void addRequest(RideRequest req) {
+		rideReqRepo.saveAndFlush(req);
+	}
+
 	public List<RideRequest> getOpenRequests() {
 //		List<Ride> openRides = rideRepo.findAllByRequestNotNullAndAvailRideNull();
 //		List<RideRequest> openReqs = new ArrayList<RideRequest>();
@@ -84,6 +88,10 @@ public class RideService {
 	// OFFERS
 	public List<AvailableRide> getOffersForUser(User u) {
 		return availRideRepo.findByCarUser(u);
+	}
+
+	public void addOffer(AvailableRide offer) {
+		availRideRepo.saveAndFlush(offer);
 	}
 
 	public List<AvailableRide> getOpenOffers() {
