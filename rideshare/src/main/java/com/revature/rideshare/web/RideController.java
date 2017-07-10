@@ -41,10 +41,10 @@ public class RideController {
 		return rideService.getRequestsForUser(u);
 	}
 
-	@GetMapping("/request/open")
-	public List<RideRequest> getOpenRequests() {
-		return rideService.getOpenRequests();
-	}
+//	@GetMapping("/request/open")
+//	public List<RideRequest> getOpenRequests() {
+//		return rideService.getOpenRequests();
+//	}
 
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(Authentication authentication) {
@@ -66,10 +66,10 @@ public class RideController {
 		return rideService.getOffersForUser(u);
 	}
 
-	@GetMapping("/offer/open")
-	public List<AvailableRide> getOpenOffers() {
-		return rideService.getOpenOffers();
-	}
+//	@GetMapping("/offer/open")
+//	public List<AvailableRide> getOpenOffers() {
+//		return rideService.getOpenOffers();
+//	}
 
 	@GetMapping("/offer/active")
 	public List<Ride> getActiveOffersForCurrentUser(Authentication authentication) {
