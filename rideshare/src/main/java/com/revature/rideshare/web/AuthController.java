@@ -1,11 +1,14 @@
 package com.revature.rideshare.web;
 
+import java.io.IOException;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.UserService;
 
@@ -22,25 +25,27 @@ public class AuthController {
 	@RequestMapping("/auth/current")
 	public User getCurrentUser(Principal principal) {
 		System.out.println(principal);
-		
-		
+		System.out.println(principal.getName());
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root;
+		try {
+			root = mapper.readTree(principal.getName());
+			String fullname = root.path("name").asText();
+			String slackId = root.path("id").asText();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return null;
 	}
 	
 //	@RequestMapping("auth/getCode")
 //	public void loginUser(@RequestParam("code") String code, HttpServletResponse response) {
 //		String destination = "/login?error=true";
-//		String url = "https://slack.com/api/oauth.access?client_id=" + slackAppId
-//				+ "&client_secret=" + slackAppSecret 
-//				+ "&code=" + code;
-//		RestTemplate restTemplate = new RestTemplate();
-//		ResponseEntity<String> accessResponse = restTemplate.getForEntity(url, String.class);
-//		System.out.println(response);
+//		String url = "https://slack.com/api/oauth.access?client_id=" + slackAppId + "&client_secret=" + slackAppSecret + "&code=" + code;
 //		ObjectMapper mapper = new ObjectMapper();
 //		JsonNode root;
 //		try {
 //			root = mapper.readTree(accessResponse.getBody());
-//			Boolean isOk = root.path("ok").asBoolean();
-//			System.out.println(isOk);
 //			String accessToken = root.path("access_token").asText();
 //			String tokenUrl = "https://slack.com/api/users.identity?token=" + accessToken;
 //			RestTemplate requestTemplate = new RestTemplate();
