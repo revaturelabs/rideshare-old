@@ -24,6 +24,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"
 	integrity="sha256-FMocp8pp1WruAK6GtjNDtuGAALCt/dCsVtw7oSjvPX0="
 	crossorigin="anonymous"></script>
+
 <!-- Cookies  -->
 <!--<script src="https://code.angularjs.org/1.5.7/angular-cookies.js"></script>-->
 
@@ -69,23 +70,20 @@
 	<!-- Header -->
 
 	<div class="wrapper">
-		<!--<div class="container" ng-show="!main.authenticated">
-			<a href="/login">
-				<img alt="Sign in with Slack" height="40" width="172"
-					src="https://platform.slack-edge.com/img/sign_in_with_slack.png"
-					srcset="https://platform.slack-edge.com/img/sign_in_with_slack.png 1x, 
-									https://platform.slack-edge.com/img/sign_in_with_slack@2x.png 2x"/>
-			</a>
-		</div>
-		<div class="container" ng-show="main.authenticated">
-			Welcome <span>{{ main.user }}</span>!
-			<div>
-				<button ng-click="home.logout()" class="btn btn-primary">Logout</button>
-			</div>
-		</div>-->
 		<!-- states inserts here -->
 		<ui-view></ui-view>
 	</div>
+
+	<!--
+		Two possible options as far as ui routing and authentication are concerned:
+		1. put the "sign in with slack" button in index.html and separate the routing config from the
+			main angular module creation. put the routing config in a file that only gets loaded
+			after the user has signed in.
+		2. leave routing config where it is and move "sign in with slack" button to the slackLogin template.
+			include "/partials/slackLogin.html" in the antMatchers() for WebSecurityConfig and add resolvers 
+			for all the other routes that only allow authenticated users to access them.
+			alternatively use angular-permission to manage access to the other view routes
+	-->
 
 
 	<!-- Footer -->
@@ -123,6 +121,6 @@
 	
 
 	<!--Just include the main bundle built by webpack-->
-	<script src="./index.js"></script>
+	<script src="./app.bundle.js"></script>
 </body>
 </html>
