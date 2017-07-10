@@ -20,4 +20,9 @@ public class UserController {
 		return userService.getUser(id);
 	}
 
+	@RequestMapping("/me")
+	public User getCurrentUser() {
+		return userService.getUser(1);
+	}
+	
 }
