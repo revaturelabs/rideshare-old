@@ -41,6 +41,12 @@ public class UserController{
         userService.removeUser(user);
     }
 
+	@RequestMapping("/me")
+	public User getCurrentUser() {
+		return userService.getUser(1);
+	}
+	
+
     @PostMapping("/updateUser")
     public void updateUser(@RequestBody User user){
         userService.updateUser(user);

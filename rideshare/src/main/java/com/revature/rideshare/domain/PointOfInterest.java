@@ -45,10 +45,10 @@ public class PointOfInterest implements Serializable {
 	private short zipCode;
 	
 	@Column(name="LATITUDE", nullable=false, scale=6)
-	private BigDecimal latitude;
+	private double latitude;
 	
 	@Column(name="LONGITUDE", nullable=false, scale=6)
-	private BigDecimal longitude;
+	private double longitude;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
 	private PointOfInterestType type;
@@ -56,7 +56,7 @@ public class PointOfInterest implements Serializable {
 	public PointOfInterest(){}
 
 	public PointOfInterest(int poiId, String poiName, String addressLine1, String addressLine2, String city,
-			String state, short zipCode, BigDecimal latitude, BigDecimal longitude, PointOfInterestType type) {
+			String state, short zipCode, double latitude, double longitude, PointOfInterestType type) {
 		super();
 		this.poiId = poiId;
 		this.poiName = poiName;
@@ -126,19 +126,19 @@ public class PointOfInterest implements Serializable {
 		this.zipCode = zipCode;
 	}
 
-	public BigDecimal getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(BigDecimal latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-	public BigDecimal getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(BigDecimal longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
