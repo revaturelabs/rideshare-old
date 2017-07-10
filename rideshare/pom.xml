@@ -10,10 +10,12 @@
 	</parent>
 	<artifactId>rideshare</artifactId>
 	<groupId>com.revature</groupId>
-	<name>Spring Boot Data JPA Sample</name>
-	<description>Spring Boot Data JPA Sample</description>
+	<name>Revature RideShare</name>
+	<description>A ride sharing app for Revature employees.</description>
 	<version>0.0.1-SNAPSHOT</version>
-
+	
+	
+	
 	
 	<dependencies>
 		<dependency>
@@ -24,6 +26,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>

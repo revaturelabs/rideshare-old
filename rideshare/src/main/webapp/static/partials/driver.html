@@ -1,0 +1,23 @@
+
+<!-- html and angular function used to display all rides -->
+<h3>Rides</h3>
+
+<ul style = "list-style-type: none;">
+<li ng-repeat="ride in rides">
+
+Time: {{ride.availRide.time}}<br>
+Pick up at: {{ride.availRide.pickupPOI.poiName}}, {{ride.availRide.pickupPOI.addressLine1}} <br>
+Drop off at: {{ride.availRide.dropoffPOI.poiName}}, {{ride.availRide.dropoffPOI.addressLine1}}<br>
+Driver: {{ride.availRide.car.user.firstName}} {{ride.availRide.car.user.lastName}}<br>
+Driver note: {{ride.availRide.car.notes}} <span ng-show =" ride.availRide.car.notes == null"> n/a </span> <br>
+Rider: {{ride.request.user.firstName}} {{ride.request.user.lastName}}<br>
+Rider note: {{ride.request.notes}} <span ng-show =" ride.request.notes == null"> n/a </span> <br>
+Compliant: {{ride.compliant}} <span ng-show =" ride.compliant == null"> n/a </span> 
+
+<br>
+<br>
+
+</li>
+
+</ul>
+
