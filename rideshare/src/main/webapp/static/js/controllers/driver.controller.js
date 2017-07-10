@@ -25,7 +25,19 @@ export let driverController = function($scope, $http, $state){
 	.then(function(response){
 		$scope.pastRides = response.data;
 	});
-
-
-
+	
+	
+		$scope.offer = {};
+		$scope.addOffer = function() {
+			console.log($scope.offer);
+			$http.post('/ride/offer/add', $scope.offer).then(
+				(formResponse) => {
+					$state.go('addOffer');
+				},
+				(failedResponse) => {
+					alert('Failure');
+				}
+			)
+	};
+	
 };
