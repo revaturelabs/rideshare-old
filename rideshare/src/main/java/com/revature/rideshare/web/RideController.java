@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +27,7 @@ public class RideController {
 	@Autowired
 	private RideService rideService;
 
+	// ALL RIDES
 	@GetMapping
 	public List<Ride> getAllRides() {
 		return rideService.getAll();
@@ -41,6 +44,11 @@ public class RideController {
 	}
 
 	// REQUESTS
+    @PostMapping("/request/add")
+    public void addRequest(@RequestBody RideRequest req){
+        rideService.addRequest(req);
+    }
+
 	@GetMapping("/request")
 	public List<RideRequest> getRequestsForCurrentUser(Principal principal) {
 //		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
@@ -79,6 +87,11 @@ public class RideController {
 		User u = userService.getUser(1);
 		return rideService.getOffersForUser(u);
 	}
+
+    @PostMapping("/offer/add")
+    public void addOffer(@RequestBody AvailableRide offer){
+        rideService.addOffer(offer);
+    }
 
 	@GetMapping("/offer/open")
 	public List<AvailableRide> getOpenOffers() {
