@@ -13,10 +13,12 @@ import com.revature.rideshare.domain.User;
 @Transactional
 public class UserServiceImpl implements UserService{
 
-	private final UserRepository userRepo;
-	
 	@Autowired
-	public UserServiceImpl(UserRepository userRepo){
+	private UserRepository userRepo;
+
+	public UserServiceImpl(){}
+		
+	public void setUserRepo(UserRepository userRepo){
 		this.userRepo = userRepo;
 	}
 
@@ -40,4 +42,13 @@ public class UserServiceImpl implements UserService{
 		return userRepo.findBySlackId(slackId);
 	}
 	
+	@Override
+	public void removeUser(User user){
+		userRepo.saveAndFlush(user);
+	}
+
+	@Override
+	public void updateUser(User user){
+		userRepo.delete(user);
+	}
 }
