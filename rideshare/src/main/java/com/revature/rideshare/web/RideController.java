@@ -1,10 +1,10 @@
 package com.revature.rideshare.web;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,15 +29,23 @@ public class RideController {
 
 	
 	@GetMapping("/history")
-	public List<Ride> getHistoryForCurrentUser(Authentication authentication) {
-		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
-		return rideService.getHistoryForUser(u);
+	public List<Ride> getHistoryForCurrentUser(Principal principal) {
+		OAuth2Authentication oa = (OAuth2Authentication) principal;
+		System.out.println("name " + oa.getName());
+		System.out.println("cred " + oa.getCredentials());
+		System.out.println("deet " + oa.getDetails());
+		System.out.println("prin " + oa.getPrincipal());
+//		User u = (User) principal;
+//		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+//		return rideService.getHistoryForUser(u);
+		return null;
 	}
 
 	// REQUESTS
 	@GetMapping("/request")
-	public List<RideRequest> getRequestsForCurrentUser(Authentication authentication) {
-		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+	public List<RideRequest> getRequestsForCurrentUser(Principal principal) {
+//		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+		User u = (User) principal;
 		return rideService.getRequestsForUser(u);
 	}
 
@@ -47,22 +55,25 @@ public class RideController {
 	}
 
 	@GetMapping("/request/active")
-	public List<Ride> getActiveRequestsForCurrentUser(Authentication authentication) {
-		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+	public List<Ride> getActiveRequestsForCurrentUser(Principal principal) {
+//		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+		User u = (User) principal;
 		return rideService.getActiveRequestsForUser(u);
 	}
 
 	@GetMapping("/request/history")
-	public List<Ride> getRequestHistoryForCurrentUser(Authentication authentication) {
-		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+	public List<Ride> getRequestHistoryForCurrentUser(Principal principal) {
+//		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+		User u = (User) principal;
 		return rideService.getRequestHistoryForUser(u);
 	}
 
 
 	// OFFERS
 	@GetMapping("/offer")
-	public List<AvailableRide> getOffersForCurrentUser(Authentication authentication) {
-		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+	public List<AvailableRide> getOffersForCurrentUser(Principal principal) {
+//		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+		User u = (User) principal;
 		return rideService.getOffersForUser(u);
 	}
 
@@ -72,14 +83,16 @@ public class RideController {
 	}
 
 	@GetMapping("/offer/active")
-	public List<Ride> getActiveOffersForCurrentUser(Authentication authentication) {
-		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+	public List<Ride> getActiveOffersForCurrentUser(Principal principal) {
+//		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+		User u = (User) principal;
 		return rideService.getActiveOffersForUser(u);
 	}
 
 	@GetMapping("/offer/history")
-	public List<Ride> getOfferHistoryForCurrentUser(Authentication authentication) {
-		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+	public List<Ride> getOfferHistoryForCurrentUser(Principal principal) {
+//		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+		User u = (User) principal;
 		return rideService.getOfferHistoryForUser(u);
 	}
 
