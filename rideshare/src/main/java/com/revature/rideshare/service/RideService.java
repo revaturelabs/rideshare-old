@@ -124,6 +124,4 @@ public class RideService {
 		
 		return completedRides;
 	}
-
-	
 }
