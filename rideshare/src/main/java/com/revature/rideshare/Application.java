@@ -10,20 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @SpringBootApplication
-@EnableOAuth2Sso
-public class Application extends WebSecurityConfigurerAdapter {
+
+public class Application {
 	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http//.requiresChannel().antMatchers("/**").requiresSecure()
-			.antMatcher("/**")
-			.authorizeRequests()
-				.antMatchers("/login")
-				.permitAll()
-			.anyRequest()
-				.authenticated()
-				 .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-	}
+	
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(Application.class, args);
