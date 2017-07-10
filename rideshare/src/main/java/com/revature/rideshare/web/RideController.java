@@ -88,6 +88,11 @@ public class RideController {
 		return rideService.getOffersForUser(u);
 	}
 
+//	@RequestMapping("/offer/accept/{id}")
+//	public @ResponseBody User getUser(@PathVariable(value = "id") long id) {
+//		return userService.getUser(id);
+//	}
+    
     @PostMapping("/offer/add")
     public void addOffer(@RequestBody AvailableRide offer){
         rideService.addOffer(offer);
