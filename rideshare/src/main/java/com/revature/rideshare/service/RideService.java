@@ -37,6 +37,10 @@ public class RideService {
 	}
 	
 	public boolean acceptRequest(long id, User u) {
+		// get request from id
+		// duplicate request as availRide
+		// create ride obj from req and avail
+		// 		return result
 		return true;
 	}
 
