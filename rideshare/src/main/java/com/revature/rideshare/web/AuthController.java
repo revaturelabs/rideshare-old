@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.UserService;
 
 @RestController
@@ -18,10 +19,11 @@ public class AuthController {
 		this.userService = userService;
 	}
 	
-	@RequestMapping("/auth")
-	public Principal getPrincipal(Principal principal) {
+	@RequestMapping("/auth/current")
+	public User getCurrentUser(Principal principal) {
 		System.out.println(principal);
-		return principal;
+		
+		
 	}
 	
 //	@RequestMapping("auth/getCode")
