@@ -11,14 +11,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Check;
+
 @Entity
 @Table(name="AVAILABLE_RIDES")
+@Check(constraints="AVAILABLE_SEATS >= 0")
 public class AvailableRide implements Serializable{
 	
 	private static final long serialVersionUID = -5753230302496991697L;
@@ -48,10 +50,13 @@ public class AvailableRide implements Serializable{
 	@Column(name="NOTES")
 	private String notes;
 
+	@Column(name="IS_OPEN", nullable=false)
+	private boolean isOpen;
+	
 	public AvailableRide(){}
 	
 	public AvailableRide(long availRideId, Car car, PointOfInterest pickupPOI, PointOfInterest dropoffPOI,
-			short seatsAvailable, Date time, String notes) {
+			short seatsAvailable, Date time, String notes, boolean isOpen) {
 		super();
 		this.availRideId = availRideId;
 		this.car = car;
@@ -60,6 +65,7 @@ public class AvailableRide implements Serializable{
 		this.seatsAvailable = seatsAvailable;
 		this.time = time;
 		this.notes = notes;
+		this.isOpen = isOpen;
 	}
 
 	public long getAvailRideId() {
@@ -117,8 +123,12 @@ public class AvailableRide implements Serializable{
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
-	
 
-	
+	public boolean isOpen() {
+		return isOpen;
+	}
+
+	public void setOpen(boolean isOpen) {
+		this.isOpen = isOpen;
+	}
 }

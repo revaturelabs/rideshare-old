@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -45,11 +44,11 @@ public class PointOfInterest implements Serializable {
 	@Column(name="ZIP", nullable=false)
 	private short zipCode;
 	
-	@Column(name="LATITUDE", nullable=false)
-	private BigDecimal latitude;
+	@Column(name="LATITUDE", nullable=false, scale=6)
+	private double latitude;
 	
-	@Column(name="LONGITUDE", nullable=false)
-	private BigDecimal longitude;
+	@Column(name="LONGITUDE", nullable=false, scale=6)
+	private double longitude;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
 	private PointOfInterestType type;
@@ -57,7 +56,7 @@ public class PointOfInterest implements Serializable {
 	public PointOfInterest(){}
 
 	public PointOfInterest(int poiId, String poiName, String addressLine1, String addressLine2, String city,
-			String state, short zipCode, BigDecimal latitude, BigDecimal longitude, PointOfInterestType type) {
+			String state, short zipCode, double latitude, double longitude, PointOfInterestType type) {
 		super();
 		this.poiId = poiId;
 		this.poiName = poiName;
@@ -127,19 +126,19 @@ public class PointOfInterest implements Serializable {
 		this.zipCode = zipCode;
 	}
 
-	public BigDecimal getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(BigDecimal latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-	public BigDecimal getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(BigDecimal longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 

@@ -6,6 +6,6 @@ import com.revature.rideshare.domain.User;
 
 
 public interface UserRepository extends JpaRepository<User, Long>{
-
+	User findBySlackId(String slackId);
 	
 }
