@@ -57,10 +57,10 @@ public class RideController {
 		return rideService.getRequestsForUser(u);
 	}
 
-	@GetMapping("/request/open")
-	public List<RideRequest> getOpenRequests() {
-		return rideService.getOpenRequests();
-	}
+//	@GetMapping("/request/open")
+//	public List<RideRequest> getOpenRequests() {
+//		return rideService.getOpenRequests();
+//	}
 
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(Principal principal) {
@@ -118,5 +118,4 @@ public class RideController {
 		User u = userService.getUser(1);
 		return rideService.getOfferHistoryForUser(u);
 	}
-
 }

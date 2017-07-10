@@ -26,7 +26,7 @@ public class Application extends WebSecurityConfigurerAdapter {
 				.permitAll()
 			.anyRequest()
 				.authenticated()
-				 .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+		           .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 	}
 
 	public static void main(String[] args) throws Exception {

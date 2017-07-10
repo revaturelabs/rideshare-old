@@ -1,7 +1,8 @@
 import { passengerController } from './js/controllers/passenger.controller.js';
 import { driverController } from './js/controllers/driver.controller.js';
 import { historyController } from './js/controllers/history.controller.js';
-
+//import { slackLoginController } from './js/controllers/slackLogin.controller.js';
+import { addCarController } from './js/controllers/addCar.controller.js';
 
 //var = function scope
 //const and let = block scope 
@@ -38,7 +39,12 @@ app.config(function($stateProvider, $urlRouterProvider){
 			templateUrl : 'partials/history.html',
 			controller : historyController
 		})
-		
+
+		.state('addCar' ,{
+			url: '/addCar',
+			templateUrl : 'partials/addCar.html',
+			controller : addCarController
+		})
 	
 	
 });
