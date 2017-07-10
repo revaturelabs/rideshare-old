@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http//.requiresChannel().antMatchers("/**").requiresSecure()
 			.antMatcher("/**")
 			.authorizeRequests()
-				.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html")
+				.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html", "/auth")
 				.permitAll()
 			.anyRequest()
 				.authenticated()
