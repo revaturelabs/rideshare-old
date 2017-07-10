@@ -9,16 +9,19 @@ export let driverController = function($scope, $http, $state){
 		$scope.rides = response.data;
 	});
 
-	$scope.openRides = {};
+	
+	//get data that shows all active ride offers for user
+	$scope.activeRides = {};
 
-	$http.get("/ride/request/active")
+	$http.get("/ride/offer/active")
 	.then(function(response){
-		$scope.openRides = response.data;
+		$scope.activeRides = response.data;
 	});
 
 	$scope.pastRides = {};
 
-	$http.get("/ride/request/history")
+	//get data that shows all past ride offers for user
+	$http.get("/ride/offer/history")
 	.then(function(response){
 		$scope.pastRides = response.data;
 	});

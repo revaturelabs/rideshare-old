@@ -1,23 +1,28 @@
+
+<!-- Tabs that display active rides and ride history for a user -->
 <div>
 
 	<!-- Nav tabs -->
 	<ul class="nav nav-tabs" role="tablist">
-		<li role="presentation" class="active"><a href="#open"
-			aria-controls="open" role="tab" data-toggle="tab" target="_self">Open</a></li>
-		<li role="presentation"><a href="#past" aria-controls="past"
-			role="tab" data-toggle="tab" target="_self">Past</a></li>
+		<li role="presentation" class="active"><a href="#active"
+			aria-controls="active" role="tab" data-toggle="tab" target="_self">Active</a></li>
+		<li role="presentation"><a href="#history" aria-controls="history"
+			role="tab" data-toggle="tab" target="_self">History</a></li>
 	</ul>
 
 	<!-- Tab panes -->
 	<div class="tab-content">
-	<div role="tabpanel" class="tab-pane active" id="open">
+	<div role="tabpanel" class="tab-pane active" id="active">
 		
 		<!-- html and angular function used to display open rides -->
-		<h3>Rides</h3>
-
 		<ul style = "list-style-type: none;">
-		<li ng-repeat="ride in openRides">
-
+		
+		<li ng-if="activeRides.length == 0">
+			No active rides
+		</li>
+		
+		<li ng-repeat="ride in activeRides">
+		
 		Time: {{ride.availRide.time}}<br>
 		Pick up at: {{ride.availRide.pickupPOI.poiName}}, {{ride.availRide.pickupPOI.addressLine1}} <br>
 		Drop off at: {{ride.availRide.dropoffPOI.poiName}}, {{ride.availRide.dropoffPOI.addressLine1}}<br>
@@ -36,12 +41,19 @@
 		
 	</div>
 	
-	<div role="tabpanel" class="tab-pane" id="past">
+	<div role="tabpanel" class="tab-pane" id="history">
 		
 		
-		<ul style = "list-style-type: none;">	
+		<ul style = "list-style-type: none;">
+		
+		<li ng-if="pastRides.length == 0">
+			No ride history
+		</li>
+		
+		
+			
 		<li ng-repeat="ride in pastRides">
-
+		
 		Time: {{ride.availRide.time}}<br>
 		Pick up at: {{ride.availRide.pickupPOI.poiName}}, {{ride.availRide.pickupPOI.addressLine1}} <br>
 		Drop off at: {{ride.availRide.dropoffPOI.poiName}}, {{ride.availRide.dropoffPOI.addressLine1}}<br>
