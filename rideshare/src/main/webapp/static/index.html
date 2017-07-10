@@ -9,35 +9,37 @@
 
 <!-- Chart.js -->
 <!-- This is a dependency for creating charts in angular -->
-<script type="text/javascript"
+<!--<script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"
-	crossorigin="anonymous"></script>
+	crossorigin="anonymous"></script>-->
 
 <!-- Angular -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-animate.js"></script>
 
 <!-- Angular UI Router -->
-<script type="text/javascript"
+<!--<script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.js"
+	crossorigin="anonymous"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"
+	integrity="sha256-FMocp8pp1WruAK6GtjNDtuGAALCt/dCsVtw7oSjvPX0="
 	crossorigin="anonymous"></script>
 
 <!-- Cookies  -->
-<script src="https://code.angularjs.org/1.5.7/angular-cookies.js"></script>
+<!--<script src="https://code.angularjs.org/1.5.7/angular-cookies.js"></script>-->
 
 <!-- alternate Cookies sourcce if above does not work -->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.7/angular-cookies.min.js"></script>-->
 
 <!-- Angular-Charts -->
-<script type="text/javascript"
+<!--<script type="text/javascript"
 	src="https://cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.js"></script>
 
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
 
 <link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
+	href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">-->
 
 <!-- Bootstrap -->
 <link rel="stylesheet"
@@ -60,8 +62,7 @@
 
 <!-- Insert css local files here -->
 <link rel="stylesheet" href="css/app.css">
-<link rel="shortcut icon"
-	href="images/favicon.ico">
+<link rel="shortcut icon" href="images/favicon.ico">
 
 <title>RideShare</title>
 </head>
@@ -72,6 +73,17 @@
 		<!-- states inserts here -->
 		<ui-view></ui-view>
 	</div>
+
+	<!--
+		Two possible options as far as ui routing and authentication are concerned:
+		1. put the "sign in with slack" button in index.html and separate the routing config from the
+			main angular module creation. put the routing config in a file that only gets loaded
+			after the user has signed in.
+		2. leave routing config where it is and move "sign in with slack" button to the slackLogin template.
+			include "/partials/slackLogin.html" in the antMatchers() for WebSecurityConfig and add resolvers 
+			for all the other routes that only allow authenticated users to access them.
+			alternatively use angular-permission to manage access to the other view routes
+	-->
 
 
 	<!-- Footer -->
@@ -109,6 +121,6 @@
 	
 
 	<!--Just include the main bundle built by webpack-->
-	<script src="./index.js"></script>
+	<script src="./app.bundle.js"></script>
 </body>
 </html>
