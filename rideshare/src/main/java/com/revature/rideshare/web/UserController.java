@@ -41,6 +41,7 @@ public class UserController{
         userService.removeUser(user);
     }
 
+    // TODO: get currently authenticated user
 	@RequestMapping("/me")
 	public User getCurrentUser() {
 		return userService.getUser(1);
