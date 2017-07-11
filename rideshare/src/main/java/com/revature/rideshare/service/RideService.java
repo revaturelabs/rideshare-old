@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.revature.rideshare.dao.AvailableRideRepository;
+import com.revature.rideshare.dao.CarRepository;
 import com.revature.rideshare.dao.RideRepository;
 import com.revature.rideshare.dao.RideRequestRepository;
 import com.revature.rideshare.domain.AvailableRide;
+import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.domain.RideRequest;
 import com.revature.rideshare.domain.User;
@@ -25,7 +27,10 @@ public class RideService {
 	
 	@Autowired
 	private AvailableRideRepository availRideRepo;
-	
+
+	@Autowired
+	private CarRepository carRepo;
+
 	public List<Ride> getAll() {
 			return rideRepo.findAll();
 	}
@@ -37,11 +42,37 @@ public class RideService {
 	}
 	
 	public boolean acceptRequest(long id, User u) {
-		// get request from id
+		// get request from id and satisfy it
+		RideRequest req = rideReqRepo.getOne(id);
+		req.setStatus(RideRequest.RequestStatus.SATISFIED);
+		rideReqRepo.saveAndFlush(req);
+		
 		// duplicate request as availRide
+		AvailableRide offer = new AvailableRide();
+		Car car = carRepo.findByUser(u);
+		offer.setCar(car);
+		offer.setSeatsAvailable((short)1);
+		offer.setPickupPOI(req.getPickupLocation());
+		offer.setDropoffPOI(req.getDropOffLocation());
+		offer.setOpen(false);
+		offer.setTime(req.getTime());
+		availRideRepo.saveAndFlush(offer);
+
 		// create ride obj from req and avail
-		// 		return result
-		return true;
+		Ride ride = new Ride();
+		ride.setAvailRide(offer);
+		ride.setRequest(req);
+		
+		try {
+			rideRepo.saveAndFlush(ride);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean cancelRequest(long id, User u) {
+		return false;
 	}
 
 	public List<RideRequest> getOpenRequests() {
@@ -95,6 +126,10 @@ public class RideService {
 
 	public boolean acceptOffer(long id, User u) {
 		return true;
+	}
+
+	public boolean cancelOffer(long id, User u) {
+		return false;
 	}
 
 	public List<AvailableRide> getOpenOffers() {

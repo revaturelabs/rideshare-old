@@ -54,10 +54,16 @@ public class RideController {
 		return rideService.getRequestsForUser(u);
 	}
 
-	@RequestMapping("/request/accept/{id}")
-	public @ResponseBody boolean acceptRequest(@PathVariable(value="id") long id) {
+	@GetMapping("/request/accept/{id}")
+	public boolean acceptRequest(@PathVariable(value="id") long id) {
 		User u = userService.getUser(1);
 		return rideService.acceptRequest(id, u);
+	}
+    
+	@GetMapping("/request/cancel/{id}")
+	public boolean cancelRequest(@PathVariable(value="id") long id) {
+		User u = userService.getUser(1);
+		return rideService.cancelRequest(id, u);
 	}
     
     @PostMapping("/request/add")
@@ -101,10 +107,16 @@ public class RideController {
         rideService.addOffer(offer);
     }
 
-	@RequestMapping("/offer/accept/{id}")
-	public @ResponseBody boolean acceptOffer(@PathVariable(value="id") long id) {
+	@GetMapping("/offer/accept/{id}")
+	public boolean acceptOffer(@PathVariable(value="id") long id) {
 		User u = userService.getUser(1);
 		return rideService.acceptOffer(id, u);
+	}
+    
+	@GetMapping("/offer/cancel/{id}")
+	public boolean cancelOffer(@PathVariable(value="id") long id) {
+		User u = userService.getUser(1);
+		return rideService.cancelOffer(id, u);
 	}
     
 	@GetMapping("/offer/open")
