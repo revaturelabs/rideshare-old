@@ -28,7 +28,7 @@ public class CarController {
 	 @GetMapping
 	    public List<Car> getAll(){
 	        return carService.getAll();
-	    }
+	 }
 	
 	@PostMapping
 	public boolean addCar(@RequestBody Car c, Authentication authentication){
