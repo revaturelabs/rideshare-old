@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.rideshare.domain.AvailableRide;
@@ -77,7 +77,8 @@ public class RideController {
 	}
 
 	@GetMapping("/request/active")
-	public List<Ride> getActiveRequestsForCurrentUser(Principal principal) {
+	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name="token") String token) {
+//		String userJson = JWT.decode(token).getClaim("user").asString();
 //		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
 //		User u = (User) principal;
 		User u = userService.getUser(1);

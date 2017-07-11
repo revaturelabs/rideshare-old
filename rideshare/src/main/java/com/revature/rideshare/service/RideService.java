@@ -14,6 +14,7 @@ import com.revature.rideshare.domain.AvailableRide;
 import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.domain.RideRequest;
+import com.revature.rideshare.domain.RideRequest.RequestStatus;
 import com.revature.rideshare.domain.User;
 
 @Component("rideService")
@@ -125,7 +126,38 @@ public class RideService {
 	}
 
 	public boolean acceptOffer(long id, User u) {
-		return true;
+		// get request from id and satisfy it
+		AvailableRide offer = availRideRepo.getOne(id);
+
+		// if car is full set open to false
+		Long inRide = rideRepo.countByAvailRide(offer) + 1;
+		if (offer.getSeatsAvailable() <= inRide) {
+			offer.setOpen(false);
+		}
+
+		availRideRepo.saveAndFlush(offer);
+		
+		// duplicate offer as request
+		RideRequest req = new RideRequest();
+		req.setUser(u);
+		req.setPickupLocation(offer.getPickupPOI());
+		req.setDropOffLocation(offer.getDropoffPOI());
+		req.setTime(offer.getTime());
+		req.setStatus(RequestStatus.SATISFIED);
+		rideReqRepo.saveAndFlush(req);
+
+
+		// create ride obj from req and avail
+		Ride ride = new Ride();
+		ride.setAvailRide(offer);
+		ride.setRequest(req);
+		
+		try {
+			rideRepo.saveAndFlush(ride);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public boolean cancelOffer(long id, User u) {
