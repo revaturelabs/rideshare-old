@@ -1,21 +1,18 @@
 export let slackLoginController = function($scope, $http, $state) {
-  $http.get("/auth/current")
-    .then(function(res) {
-      $scope.authenticated = true;
-    })
-    .catch(function() {
-      $scope.user = "N/A";
-      $scope.authenticated = false;
-    });
-  $scope.logout = function() {
-    $http.post('/logout', {})
-      .then(function() {
-        $scope.authenticated = false;
-        $location.path("/");
+  $scope.checkAuth = function() {
+    $http.get("/auth/check")
+      .then(function(res) {
+        console.log(res);
+        if (res.data !== null && res.data === true) {
+          $scope.authenticated = true;
+          $state.go('passenger');
+        } else {
+          $scope.authenticated = false;
+        }
       })
-      .catch(function(data) {
-        console.log("Logout failed")
+      .catch(function() {
         $scope.authenticated = false;
       });
-  };
+  }
+  $scope.checkAuth();
 }
