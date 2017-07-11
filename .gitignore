@@ -71,3 +71,5 @@ Servers*
 /rideshare/node_modules
 /rideshare/**/index.js
 /slack-testapp-tokens.txt
+/rideshare/src/main/webapp/static/app.bundle.js
+/rideshare/src/main/webapp/static/main.bundle.js
