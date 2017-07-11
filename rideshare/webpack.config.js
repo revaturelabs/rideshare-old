@@ -16,7 +16,6 @@ module.exports = (env = {}) => {
       modules: [ './node_modules' ]
     },
     entry: {
-      main: [ './main.js' ],
       app: [ './app.js' ]
     },
     output: {
