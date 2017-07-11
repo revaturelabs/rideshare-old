@@ -30,7 +30,6 @@ public class RideService {
 			return rideRepo.findAll();
 	}
 	
-	
 	// REQUESTS
 	public void addRequest(RideRequest req) {
 		rideReqRepo.saveAndFlush(req);
@@ -82,9 +81,6 @@ public class RideService {
 		return completedRides;
 	}
 
-	
-	
-	// OFFERS
 	public List<AvailableRide> getOffersForUser(User u) {
 		return availRideRepo.findByCarUser(u);
 	}

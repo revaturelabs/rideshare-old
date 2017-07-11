@@ -19,6 +19,14 @@ public class Application extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+
+//		http//.requiresChannel().antMatchers("/**").requiresSecure()
+//			.antMatcher("/**")
+//			.authorizeRequests()
+//				.antMatchers("/login")
+//				.permitAll()
+//			.anyRequest()
+//				.authenticated();
 		http//.requiresChannel().antMatchers("/**").requiresSecure()
 			.antMatcher("/**")
 			.authorizeRequests()
@@ -28,6 +36,7 @@ public class Application extends WebSecurityConfigurerAdapter {
 				.authenticated()
 		           .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 	}
+	
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(Application.class, args);
