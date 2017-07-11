@@ -1,32 +1,45 @@
 package com.revature.rideshare.web;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.UserService;
 
 @RestController
+@RequestMapping("auth")
 public class AuthController {
+	
+	// TODO: start using an environment variable when this application is deployed
+//	@Value("#{systemEnvironment['RIDESHARE_JWT_SECRET']}")
+	private String jwtSecret = "Richie is obsessed with chickens!";
 	
 	private String slackAppId = "184219023015.209820937091";
 	private String slackAppSecret = "f69b998afcc9b1043adfa2ffdab49308";
 	private String slackAppToken = "xER6r1Zrr0nxUBdSz7Fyq5UU";
-	private String slackAppTeam = "";
+	private String slackAppTeamId = "T5E6F0P0F"; // for 1705may15java
 	
 	@Autowired
 	UserService userService;
@@ -35,37 +48,79 @@ public class AuthController {
 		this.userService = userService;
 	}
 	
-	@RequestMapping("/auth/check")
+	@RequestMapping("/check")
 	public Boolean isAuthenticated(Principal principal) {
 		return principal != null;
 	}
 	
-	@RequestMapping("/auth/current")
-	public User getCurrentUser(Principal principal) {
-		ObjectMapper mapper = new ObjectMapper();
-		System.out.println(principal);
-		System.out.println(principal.getName());
-		String principalName = principal.getName();
-		try {
-			JsonNode root = mapper.readTree(principal.getName());
-			String fullname = root.path("name").asText();
-			String slackId = root.path("id").asText();
-			User u = userService.getUserBySlackId(slackId);
-		} catch (IOException ex) {
-			ex.printStackTrace();
+	/*
+	 * TODO: this method is currently a hackish quick fix, find a better solution
+	 * NOTE: slack user IDs are only unique within a specific team, but team IDs are unique across all of slack
+	 */
+	@RequestMapping("/current")
+	public User getCurrentUser(OAuth2Authentication authentication, HttpServletRequest request) {	
+		String[] nameTokens = authentication.getName().split(", ");
+		String fullName = nameTokens[0].substring(6);
+		System.out.println(fullName);
+		String slackId = nameTokens[1].substring(3);
+		System.out.println(slackId);
+		String email = nameTokens[2].substring(6, nameTokens[2].length() - 1);
+		System.out.println(email);
+		User u = userService.getUserBySlackId(slackId);
+		if (u == null) {
+			System.out.println("creating new user");
+			u = new User();
+			u.setSlackId(slackId);
+			u.setFullName(fullName);
+			u.setEmail(email);
+			u.setAdmin(false);
+			userService.addUser(u);
 		}
-		return null;
+		return u;
 	}
 	
-	@RequestMapping("auth/getCode")
+	@GetMapping("/token")
+	public String getJsonWebToken(OAuth2Authentication authentication) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			Algorithm alg = Algorithm.HMAC256(jwtSecret);
+			String[] nameTokens = authentication.getName().split(", ");
+			String fullName = nameTokens[0].substring(6);
+			String slackId = nameTokens[1].substring(3);
+			String email = nameTokens[2].substring(6, nameTokens[2].length() - 1);
+			User u = userService.getUserBySlackId(slackId);
+			if (u == null) {
+				u = new User();
+				u.setSlackId(slackId);
+				u.setFullName(fullName);
+				u.setEmail(email);
+				u.setAdmin(false);
+				userService.addUser(u);
+			}
+			String userJson;
+			userJson = mapper.writeValueAsString(u);
+			String token = JWT.create()
+					.withIssuer("Revature RideShare")
+					.withIssuedAt(new Date())
+					.withAudience("Revature RideShare AngularJS Client")
+					.withClaim("user", userJson)
+					.sign(alg);
+			System.out.println(token);
+			return token;
+		} catch (IllegalArgumentException | UnsupportedEncodingException | JsonProcessingException ex) {
+			ex.printStackTrace();
+			return "Failed to get authentication token.";
+		}
+	}
+	
+	@RequestMapping("/getCode")
 	public void loginUser(@RequestParam("code") String code, HttpServletResponse response) {
 		String destination = "/login?error=true";
 		RestTemplate restTemplate = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		String accessUrl = "https://slack.com/api/oauth.access?client_id=" + slackAppId
 				+ "&client_secret=" + slackAppSecret
-				+ "&code=" + code
-				+ "&team=" + slackAppTeam;
+				+ "&code=" + code;
 		ResponseEntity<String> accessResponse = restTemplate.getForEntity(accessUrl, String.class);
 		try {
 			JsonNode root = mapper.readTree(accessResponse.getBody());
@@ -99,6 +154,10 @@ public class AuthController {
 				e1.printStackTrace();
 			}
 		}
+	}
+	
+	private User removeSensitiveInformation(User u) {
+		return null;
 	}
 	
 }
