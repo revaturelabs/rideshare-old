@@ -13,4 +13,13 @@ export let passengerController = function($scope, $http, $state, $location){
       	self.authenticated = false;
 			});
   };
+	$scope.getToken = function() {
+		$http.get('auth/token')
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((res) => {
+				console.log(res);
+			})
+	}
 };
