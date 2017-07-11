@@ -1,5 +1,8 @@
 package com.revature.rideshare.web;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,23 +39,25 @@ public class SlackController {
 	// REQUESTS
     @PostMapping("/request/add")
     public void addRequest(@RequestParam(name="user_id") String userId, @RequestParam(name="command") String command, @RequestParam(name="text") String text){
-        // /request MM/DD tt:tt "pickup" "dropoff"
+        // /request YYYY/MM/DD tt:tt pickupid dropoffid
     	User u = userService.getUserBySlackId(userId);
     	RideRequest request = new RideRequest();
+    	//Split the input by space
     	String delim = " ";
-    	String[] tokens = text.split(delim); 
+    	String[] tokens = text.split(delim);
+    	//Split the variables for the LocalDateTime Object
+    	String[] dateTokens = tokens[0].split("/");
+    	String[] timeTokens = tokens[1].split(":");
+    	LocalDateTime rideDate = LocalDateTime.of(Integer.parseInt(dateTokens[0]),Integer.parseInt(dateTokens[1]),Integer.parseInt(dateTokens[2]),Integer.parseInt(timeTokens[0]),Integer.parseInt(timeTokens[1]));
     	int pickupLocationId = Integer.parseInt(tokens[2]);
     	int dropoffLocationId = Integer.parseInt(tokens[3]);
-    	//PointOfInterest pickupLocation = poiService.
-    	//PointOfInterest dropoffLocation = poiService.
+    	PointOfInterest pickupLocation = poiService.getPoi(pickupLocationId);
+    	PointOfInterest dropoffLocation = poiService.getPoi(dropoffLocationId);
     
-    	
-//    	try{
-//    		
-//    	}catch(IOException e){
-//    		e.printStackTrace();
-//    	}
     	request.setUser(u);
+    	request.setPickupLocation(pickupLocation);
+    	request.setDropOffLocation(dropoffLocation);
+    	//request.setTime(rideDate);
 
     	
     	rideService.addRequest(request);
