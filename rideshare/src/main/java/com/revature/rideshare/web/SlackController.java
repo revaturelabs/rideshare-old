@@ -42,7 +42,9 @@ public class SlackController {
     	String delim = " ";
     	String[] tokens = text.split(delim); 
     	int pickupLocationId = Integer.parseInt(tokens[2]);
+    	int dropoffLocationId = Integer.parseInt(tokens[3]);
     	//PointOfInterest pickupLocation = poiService.
+    	//PointOfInterest dropoffLocation = poiService.
     
     	
 //    	try{
