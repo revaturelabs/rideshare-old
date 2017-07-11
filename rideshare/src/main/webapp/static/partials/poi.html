@@ -1,17 +1,17 @@
 <!--add new poi-->
 <div class="container">
-    <input type="text" id="poiName" ng-model="poiName" placeholder="Point of Interest Name" required>
-    <input type="text" id="poiAddress1" ng-model="poiAddressLine1" placeholder="Address Line" required>
-    <input type="text" id="poiAddress2" ng-model="poiAddressLine2" placeholder="Address Line 2">
-    <input type="text" id="poiCity" ng-model="poiCity" placeholder="City" required>
-    <input type="text" id="poiState" ng-model="poiState" placeholder="State" required>
+    <input type="text" id="poiName" ng-model="poi.poiName" placeholder="Point of Interest Name" required>
+    <input type="text" id="poiAddress1" ng-model="poi.poiAddressLine1" placeholder="Address Line" required>
+    <input type="text" id="poiAddress2" ng-model="poi.poiAddressLine2" value="" placeholder="Address Line 2">
+    <input type="text" id="poiCity" ng-model="poi.poiCity" placeholder="City" required>
+    <input type="text" id="poiState" ng-model="poi.poiState" placeholder="State" required>
     <!--not currently doing anything to check state abbreviations atm-->
-    <input type="text" id="poiZipcode" ng-model="poiZipCode" placeholder="Zip Code" required>
+    <input type="text" id="poiZipcode" ng-model="poi.poiZipCode" placeholder="Zip Code" required>
     <!--latitude/longitude taken when form address submitted-->
-    <input type="number" id="poiLat" ng-model="latitude" style="display:none">
-    <input type="number" id="poiLng" ng-model="longitude" style="display:none">
+    <input type="number" id="poiLat" ng-model="poi.latitude" style="display:none">
+    <input type="number" id="poiLng" ng-model="poi.longitude" style="display:none">
     Point of Interest Type
-    <select id="poiType">
+    <select id="poiType" ng-model="poi.poiType">
         <option value="office" selected>Office</option>
         <option value="housing">Housing</option>
         <option value="other">Other</option>
