@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.rideshare.domain.AvailableRide;
@@ -44,11 +46,6 @@ public class RideController {
 	}
 
 	// REQUESTS
-    @PostMapping("/request/add")
-    public void addRequest(@RequestBody RideRequest req){
-        rideService.addRequest(req);
-    }
-
 	@GetMapping("/request")
 	public List<RideRequest> getRequestsForCurrentUser(Principal principal) {
 //		User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
@@ -57,10 +54,21 @@ public class RideController {
 		return rideService.getRequestsForUser(u);
 	}
 
-//	@GetMapping("/request/open")
-//	public List<RideRequest> getOpenRequests() {
-//		return rideService.getOpenRequests();
-//	}
+	@RequestMapping("/request/accept/{id}")
+	public @ResponseBody boolean acceptRequest(@PathVariable(value="id") long id) {
+		User u = userService.getUser(1);
+		return rideService.acceptRequest(id, u);
+	}
+    
+    @PostMapping("/request/add")
+    public void addRequest(@RequestBody RideRequest req){
+        rideService.addRequest(req);
+    }
+
+	@GetMapping("/request/open")
+	public List<RideRequest> getOpenRequests() {
+		return rideService.getOpenRequests();
+	}
 
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(Principal principal) {
@@ -93,6 +101,12 @@ public class RideController {
         rideService.addOffer(offer);
     }
 
+	@RequestMapping("/offer/accept/{id}")
+	public @ResponseBody boolean acceptOffer(@PathVariable(value="id") long id) {
+		User u = userService.getUser(1);
+		return rideService.acceptOffer(id, u);
+	}
+    
 	@GetMapping("/offer/open")
 	public List<AvailableRide> getOpenOffers() {
 		return rideService.getOpenOffers();
