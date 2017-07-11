@@ -42,21 +42,30 @@ public class SlackController {
         // /request YYYY/MM/DD tt:tt pickupid dropoffid
     	User u = userService.getUserBySlackId(userId);
     	RideRequest request = new RideRequest();
-    	//Split the input by space
+    	//Split the input by a space
     	String delim = " ";
     	String[] tokens = text.split(delim);
     	//Split the variables for the LocalDateTime Object
     	String[] dateTokens = tokens[0].split("/");
     	String[] timeTokens = tokens[1].split(":");
+    	String checkPoi = tokens[2] + tokens[3];
+    	if(checkPoi.equalsIgnoreCase(("to work")) || tokens[2].equalsIgnoreCase("W")){
+    		request.setPickupLocation(u.getMainPOI());
+        	request.setDropOffLocation(u.getWorkPOI());
+    	}else if(checkPoi.equalsIgnoreCase("to home") || tokens[2].equalsIgnoreCase("H")){
+    		request.setPickupLocation(u.getWorkPOI());
+        	request.setDropOffLocation(u.getMainPOI());
+    	}else{
+    		int pickupLocationId = Integer.parseInt(tokens[2]);
+        	int dropoffLocationId = Integer.parseInt(tokens[3]);
+        	PointOfInterest pickupLocation = poiService.getPoi(pickupLocationId);
+        	PointOfInterest dropoffLocation = poiService.getPoi(dropoffLocationId);
+        	request.setPickupLocation(pickupLocation);
+        	request.setDropOffLocation(dropoffLocation);
+    	}
     	LocalDateTime rideDate = LocalDateTime.of(Integer.parseInt(dateTokens[0]),Integer.parseInt(dateTokens[1]),Integer.parseInt(dateTokens[2]),Integer.parseInt(timeTokens[0]),Integer.parseInt(timeTokens[1]));
-    	int pickupLocationId = Integer.parseInt(tokens[2]);
-    	int dropoffLocationId = Integer.parseInt(tokens[3]);
-    	PointOfInterest pickupLocation = poiService.getPoi(pickupLocationId);
-    	PointOfInterest dropoffLocation = poiService.getPoi(dropoffLocationId);
-    
+    	
     	request.setUser(u);
-    	request.setPickupLocation(pickupLocation);
-    	request.setDropOffLocation(dropoffLocation);
     	//request.setTime(rideDate);
 
     	
