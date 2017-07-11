@@ -17,6 +17,7 @@ export let passengerController = function($scope, $http, $state, $location){
 		$http.get('auth/token')
 			.then((res) => {
 				console.log(res);
+				console.log(res.headers('token'));
 			})
 			.catch((res) => {
 				console.log(res);

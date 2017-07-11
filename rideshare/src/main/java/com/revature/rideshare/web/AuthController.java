@@ -80,7 +80,7 @@ public class AuthController {
 	}
 	
 	@GetMapping("/token")
-	public String getJsonWebToken(OAuth2Authentication authentication) {
+	public User getJsonWebToken(OAuth2Authentication authentication, HttpServletResponse response) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			Algorithm alg = Algorithm.HMAC256(jwtSecret);
@@ -106,10 +106,12 @@ public class AuthController {
 					.withClaim("user", userJson)
 					.sign(alg);
 			System.out.println(token);
-			return token;
+			response.addHeader("token", token);
+			return u;
 		} catch (IllegalArgumentException | UnsupportedEncodingException | JsonProcessingException ex) {
 			ex.printStackTrace();
-			return "Failed to get authentication token.";
+			response.addHeader("token", null);
+			return null;
 		}
 	}
 	
