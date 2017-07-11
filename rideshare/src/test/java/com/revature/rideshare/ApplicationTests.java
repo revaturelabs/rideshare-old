@@ -1,4 +1,4 @@
-package com.revature.rideshare.data.jpa;
+package com.revature.rideshare;
 
 import org.junit.Before;
 import org.junit.Test;
