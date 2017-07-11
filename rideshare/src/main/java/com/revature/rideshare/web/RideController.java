@@ -52,8 +52,8 @@ public class RideController {
 	}
 
 	@PostMapping("/request/add")
-	public void addRequest(@RequestBody RideRequest req) {
-		rideService.addRequest(req);
+	public boolean addRequest(@RequestBody RideRequest req) {
+		return rideService.addRequest(req);
 	}
 
 	@GetMapping("/request/open")
@@ -81,8 +81,8 @@ public class RideController {
 	}
 
 	@PostMapping("/offer/add")
-	public void addOffer(@RequestBody AvailableRide offer) {
-		rideService.addOffer(offer);
+	public boolean addOffer(@RequestBody AvailableRide offer) {
+		return rideService.addOffer(offer);
 	}
 
 	@GetMapping("/offer/accept/{id}")

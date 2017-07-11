@@ -22,10 +22,10 @@ public class RideService {
 
 	@Autowired
 	private RideRepository rideRepo;
-	
+
 	@Autowired
 	private RideRequestRepository rideReqRepo;
-	
+
 	@Autowired
 	private AvailableRideRepository availRideRepo;
 
@@ -33,26 +33,26 @@ public class RideService {
 	private CarRepository carRepo;
 
 	public List<Ride> getAll() {
-			return rideRepo.findAll();
+		return rideRepo.findAll();
 	}
-	
-	
+
 	// REQUESTS
-	public void addRequest(RideRequest req) {
+	public boolean addRequest(RideRequest req) {
 		rideReqRepo.saveAndFlush(req);
+		return true; // TODO: return false on failure
 	}
-	
+
 	public boolean acceptRequest(long id, User u) {
 		// get request from id and satisfy it
 		RideRequest req = rideReqRepo.getOne(id);
 		req.setStatus(RideRequest.RequestStatus.SATISFIED);
 		rideReqRepo.saveAndFlush(req);
-		
+
 		// duplicate request as availRide
 		AvailableRide offer = new AvailableRide();
 		Car car = carRepo.findByUser(u);
 		offer.setCar(car);
-		offer.setSeatsAvailable((short)1);
+		offer.setSeatsAvailable((short) 1);
 		offer.setPickupPOI(req.getPickupLocation());
 		offer.setDropoffPOI(req.getDropOffLocation());
 		offer.setOpen(false);
@@ -63,7 +63,7 @@ public class RideService {
 		Ride ride = new Ride();
 		ride.setAvailRide(offer);
 		ride.setRequest(req);
-		
+
 		try {
 			rideRepo.saveAndFlush(ride);
 			return true;
@@ -71,11 +71,13 @@ public class RideService {
 			return false;
 		}
 	}
-	
+
+	// TODO: implement
 	public boolean cancelRequest(long id, User u) {
 		return false;
 	}
 
+	// TODO: implement
 	public List<RideRequest> getOpenRequests() {
 		return null;
 	}
@@ -87,38 +89,37 @@ public class RideService {
 	public List<Ride> getActiveRequestsForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> activeRides = new ArrayList<Ride>();
-		
+
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() == null) {
 				activeRides.add(r);
 			}
 		}
-		
+
 		return activeRides;
 	}
 
 	public List<Ride> getRequestHistoryForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> completedRides = new ArrayList<Ride>();
-		
+
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() != null) {
 				completedRides.add(r);
 			}
 		}
-		
+
 		return completedRides;
 	}
 
-	
-	
 	// OFFERS
 	public List<AvailableRide> getOffersForUser(User u) {
 		return availRideRepo.findByCarUser(u);
 	}
 
-	public void addOffer(AvailableRide offer) {
+	public boolean addOffer(AvailableRide offer) {
 		availRideRepo.saveAndFlush(offer);
+		return true; // TODO: return false on failure
 	}
 
 	public boolean acceptOffer(long id, User u) {
@@ -132,7 +133,7 @@ public class RideService {
 		}
 
 		availRideRepo.saveAndFlush(offer);
-		
+
 		// duplicate offer as request
 		RideRequest req = new RideRequest();
 		req.setUser(u);
@@ -142,12 +143,11 @@ public class RideService {
 		req.setStatus(RequestStatus.SATISFIED);
 		rideReqRepo.saveAndFlush(req);
 
-
 		// create ride obj from req and avail
 		Ride ride = new Ride();
 		ride.setAvailRide(offer);
 		ride.setRequest(req);
-		
+
 		try {
 			rideRepo.saveAndFlush(ride);
 			return true;
@@ -156,37 +156,39 @@ public class RideService {
 		}
 	}
 
+	// TODO: implement
 	public boolean cancelOffer(long id, User u) {
 		return false;
 	}
 
+	// TODO: implement
 	public List<AvailableRide> getOpenOffers() {
 		return null;
 	}
-	
+
 	public List<Ride> getActiveOffersForUser(User u) {
 		List<Ride> allRides = rideRepo.findByAvailRideCarUser(u);
 		List<Ride> activeRides = new ArrayList<Ride>();
-		
+
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() == null) {
 				activeRides.add(r);
 			}
 		}
-		
+
 		return activeRides;
 	}
 
 	public List<Ride> getOfferHistoryForUser(User u) {
 		List<Ride> allRides = rideRepo.findByAvailRideCarUser(u);
 		List<Ride> completedRides = new ArrayList<Ride>();
-		
+
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() != null) {
 				completedRides.add(r);
 			}
 		}
-		
+
 		return completedRides;
 	}
 }
