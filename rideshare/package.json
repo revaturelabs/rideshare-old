@@ -32,9 +32,11 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "angular": "^1.6.5",
     "@uirouter/angularjs": "^1.0.5",
-    "@uirouter/core": "^5.0.5"
+    "@uirouter/core": "^5.0.5",
+    "angular": "^1.6.5",
+    "angular-jwt": "^0.1.9",
+    "angular-permission": "^5.3.2"
   },
   "devDependencies": {
     "@uirouter/visualizer": "^4.0.0",
