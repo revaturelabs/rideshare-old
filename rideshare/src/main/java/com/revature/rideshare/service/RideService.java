@@ -32,16 +32,19 @@ public class RideService {
 	
 	
 	// REQUESTS
+	public void addRequest(RideRequest req) {
+		rideReqRepo.saveAndFlush(req);
+	}
+	
+	public boolean acceptRequest(long id, User u) {
+		// get request from id
+		// duplicate request as availRide
+		// create ride obj from req and avail
+		// 		return result
+		return true;
+	}
+
 	public List<RideRequest> getOpenRequests() {
-//		List<Ride> openRides = rideRepo.findAllByRequestNotNullAndAvailRideNull();
-//		List<RideRequest> openReqs = new ArrayList<RideRequest>();
-//		
-//		for (Ride r : openRides) {
-//			openReqs.add(r.getRequest());
-//		}
-//
-//		return openReqs;
-//		return rideReqRepo.findOpen();
 		return null;
 	}
 
@@ -86,16 +89,15 @@ public class RideService {
 		return availRideRepo.findByCarUser(u);
 	}
 
+	public void addOffer(AvailableRide offer) {
+		availRideRepo.saveAndFlush(offer);
+	}
+
+	public boolean acceptOffer(long id, User u) {
+		return true;
+	}
+
 	public List<AvailableRide> getOpenOffers() {
-//		List<Ride> openRides = rideRepo.findAllByAvailRideNotNullAndRequestNull();
-//		List<AvailableRide> openOffers = new ArrayList<AvailableRide>();
-//		
-//		for (Ride r : openRides) {
-//			openOffers.add(r.getAvailRide());
-//		}
-//
-//		return openOffers;
-//		return availRideRepo.findOpen();
 		return null;
 	}
 	
