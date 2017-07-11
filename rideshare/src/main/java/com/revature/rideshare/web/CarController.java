@@ -29,6 +29,15 @@ public class CarController {
 	    public List<Car> getAll(){
 	        return carService.getAll();
 	    }
+	 
+	 @GetMapping("/myCar")
+	 public Car getCar()
+	 {
+		 //User u = (User) ((PreAuthenticatedAuthenticationToken) authentication).getPrincipal();
+		 //User u = (User) principal;
+		 User u = userService.getUser(1);
+		 return carService.getCarForUser(u);
+	 }
 	
 	@PostMapping
 	public boolean addCar(@RequestBody Car c, Authentication authentication){
