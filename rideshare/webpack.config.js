@@ -15,10 +15,13 @@ module.exports = (env = {}) => {
     resolveLoader: {
       modules: [ './node_modules' ]
     },
-    entry: './app.js',
+    entry: {
+      main: [ './main.js' ],
+      app: [ './app.js' ]
+    },
     output: {
       path: path.join(__dirname, 'src', 'main', 'webapp', 'static'),
-      filename: 'index.js'
+      filename: '[name].bundle.js'
     },
     module: {
       rules: [

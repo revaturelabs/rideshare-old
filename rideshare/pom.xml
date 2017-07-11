@@ -14,7 +14,10 @@
 	<description>A ride sharing app for Revature employees.</description>
 	<version>0.0.1-SNAPSHOT</version>
 	
-	
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 	
 	
 	<dependencies>
@@ -54,7 +57,20 @@
 			<artifactId>ojdbc7</artifactId>
 			<version>12.1.0</version>
 		</dependency>
-
+		<!-- <dependency>
+    		<groupId>org.springframework.security</groupId>
+    		<artifactId>spring-security-jwt</artifactId>
+		</dependency> -->
+		<dependency>
+    		<groupId>com.auth0</groupId>
+    		<artifactId>java-jwt</artifactId>
+    		<version>3.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -83,8 +99,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-
-
-
 </project>
