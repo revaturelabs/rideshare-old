@@ -9,6 +9,7 @@ import { addCarController } from './js/controllers/addCar.controller.js';
 //var = function scope
 //const and let = block scope 
 
+// TODO: resolve view routing bugs related to authentication and logout
 
 const app = angular.module('app', ['ui.router', permission, uiPermission, 'angular-jwt']);
 
