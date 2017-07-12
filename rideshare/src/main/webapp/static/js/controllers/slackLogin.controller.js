@@ -15,4 +15,13 @@ export let slackLoginController = function($scope, $http, $state) {
       });
   }
   $scope.checkAuth();
+  
+  
+  $http.get("/auth/token")
+  	.then(function(res) {
+  		// put res (token) in localstorage
+		localStorage.setItem('RideShare_auth_token', res.headers('token'));
+  	});
+  
+  
 }
