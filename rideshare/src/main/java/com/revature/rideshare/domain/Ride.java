@@ -85,7 +85,6 @@ public class Ride implements Serializable{
 	public void setComplaint(String complaint) {
 		this.complaint = complaint;
 	}
-
 	@Override
 	public String toString() {
 		return "Ride [rideId=" + rideId + ", availRide=" + availRide + ", request=" + request + ", wasSuccessful="

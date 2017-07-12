@@ -124,7 +124,6 @@ public class Car implements Serializable  {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-
 	@Override
 	public String toString() {
 		return "Car [carId=" + carId + ", user=" + user + ", licensePlate=" + licensePlate + ", brand=" + brand

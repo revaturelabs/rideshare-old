@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import com.auth0.jwt.JWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name="USERS")
@@ -141,5 +143,18 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", fullName=" + fullName 
 				+ ", mainPOI=" + mainPOI + ", workPOI=" + workPOI + ", email=" + email + ", slackId=" + slackId + ", isAdmin=" + isAdmin + "]";
+	}
+
+	public static User getUserFromToken(String token) {
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			String userJson = JWT.decode(token).getClaim("user").asString();
+			return (User) mapper.readValue(userJson, User.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			return null;
+		}
 	}
 }

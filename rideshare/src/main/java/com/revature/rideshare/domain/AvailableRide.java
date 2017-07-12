@@ -1,7 +1,7 @@
 package com.revature.rideshare.domain;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Check;
 
@@ -41,6 +43,7 @@ public class AvailableRide implements Serializable, Comparable<AvailableRide>{
 	@Column(name="AVAILABLE_SEATS", nullable=false)
 	private short seatsAvailable;
 	
+	@Temporal(TemporalType.DATE)
 	@Column(name="TIME", nullable=false)
 	private Date time;
 	
@@ -140,5 +143,5 @@ public class AvailableRide implements Serializable, Comparable<AvailableRide>{
 				+ ", dropoffPOI=" + dropoffPOI + ", seatsAvailable=" + seatsAvailable + ", time=" + time + ", notes="
 				+ notes + "]";
 	}
-	
+
 }

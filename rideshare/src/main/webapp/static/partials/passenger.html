@@ -14,6 +14,13 @@
     srcset="https://platform.slack-edge.com/img/sign_in_with_slack.png 1x, 
             https://platform.slack-edge.com/img/sign_in_with_slack@2x.png 2x"/>
 </a>-->
+<div>
+  <button ng-click="getActiveRequests()" class="btn btn-primary">Active Requests</button>
+  <button ng-click="getRequestHistory()" class="btn btn-primary">Request History</button>
+</div>
+
+<div id="map" style="height: 400px;width: 600px;"></div>
+
 <script src="../js/googleMapAPI/markerclusterer.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_mhIdxsdRfwiAHVm8qPufCklQ0iMOt6A&callback=initMap"></script>
 <script>

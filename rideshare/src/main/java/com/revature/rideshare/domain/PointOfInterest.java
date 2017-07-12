@@ -149,7 +149,6 @@ public class PointOfInterest implements Serializable {
 	public void setType(PointOfInterestType type) {
 		this.type = type;
 	}
-
 	@Override
 	public String toString() {
 		return "PointOfInterest [poiId=" + poiId + ", poiName=" + poiName + ", addressLine1=" + addressLine1

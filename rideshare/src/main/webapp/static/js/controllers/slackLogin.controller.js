@@ -1,4 +1,5 @@
 export let slackLoginController = function($scope, $http, $state) {
+	
   $scope.checkAuth = function() {
     $http.get("/auth/check")
       .then(function(res) {
@@ -22,6 +23,4 @@ export let slackLoginController = function($scope, $http, $state) {
   		// put res (token) in localstorage
 		localStorage.setItem('RideShare_auth_token', res.headers('token'));
   	});
-  
-  
 }

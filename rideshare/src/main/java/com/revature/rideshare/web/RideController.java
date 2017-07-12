@@ -1,5 +1,4 @@
 package com.revature.rideshare.web;
-
 import java.security.Principal;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.AvailableRide;
@@ -35,8 +33,7 @@ public class RideController {
 	@GetMapping
 	public List<Ride> getAllRides() {
 		return rideService.getAll();
-	}
-	
+	}	
 
 	// TODO: move to util class
 	private User getUserFromToken(String token) {
@@ -52,8 +49,8 @@ public class RideController {
 	
 	// REQUESTS
 	@GetMapping("/request")
-	public List<RideRequest> getRequestsForCurrentUser(@RequestHeader(name="Authorization") String token) {
-		User u = getUserFromToken(token);
+	public List<RideRequest> getRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
 		return rideService.getRequestsForUser(u);
 	}
 
@@ -128,8 +125,9 @@ public class RideController {
 	}
 
 	@GetMapping("/offer/history")
-	public List<Ride> getOfferHistoryForCurrentUser(@RequestHeader(name="Authorization") String token) {
-		User u = getUserFromToken(token);
+
+	public List<Ride> getOfferHistoryForCurrentUser(@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
 		return rideService.getOfferHistoryForUser(u);
 	}
 }
