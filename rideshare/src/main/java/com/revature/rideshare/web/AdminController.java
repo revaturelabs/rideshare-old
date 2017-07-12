@@ -36,7 +36,7 @@ public class AdminController {
 	@Autowired
 	private PointOfInterestService poiService;
 	 
-	@GetMapping("/admin/cars")
+	@GetMapping("/cars")
     public List<Car> getAllCars(){
 	 	List<Car> cars = new ArrayList<Car>();
 	 	cars = carService.getAll();
@@ -44,39 +44,39 @@ public class AdminController {
 	 	return carService.getAll();
 	}
 	 
-	@GetMapping("/admin/users")
+	@GetMapping("/users")
 	public List<User> getAllUsers(){
 		return userService.getAll();
 	}
 	 
-	@PostMapping("/admin/updateStatus/{id}") 
+	@PostMapping("/updateStatus/{id}") 
 	public void updateStatus(@PathVariable(value="id") long id) {
 		User user = userService.getUser(id);
 		userService.updateUser(user);
 	}
 	 
-	@PostMapping("/admin/removeUser/{id}")
+	@PostMapping("/removeUser/{id}")
 	public void removeUser(@PathVariable(value="id") long id) {
 		User user = userService.getUser(id);
 		userService.removeUser(user);
 	}
 	 
-	@PostMapping("/admin/addPOI")
+	@PostMapping("/addPOI")
 	public void addPoi(@RequestBody PointOfInterest poi){
 		poiService.addPoi(poi);
 	}
 	 
-	@PostMapping("/admin/removePOI")
+	@PostMapping("/removePOI")
 	public void removePoi(@RequestBody PointOfInterest poi){
 		poiService.removePoi(poi);
 	}
 	
-	@GetMapping("/admin/activeRides")
+	@GetMapping("/activeRides")
 	public List<Ride> getAllActiveRides() {
 		return rideService.getAllActiveRides();
 	}
 	
-	@GetMapping("/admin/rideHistory")
+	@GetMapping("/rideHistory")
 	public List<Ride> getAllInactiveRides() {
 		return rideService.getAllInactiveRides();
 	}

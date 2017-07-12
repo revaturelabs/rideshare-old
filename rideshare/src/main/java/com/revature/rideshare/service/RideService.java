@@ -32,9 +32,6 @@ public class RideService {
 	@Autowired
 	private CarRepository carRepo;
 	
-	
-	
-	
 	public List<Ride> getAllActiveRides() {
 		return rideRepo.findByWasSuccessfulNull();
 	}
