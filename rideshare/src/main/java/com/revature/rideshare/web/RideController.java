@@ -79,8 +79,8 @@ public class RideController {
 
 	// OFFERS
 	@GetMapping("/offer")
-	public List<AvailableRide> getOffersForCurrentUser() {
-		User u = userService.getUser(50);
+	public List<AvailableRide> getOffersForCurrentUser(@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
 		return rideService.getOffersForUser(u);
 	}
 
@@ -98,7 +98,7 @@ public class RideController {
 
 	@GetMapping("/offer/cancel/{id}")
 	public boolean cancelOffer(@PathVariable(value = "id") long id,
-			@RequestHeader(name = "Authorization") String token) {
+		@RequestHeader(name = "Authorization") String token) {
 		User u = User.getUserFromToken(token);
 		return rideService.cancelOffer(id, u);
 	}
@@ -109,14 +109,14 @@ public class RideController {
 	}
 
 	@GetMapping("/offer/active")
-	public List<Ride> getActiveOffersForCurrentUser() {
-		 User u = userService.getUser(50);
+	public List<Ride> getActiveOffersForCurrentUser(@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
 		return rideService.getActiveOffersForUser(u);
 	}
 
 	@GetMapping("/offer/history")
-	public List<Ride> getOfferHistoryForCurrentUser() {
-		 User u = userService.getUser(50);
+	public List<Ride> getOfferHistoryForCurrentUser(@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
 		return rideService.getOfferHistoryForUser(u);
 	}
 }

@@ -1,6 +1,7 @@
 package com.revature.rideshare.service;
 
 import com.revature.rideshare.domain.Car;
+import com.revature.rideshare.domain.User;
 import java.util.List;
 
 public interface CarService {

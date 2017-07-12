@@ -72,6 +72,4 @@ export let driverController = function($scope, $http, $state){
 		console.log($scope.allPoi);
 	});
 	
-	
-	
-
+};
