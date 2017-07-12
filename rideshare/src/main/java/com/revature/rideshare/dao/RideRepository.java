@@ -20,4 +20,8 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 	List<Ride> findAllByAvailRideNotNullAndRequestNull();
 
 	Long countByAvailRide(AvailableRide a);
+
+	List<Ride> findByWasSuccessfulNull();
+
+	List<Ride> findByWasSuccessfulNotNull();
 }

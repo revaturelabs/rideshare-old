@@ -37,22 +37,22 @@ public class AdminController {
 	private PointOfInterestService poiService;
 	 
 	@GetMapping("/admin/cars")
-	    public List<Car> getAllCars(){
-		 	List<Car> cars = new ArrayList<Car>();
-		 	cars = carService.getAll();
-		 	System.out.println(cars);
-		 	return carService.getAll();
+    public List<Car> getAllCars(){
+	 	List<Car> cars = new ArrayList<Car>();
+	 	cars = carService.getAll();
+	 	System.out.println(cars);
+	 	return carService.getAll();
 	}
 	 
 	@GetMapping("/admin/users")
-		public List<User> getAllUsers(){
-			return userService.getAll();
+	public List<User> getAllUsers(){
+		return userService.getAll();
 	}
 	 
 	@PostMapping("/admin/updateStatus/{id}") 
-		public void updateStatus(@PathVariable(value="id") long id) {
-			User user = userService.getUser(id);
-			userService.updateUser(user);
+	public void updateStatus(@PathVariable(value="id") long id) {
+		User user = userService.getUser(id);
+		userService.updateUser(user);
 	}
 	 
 	@PostMapping("/admin/removeUser/{id}")
@@ -69,5 +69,15 @@ public class AdminController {
 	@PostMapping("/admin/removePOI")
 	public void removePoi(@RequestBody PointOfInterest poi){
 		poiService.removePoi(poi);
+	}
+	
+	@GetMapping("/admin/activeRides")
+	public List<Ride> getAllActiveRides() {
+		return rideService.getAllActiveRides();
+	}
+	
+	@GetMapping("/admin/rideHistory")
+	public List<Ride> getAllInactiveRides() {
+		return rideService.getAllInactiveRides();
 	}
 }
