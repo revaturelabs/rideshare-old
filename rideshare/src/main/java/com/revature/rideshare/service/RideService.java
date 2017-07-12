@@ -1,7 +1,5 @@
 package com.revature.rideshare.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -86,80 +84,13 @@ public class RideService {
 		return false;
 	}
 
-	public List<RideRequest> getOpenRequests() {
-//		List<Ride> openRides = rideRepo.findAllByRequestNotNullAndAvailRideNull();
-//		List<RideRequest> openReqs = new ArrayList<RideRequest>();
-//		
-//		
-//		for (Ride r : openRides) {
-//			openReqs.add(r.getRequest());
-//		}
-		
-		/*Between these block comments is all test data, use above code when DB is usable.*/
-		List<RideRequest> openReqs = new ArrayList<RideRequest>();
-		List<PointOfInterest> pois = poiService.getAll();
-		
-//		Date time = new Date(1499691600000L);
-//		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		
-		String now = "2016-11-09 10:30";
-		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime time = LocalDateTime.parse(now, format);
-		
-		RideRequest req1 = new RideRequest();
-		req1.setTime(time);
-		req1.setRequestId(1);
-		req1.setDropOffLocation(pois.get(1));
+	public List<RideRequest> getOpenRequests(int poiId) {
+		RideRequest rr = new RideRequest();
+		List<RideRequest> openReqs = rideReqRepo.findByStatus(RequestStatus.OPEN);
 
-		now = "2016-11-09 08:20";
-		time = LocalDateTime.parse(now,format);
-		RideRequest req2 = new RideRequest();
-		req2.setTime(time);
-		req2.setRequestId(2);
-		req2.setDropOffLocation(pois.get(1));
-		
-		now = "2016-11-09 09:00";
-		time = LocalDateTime.parse(now,format);
-		RideRequest req3 = new RideRequest();
-		req3.setTime(time);
-		req3.setRequestId(3);
-		req3.setDropOffLocation(pois.get(1));
-		
-		now = "2016-11-09 10:00";
-		time = LocalDateTime.parse(now,format);
-		RideRequest req4 = new RideRequest();
-		req4.setTime(time);
-		req4.setRequestId(4);
-		req4.setDropOffLocation(pois.get(4));
-		
-		now = "2016-11-09 09:00";
-		time = LocalDateTime.parse(now,format);
-		RideRequest req5 = new RideRequest();
-		req5.setTime(time);
-		req5.setRequestId(5);
-		req5.setDropOffLocation(pois.get(4));
-		
-		now = "2016-11-09 08:40";
-		time = LocalDateTime.parse(now,format);
-		RideRequest req6 = new RideRequest();
-		req6.setTime(time);
-		req6.setRequestId(6);
-		req6.setDropOffLocation(pois.get(4));
-		
-		openReqs.add(req1);
-		openReqs.add(req2);
-		openReqs.add(req3);
-		openReqs.add(req4);
-		openReqs.add(req5);
-		openReqs.add(req6);
-		/*Between these block comments is all test data, use above code when DB is usable.*/
-		
 		Collections.sort(openReqs);
 		
-		for(RideRequest r : openReqs){
-			System.out.println(r.toString());
-		}
-		PointOfInterest temp = poiService.getAll().get(1);
+		PointOfInterest temp = poiService.getAll().get((int) poiId);
 		sortRequestsByPOI(openReqs, temp);
 			
 		return openReqs;
@@ -242,14 +173,13 @@ public class RideService {
 		return false;
 	}
 
-	public List<AvailableRide> getOpenOffers() {
-		List<AvailableRide> openOffers = availRideRepo.findByIsOpenTrue();
-				
+	public List<AvailableRide> getOpenOffers(int poiId) {
+		List<AvailableRide> openOffers = availRideRepo.findAllByIsOpenTrue();
+		
 		Collections.sort(openOffers);
 		
-		for(AvailableRide r : openOffers){
-			System.out.println(r.toString());
-		}
+		PointOfInterest temp = poiService.getAll().get(poiId);
+		sortAvailableByPOI(openOffers, temp);
 		
 		return openOffers;
 	}

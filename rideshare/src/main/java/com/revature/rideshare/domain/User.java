@@ -142,6 +142,4 @@ public class User implements Serializable {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", fullName=" + fullName 
 				+ ", mainPOI=" + mainPOI + ", workPOI=" + workPOI + ", email=" + email + ", slackId=" + slackId + ", isAdmin=" + isAdmin + "]";
 	}
-	
-	
 }

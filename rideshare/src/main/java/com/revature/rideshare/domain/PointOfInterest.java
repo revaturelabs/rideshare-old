@@ -149,7 +149,11 @@ public class PointOfInterest implements Serializable {
 	public void setType(PointOfInterestType type) {
 		this.type = type;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "PointOfInterest [poiId=" + poiId + ", poiName=" + poiName + ", addressLine1=" + addressLine1
+				+ ", addressLine2=" + addressLine2 + ", city=" + city + ", state=" + state + ", zipCode=" + zipCode
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", type=" + type + "]";
+	}
 }

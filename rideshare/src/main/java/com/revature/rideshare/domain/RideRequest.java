@@ -1,7 +1,7 @@
 package com.revature.rideshare.domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -38,7 +38,7 @@ public class RideRequest implements Serializable, Comparable<RideRequest>{
 	private PointOfInterest dropOffLocation;
 	
 	@Column(name="TIME", nullable=false)
-	private LocalDateTime time;
+	private Date time;
 	
 	@Column(name="NOTES")
 	private String notes;
@@ -56,7 +56,7 @@ public class RideRequest implements Serializable, Comparable<RideRequest>{
 	public RideRequest(){}
 
 	public RideRequest(long requestId, User user, PointOfInterest pickupLocation, PointOfInterest dropOffLocation,
-			LocalDateTime time, String notes, RequestStatus status) {
+			Date time, String notes, RequestStatus status) {
 		super();
 		this.requestId = requestId;
 		this.user = user;
@@ -99,11 +99,11 @@ public class RideRequest implements Serializable, Comparable<RideRequest>{
 		this.dropOffLocation = dropOffLocation;
 	}
 
-	public LocalDateTime getTime() {
+	public Date getTime() {
 		return time;
 	}
 
-	public void setTime(LocalDateTime time) {
+	public void setTime(Date time) {
 		this.time = time;
 	}
 
@@ -132,5 +132,4 @@ public class RideRequest implements Serializable, Comparable<RideRequest>{
 		return "RideRequest [requestId=" + requestId + ", user=" + user + ", pickupLocation=" + pickupLocation
 				+ ", dropOffLocation=" + dropOffLocation + ", time=" + time + ", notes=" + notes + "]";
 	}
-	
 }

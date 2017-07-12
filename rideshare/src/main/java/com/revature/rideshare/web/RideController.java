@@ -74,9 +74,9 @@ public class RideController {
         rideService.addRequest(req);
     }
 
-	@GetMapping("/request/open")
-	public List<RideRequest> getOpenRequests() {
-		return rideService.getOpenRequests();
+	@GetMapping("/request/open/{id}")
+	public List<RideRequest> getOpenRequests(@PathVariable(value="id") int id) {
+		return rideService.getOpenRequests(id);
 	}
 
 	@GetMapping("/request/active")
@@ -116,9 +116,9 @@ public class RideController {
 		return rideService.cancelOffer(id, u);
 	}
     
-	@GetMapping("/offer/open")
-	public List<AvailableRide> getOpenOffers() {
-		return rideService.getOpenOffers();
+	@GetMapping("/offer/open/{id}")
+	public List<AvailableRide> getOpenOffers(@PathVariable(value="id") int id) {
+		return rideService.getOpenOffers(id);
 	}
 
 	@GetMapping("/offer/active")

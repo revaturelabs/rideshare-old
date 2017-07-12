@@ -12,5 +12,5 @@ public interface AvailableRideRepository extends JpaRepository<AvailableRide, Lo
 
 	List<AvailableRide> findByIsOpenFalse();
 	
-	List<AvailableRide> findByIsOpenTrue();
+	List<AvailableRide> findAllByIsOpenTrue();
 }
