@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +29,13 @@ public class CarController {
 	 @GetMapping
 	    public List<Car> getAll(){
 	        return carService.getAll();
+	    }
+	 
+	 @GetMapping("/myCar")
+	 public Car getCar()
+	 {
+		 User u = userService.getUser(50);
+		 return carService.getCarForUser(u);
 	 }
 	
 	@PostMapping
@@ -53,3 +61,4 @@ public class CarController {
         carService.updateCar(car);
     }
 }
+

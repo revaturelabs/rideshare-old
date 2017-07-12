@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.rideshare.dao.CarRepository;
 import com.revature.rideshare.domain.Car;
+import com.revature.rideshare.domain.User;
 
 import java.util.List;
 
@@ -25,6 +26,11 @@ public class CarServiceImpl implements CarService {
 	@Override
 	public List<Car> getAll(){
 		return carRepo.findAll();
+	}
+	
+	public Car getCarForUser (User u)
+	{
+		return carRepo.findByUser(u);
 	}
 
 	@Override

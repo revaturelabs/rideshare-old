@@ -16,6 +16,7 @@ import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.domain.RideRequest;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.RideService;
+import com.revature.rideshare.service.UserService;
 
 @RestController
 @RequestMapping("ride")
@@ -23,6 +24,9 @@ public class RideController {
 
 	@Autowired
 	private RideService rideService;
+	
+	@Autowired
+	private UserService userService;
 
 	// ALL RIDES
 	@GetMapping
@@ -94,7 +98,7 @@ public class RideController {
 
 	@GetMapping("/offer/cancel/{id}")
 	public boolean cancelOffer(@PathVariable(value = "id") long id,
-			@RequestHeader(name = "Authorization") String token) {
+		@RequestHeader(name = "Authorization") String token) {
 		User u = User.getUserFromToken(token);
 		return rideService.cancelOffer(id, u);
 	}
