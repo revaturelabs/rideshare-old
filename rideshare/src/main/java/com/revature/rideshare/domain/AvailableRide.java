@@ -21,7 +21,7 @@ import org.hibernate.annotations.Check;
 @Entity
 @Table(name="AVAILABLE_RIDES")
 @Check(constraints="AVAILABLE_SEATS >= 0")
-public class AvailableRide implements Serializable{
+public class AvailableRide implements Serializable, Comparable<AvailableRide>{
 	
 	private static final long serialVersionUID = -5753230302496991697L;
 
@@ -131,4 +131,17 @@ public class AvailableRide implements Serializable{
 	public void setOpen(boolean isOpen) {
 		this.isOpen = isOpen;
 	}
+
+	@Override
+	public int compareTo(AvailableRide ar) {
+		return this.getTime().compareTo(ar.getTime());
+	}
+
+	@Override
+	public String toString() {
+		return "AvailableRide [availRideId=" + availRideId + ", car=" + car + ", pickupPOI=" + pickupPOI
+				+ ", dropoffPOI=" + dropoffPOI + ", seatsAvailable=" + seatsAvailable + ", time=" + time + ", notes="
+				+ notes + "]";
+	}
+
 }

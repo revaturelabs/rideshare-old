@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -145,7 +144,7 @@ public class User implements Serializable {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", fullName=" + fullName 
 				+ ", mainPOI=" + mainPOI + ", workPOI=" + workPOI + ", email=" + email + ", slackId=" + slackId + ", isAdmin=" + isAdmin + "]";
 	}
-	
+
 	public static User getUserFromToken(String token) {
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -159,7 +158,4 @@ public class User implements Serializable {
 			return null;
 		}
 	}
-	
-	
-	
 }

@@ -46,8 +46,8 @@ public class PointOfInterestType implements Serializable {
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
 	}
-	
-	
-	
-	
+	@Override
+	public String toString() {
+		return "PointOfInterestType [typeId=" + typeId + ", typeName=" + typeName + "]";
+	}
 }

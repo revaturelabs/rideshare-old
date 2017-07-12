@@ -13,3 +13,4 @@ public interface RideRequestRepository extends JpaRepository<RideRequest, Long> 
 
 	List<RideRequest> findByStatus(RequestStatus s);
 }
+

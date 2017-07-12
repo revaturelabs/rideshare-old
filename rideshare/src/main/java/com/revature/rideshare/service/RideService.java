@@ -1,7 +1,12 @@
 package com.revature.rideshare.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,6 +17,7 @@ import com.revature.rideshare.dao.RideRepository;
 import com.revature.rideshare.dao.RideRequestRepository;
 import com.revature.rideshare.domain.AvailableRide;
 import com.revature.rideshare.domain.Car;
+import com.revature.rideshare.domain.PointOfInterest;
 import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.domain.RideRequest;
 import com.revature.rideshare.domain.RideRequest.RequestStatus;
@@ -30,8 +36,17 @@ public class RideService {
 	private AvailableRideRepository availRideRepo;
 
 	@Autowired
+	private PointOfInterestService poiService;
+	
+	@Autowired
 	private CarRepository carRepo;
-
+	
+	// REQUESTS
+	public boolean addRequest(RideRequest req) {
+		rideReqRepo.saveAndFlush(req);
+		return true; // TODO: return false on failure
+	}
+	
 	public List<Ride> getAll() {
 		return rideRepo.findAll();
 	}
@@ -43,13 +58,7 @@ public class RideService {
 	public List<Ride> getAllInactiveRides() {
 		return rideRepo.findByWasSuccessfulNotNull();
 	}
-
-	// REQUESTS
-	public boolean addRequest(RideRequest req) {
-		rideReqRepo.saveAndFlush(req);
-		return true; // TODO: return false on failure
-	}
-
+	
 	public boolean acceptRequest(long id, User u) {
 		// get request from id and satisfy it
 		RideRequest req = rideReqRepo.getOne(id);
@@ -79,15 +88,21 @@ public class RideService {
 			return false;
 		}
 	}
-
 	// TODO: implement
 	public boolean cancelRequest(long id, User u) {
 		return false;
 	}
 
-	// TODO: implement
-	public List<RideRequest> getOpenRequests() {
-		return null;
+	public List<RideRequest> getOpenRequests(int poiId) {
+		RideRequest rr = new RideRequest();
+		List<RideRequest> openReqs = rideReqRepo.findByStatus(RequestStatus.OPEN);
+
+		Collections.sort(openReqs);
+		
+		PointOfInterest temp = poiService.getAll().get((int) poiId);
+		sortRequestsByPOI(openReqs, temp);
+			
+		return openReqs;
 	}
 
 	public List<RideRequest> getRequestsForUser(User u) {
@@ -97,26 +112,22 @@ public class RideService {
 	public List<Ride> getActiveRequestsForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> activeRides = new ArrayList<Ride>();
-
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() == null) {
 				activeRides.add(r);
 			}
 		}
-
 		return activeRides;
 	}
 
 	public List<Ride> getRequestHistoryForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> completedRides = new ArrayList<Ride>();
-
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() != null) {
 				completedRides.add(r);
 			}
 		}
-
 		return completedRides;
 	}
 
@@ -124,6 +135,7 @@ public class RideService {
 	public List<AvailableRide> getOffersForUser(User u) {
 		return availRideRepo.findByCarUser(u);
 	}
+
 
 	public boolean addOffer(AvailableRide offer) {
 		availRideRepo.saveAndFlush(offer);
@@ -141,7 +153,7 @@ public class RideService {
 		}
 
 		availRideRepo.saveAndFlush(offer);
-
+		
 		// duplicate offer as request
 		RideRequest req = new RideRequest();
 		req.setUser(u);
@@ -169,9 +181,15 @@ public class RideService {
 		return false;
 	}
 
-	// TODO: implement
-	public List<AvailableRide> getOpenOffers() {
-		return null;
+	public List<AvailableRide> getOpenOffers(int poiId) {
+		List<AvailableRide> openOffers = availRideRepo.findAllByIsOpenTrue();
+		
+		Collections.sort(openOffers);
+		
+		PointOfInterest temp = poiService.getAll().get(poiId);
+		sortAvailableByPOI(openOffers, temp);
+		
+		return openOffers;
 	}
 
 	public List<Ride> getActiveOffersForUser(User u) {
@@ -183,7 +201,6 @@ public class RideService {
 				activeRides.add(r);
 			}
 		}
-
 		return activeRides;
 	}
 
@@ -196,7 +213,103 @@ public class RideService {
 				completedRides.add(r);
 			}
 		}
-
+		
 		return completedRides;
+	}
+	
+	/**
+	 * Returns a list of RideRequest Objects in order from closest destination point to farthest away.
+	 *
+	 * @param  List<RideRequest> reqs  a list of all open RideRequests
+	 * @param  PointOfInterest mpoi  the user's main POI, used as a starting(pickup) point for all calculations.
+	 * @return list of PointOfInterest objects.
+	 */
+	public List<RideRequest> sortRequestsByPOI(List<RideRequest> reqs, PointOfInterest poi) {
+		List<RideRequest> temp = new ArrayList<RideRequest>();
+		List<PointOfInterest> pois = poiService.getAll();
+		
+		int[] poisByDistance = calculateDistance(pois, poi);	
+		System.out.println(reqs.get(1).toString());
+		for(int i : poisByDistance){
+			for(RideRequest rq : reqs){
+				System.out.println("POI IDs: " + i + " --> dropOff ID: " + rq.getDropOffLocation().getPoiId());
+				if(rq.getDropOffLocation().getPoiId() == i) {
+					temp.add(rq);
+				}
+			}
+		}
+		
+		System.out.println("----------LIST OF ALL REQUESTS SORTED BY POI AND TIME! :D?");
+		for(RideRequest rq : temp){
+			System.out.println(rq.toString());
+		}
+		return temp;
+	}
+	
+	/**
+	 * Returns a list of RideRequest Objects in order from closest destination point to farthest away.
+	 *
+	 * @param  List<RideRequest> reqs  a list of all open RideRequests
+	 * @param  PointOfInterest mpoi  the user's main POI, used as a starting(pickup) point for all calculations.
+	 * @return list of PointOfInterest objects.
+	 */
+	public List<AvailableRide> sortAvailableByPOI(List<AvailableRide> reqs, PointOfInterest poi) {
+		List<AvailableRide> temp = new ArrayList<AvailableRide>();
+		List<PointOfInterest> pois = poiService.getAll();
+		
+		int[] poisByDistance = calculateDistance(pois, poi);	
+		System.out.println(reqs.get(1).toString());
+		for(int i : poisByDistance){
+			for(AvailableRide rq : reqs){
+				System.out.println("POI IDs: " + i + " --> dropOff ID: " + rq.getDropoffPOI().getPoiId());
+				if(rq.getDropoffPOI().getPoiId() == i) {
+					temp.add(rq);
+				}
+			}
+		}
+		
+		System.out.println("----------LIST OF ALL REQUESTS SORTED BY POI AND TIME! :D?");
+		for(AvailableRide rq : temp){
+			System.out.println(rq.toString());
+		}
+		return temp;
+	}
+	
+	/**
+	 * Returns a list of PointOfInterest Objects in order from closest to farthest away.
+	 *
+	 * @param  List<PointOfInterest> pois  a list of all available POIs
+	 * @param  PointOfInterest mpoi  the user's main POI
+	 * @return list of PointOfInterest objects.
+	 */
+	private int[] calculateDistance(List<PointOfInterest> pois, PointOfInterest mpoi){
+		double mLat = Math.abs(mpoi.getLatitude());
+		double mLong =  Math.abs(mpoi.getLongitude());
+		Map<Double, Integer> map = new TreeMap();
+		
+		for(int i = 0; i < pois.size(); i++) {
+			if(mpoi.getPoiId() != pois.get(i).getPoiId()){
+				double poiLat = Math.abs(pois.get(i).getLatitude());
+				double poiLong =  Math.abs(pois.get(i).getLongitude());
+				
+				double x = mLong - poiLong;
+				double y = mLat - poiLat;
+				
+				double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+				map.put(distance, i);
+			}
+		}
+		
+		Set<?> set = map.entrySet();
+		Iterator<?> iter = set.iterator();
+		
+		int[] poiByDistance = new int[pois.size()-1]; // -1 because it does not include the current poi
+		int counter = pois.size()-2;
+		while(iter.hasNext()) {
+			Map.Entry me = (Map.Entry) iter.next();
+			poiByDistance[counter--] = (Integer) me.getValue();		
+		}
+
+		return poiByDistance;
 	}
 }
