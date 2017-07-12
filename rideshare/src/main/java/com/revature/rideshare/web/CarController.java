@@ -1,4 +1,3 @@
-
 package com.revature.rideshare.web;
 
 import java.util.List;

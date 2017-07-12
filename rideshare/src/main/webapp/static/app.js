@@ -15,6 +15,10 @@ const app = angular.module('app', ['ui.router', permission, uiPermission, 'angul
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
 	
 	jwtOptionsProvider.config({
+<<<<<<< HEAD
+=======
+		  authPrefix: '',
+>>>>>>> 3054fbbf2845c6912b1f241a1a126c182de23a27
 	      tokenGetter: [function() {
 	        return localStorage.getItem('RideShare_auth_token');
 	      }]

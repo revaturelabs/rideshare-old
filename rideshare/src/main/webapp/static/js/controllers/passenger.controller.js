@@ -17,7 +17,14 @@ export let passengerController = function($scope, $http, $state, $location){
 	$scope.getActiveRequests = function() {
 		$http.get('/ride/request/active')
 		.then((res) => {
-			console.log(res);
+			console.log(res.data);
+		})
+	}
+
+	$scope.getRequestHistory = function() {
+		$http.get('/ride/request/history')
+		.then((res) => {
+			console.log(res.data);
 		})
 	}
 };

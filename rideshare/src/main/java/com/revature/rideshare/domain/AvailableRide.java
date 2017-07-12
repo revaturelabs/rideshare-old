@@ -30,7 +30,7 @@ public class AvailableRide implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AR_ID_SEQUENCE")
 	@SequenceGenerator(name="AR_ID_SEQUENCE", sequenceName="AR_ID_SEQUENCE")
 	private long availRideId;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Car car;
 	

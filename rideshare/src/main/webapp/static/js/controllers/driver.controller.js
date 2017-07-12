@@ -75,4 +75,3 @@ export let driverController = function($scope, $http, $state){
 	
 	
 
-};
