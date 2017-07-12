@@ -1,3 +1,4 @@
+import { angularJwt } from 'angular-jwt';
 import { permission, uiPermission } from 'angular-permission';
 import { passengerController } from './js/controllers/passenger.controller.js';
 import { driverController } from './js/controllers/driver.controller.js';
@@ -9,10 +10,19 @@ import { addCarController } from './js/controllers/addCar.controller.js';
 //const and let = block scope 
 
 
-const app = angular.module('app', ['ui.router', permission, uiPermission]);
+const app = angular.module('app', ['ui.router', permission, uiPermission, 'angular-jwt']);
 
-app.config(function($stateProvider, $urlRouterProvider){
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
 	
+	jwtOptionsProvider.config({
+	      tokenGetter: [function() {
+	        return localStorage.getItem('RideShare_auth_token');
+	      }]
+	    });
+
+	$httpProvider.interceptors.push('jwtInterceptor');
+
+
 	$urlRouterProvider.otherwise('/slackLogin');
 	
 	$stateProvider

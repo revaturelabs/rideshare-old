@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http//.requiresChannel().antMatchers("/**").requiresSecure()
 			.antMatcher("/**")
 			.authorizeRequests()
-				.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html", "/auth")
+				.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html", "/auth/check")
 				.permitAll()
 			.anyRequest()
 				.authenticated()
@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		OAuth2ClientAuthenticationProcessingFilter slackFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/slack");
 		OAuth2RestTemplate slackTemplate = new OAuth2RestTemplate(slack(), oauth2ClientContext);
 		slackFilter.setRestTemplate(slackTemplate);
-		UserInfoTokenServices tokenServices = new UserInfoTokenServices(slackResource().getUserInfoUri(), slack().getClientId());
+		UserInfoTokenServices tokenServices = new UserInfoTokenServices(slackIdentityResource().getUserInfoUri(), slack().getClientId());
 		tokenServices.setRestTemplate(slackTemplate);
 		slackFilter.setTokenServices(tokenServices);
 		return slackFilter;
@@ -65,8 +65,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Bean
-	@ConfigurationProperties("slack.resource")
-	public ResourceServerProperties slackResource() {
+	@ConfigurationProperties("slack.resource.identity")
+	public ResourceServerProperties slackIdentityResource() {
+		return new ResourceServerProperties();
+	}
+	
+	@Bean
+	@ConfigurationProperties("slack.resource.profile")
+	public ResourceServerProperties slackProfileResource() {
 		return new ResourceServerProperties();
 	}
 	
