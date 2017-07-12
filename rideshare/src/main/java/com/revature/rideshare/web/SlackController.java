@@ -66,7 +66,7 @@ public class SlackController {
     	LocalDateTime rideDate = LocalDateTime.of(Integer.parseInt(dateTokens[0]),Integer.parseInt(dateTokens[1]),Integer.parseInt(dateTokens[2]),Integer.parseInt(timeTokens[0]),Integer.parseInt(timeTokens[1]));
     	
     	request.setUser(u);
-    	//request.setTime(rideDate);
+    	request.setTime(rideDate);
 
     	
     	rideService.addRequest(request);
