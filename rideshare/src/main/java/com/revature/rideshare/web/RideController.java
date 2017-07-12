@@ -16,6 +16,7 @@ import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.domain.RideRequest;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.RideService;
+import com.revature.rideshare.service.UserService;
 
 @RestController
 @RequestMapping("ride")
@@ -23,6 +24,9 @@ public class RideController {
 
 	@Autowired
 	private RideService rideService;
+	
+	@Autowired
+	private UserService userService;
 
 	// ALL RIDES
 	@GetMapping
@@ -75,8 +79,8 @@ public class RideController {
 
 	// OFFERS
 	@GetMapping("/offer")
-	public List<AvailableRide> getOffersForCurrentUser(@RequestHeader(name = "Authorization") String token) {
-		User u = User.getUserFromToken(token);
+	public List<AvailableRide> getOffersForCurrentUser() {
+		User u = userService.getUser(50);
 		return rideService.getOffersForUser(u);
 	}
 
@@ -105,14 +109,14 @@ public class RideController {
 	}
 
 	@GetMapping("/offer/active")
-	public List<Ride> getActiveOffersForCurrentUser(@RequestHeader(name = "Authorization") String token) {
-		User u = User.getUserFromToken(token);
+	public List<Ride> getActiveOffersForCurrentUser() {
+		 User u = userService.getUser(50);
 		return rideService.getActiveOffersForUser(u);
 	}
 
 	@GetMapping("/offer/history")
-	public List<Ride> getOfferHistoryForCurrentUser(@RequestHeader(name = "Authorization") String token) {
-		User u = User.getUserFromToken(token);
+	public List<Ride> getOfferHistoryForCurrentUser() {
+		 User u = userService.getUser(50);
 		return rideService.getOfferHistoryForUser(u);
 	}
 }

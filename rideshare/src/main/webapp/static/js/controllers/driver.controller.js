@@ -28,10 +28,12 @@ export let driverController = function($scope, $http, $state){
 	});
 	
 	
+	//scope provides structure of object needed to crreate an offer
 		$scope.offer = {car : {}, pickupPOI : {}, dropoffPOI : {}, seatsAvailable:0, time:"", notes:"",open: true};
 		console.log($scope.offer);
 		
 		
+		//method to add offer through http post
 		$scope.addOffer = function(pickup,dropoff,notes,time,seats) {
 			
 			$scope.offer.car = $scope.car;
@@ -47,7 +49,7 @@ export let driverController = function($scope, $http, $state){
 					$state.go('driver');
 				},
 				(failedResponse) => {
-					alert('Failure');
+						alert('Failure');
 				}
 			)
 	};
@@ -67,6 +69,7 @@ export let driverController = function($scope, $http, $state){
 	$http.get("/poiController")
 	.then(function(response){
 		$scope.allPoi = response.data;
+		console.log($scope.allPoi);
 	});
 	
 	
