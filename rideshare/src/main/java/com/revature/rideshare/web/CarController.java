@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.auth0.jwt.JWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.CarService;
@@ -24,6 +26,21 @@ public class CarController {
 	
 	@Autowired
 	private UserService userService;
+	
+	
+	
+	private User getUserFromToken(String token) {
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			String userJson = JWT.decode(token).getClaim("user").asString();
+			return (User) mapper.readValue(userJson, User.class);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	
 	
 	 @GetMapping
 	    public List<Car> getAll(){
