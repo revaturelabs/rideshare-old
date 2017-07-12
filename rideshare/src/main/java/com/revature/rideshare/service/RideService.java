@@ -31,6 +31,14 @@ public class RideService {
 
 	@Autowired
 	private CarRepository carRepo;
+	
+	public List<Ride> getAllActiveRides() {
+		return rideRepo.findByWasSuccessfulNull();
+	}
+	
+	public List<Ride> getAllInactiveRides() {
+		return rideRepo.findByWasSuccessfulNotNull();
+	}
 
 	public List<Ride> getAll() {
 			return rideRepo.findAll();
