@@ -44,11 +44,11 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public void removeUser(User user){
-		userRepo.saveAndFlush(user);
+		userRepo.delete(user);
 	}
 
 	@Override
 	public void updateUser(User user){
-		userRepo.delete(user);
+		userRepo.saveAndFlush(user);
 	}
 }

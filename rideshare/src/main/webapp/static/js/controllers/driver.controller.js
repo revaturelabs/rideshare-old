@@ -1,3 +1,4 @@
+
 export let driverController = function($scope, $http, $state){
 
 	// scope and function used to pass ride data to front end
@@ -70,4 +71,5 @@ export let driverController = function($scope, $http, $state){
 	
 	
 	
+
 };
