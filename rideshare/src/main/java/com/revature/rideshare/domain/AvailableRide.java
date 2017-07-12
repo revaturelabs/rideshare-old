@@ -1,7 +1,7 @@
 package com.revature.rideshare.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,7 +21,7 @@ import org.hibernate.annotations.Check;
 @Entity
 @Table(name="AVAILABLE_RIDES")
 @Check(constraints="AVAILABLE_SEATS >= 0")
-public class AvailableRide implements Serializable{
+public class AvailableRide implements Serializable, Comparable<AvailableRide>{
 	
 	private static final long serialVersionUID = -5753230302496991697L;
 
@@ -43,9 +43,8 @@ public class AvailableRide implements Serializable{
 	@Column(name="AVAILABLE_SEATS", nullable=false)
 	private short seatsAvailable;
 	
-	@Temporal(TemporalType.DATE)
 	@Column(name="TIME", nullable=false)
-	private Date time;
+	private LocalDateTime time;
 	
 	@Column(name="NOTES")
 	private String notes;
@@ -56,7 +55,7 @@ public class AvailableRide implements Serializable{
 	public AvailableRide(){}
 	
 	public AvailableRide(long availRideId, Car car, PointOfInterest pickupPOI, PointOfInterest dropoffPOI,
-			short seatsAvailable, Date time, String notes, boolean isOpen) {
+			short seatsAvailable, LocalDateTime time, String notes, boolean isOpen) {
 		super();
 		this.availRideId = availRideId;
 		this.car = car;
@@ -108,11 +107,11 @@ public class AvailableRide implements Serializable{
 		this.seatsAvailable = seatsAvailable;
 	}
 
-	public Date getTime() {
+	public LocalDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(LocalDateTime time) {
 		this.time = time;
 	}
 
@@ -131,4 +130,17 @@ public class AvailableRide implements Serializable{
 	public void setOpen(boolean isOpen) {
 		this.isOpen = isOpen;
 	}
+
+	@Override
+	public int compareTo(AvailableRide ar) {
+		return this.getTime().compareTo(ar.getTime());
+	}
+
+	@Override
+	public String toString() {
+		return "AvailableRide [availRideId=" + availRideId + ", car=" + car + ", pickupPOI=" + pickupPOI
+				+ ", dropoffPOI=" + dropoffPOI + ", seatsAvailable=" + seatsAvailable + ", time=" + time + ", notes="
+				+ notes + "]";
+	}
+	
 }
