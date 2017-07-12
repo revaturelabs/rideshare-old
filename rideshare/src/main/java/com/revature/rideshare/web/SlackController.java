@@ -1,6 +1,6 @@
 package com.revature.rideshare.web;
 
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,10 +63,11 @@ public class SlackController {
         	request.setPickupLocation(pickupLocation);
         	request.setDropOffLocation(dropoffLocation);
     	}
-    	LocalDateTime rideDate = LocalDateTime.of(Integer.parseInt(dateTokens[0]),Integer.parseInt(dateTokens[1]),Integer.parseInt(dateTokens[2]),Integer.parseInt(timeTokens[0]),Integer.parseInt(timeTokens[1]));
+    	Date rideDate = new Date(Integer.parseInt(dateTokens[0])-1900, Integer.parseInt(dateTokens[1]),
+    			Integer.parseInt(dateTokens[2]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
     	
     	request.setUser(u);
-    	request.setTime(rideDate);
+    	//request.setTime(rideDate);
 
     	
     	rideService.addRequest(request);

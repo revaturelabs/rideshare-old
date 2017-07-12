@@ -1,102 +1,204 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<!-- Your own application should inherit from spring-boot-starter-parent -->
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.1.RELEASE</version>
-	</parent>
-	<artifactId>rideshare</artifactId>
-	<groupId>com.revature</groupId>
-	<name>Revature RideShare</name>
-	<description>A ride sharing app for Revature employees.</description>
-	<version>0.0.1-SNAPSHOT</version>
-	
-	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-	</properties>
-	
-	
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<!-- not in maven repo, must be installed on local machine and EC2 instance -->
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc7</artifactId>
-			<version>12.1.0</version>
-		</dependency>
-		<!-- <dependency>
-    		<groupId>org.springframework.security</groupId>
-    		<artifactId>spring-security-jwt</artifactId>
-		</dependency> -->
-		<dependency>
-    		<groupId>com.auth0</groupId>
-    		<artifactId>java-jwt</artifactId>
-    		<version>3.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<finalName>rideshare</finalName>
-		<pluginManagement>
-			<plugins>
-			<!--  	<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.6.0</version>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-					</configuration>
-				</plugin>
--->
-				<!-- <plugin> <groupId>org.apache.tomcat.maven</groupId> <artifactId>tomcat7-maven-plugin</artifactId> 
-					<version>2.0</version> <configuration> <url>http://localhost:80/manager/text</url> 
-					<update>true</update> <server>caliberbot</server> <path>/</path> </configuration> 
-					</plugin> -->
-
-				<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-</project>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+
+		<!-- Your own application should inherit from spring-boot-starter-parent -->
+
+		<groupId>org.springframework.boot</groupId>
+
+		<artifactId>spring-boot-starter-parent</artifactId>
+
+		<version>1.4.1.RELEASE</version>
+
+	</parent>
+
+	<artifactId>rideshare</artifactId>
+
+	<groupId>com.revature</groupId>
+
+	<name>Revature RideShare</name>
+
+	<description>A ride sharing app for Revature employees.</description>
+
+	<version>0.0.1-SNAPSHOT</version>
+
+	
+
+	<properties>
+
+		<maven.compiler.source>1.8</maven.compiler.source>
+
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+	</properties>
+
+	
+
+	
+
+	<dependencies>
+
+		<dependency>
+
+			<groupId>org.springframework.boot</groupId>
+
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>org.springframework.boot</groupId>
+
+			<artifactId>spring-boot-starter-web</artifactId>
+
+		</dependency>
+
+		<dependency>
+
+            <groupId>org.springframework.boot</groupId>
+
+            <artifactId>spring-boot-starter-security</artifactId>
+
+        </dependency>
+
+        <dependency>
+
+			<groupId>org.springframework.security.oauth</groupId>
+
+			<artifactId>spring-security-oauth2</artifactId>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>org.hsqldb</groupId>
+
+			<artifactId>hsqldb</artifactId>
+
+			<scope>runtime</scope>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+
+			<artifactId>jackson-datatype-jsr310</artifactId>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>org.springframework.boot</groupId>
+
+			<artifactId>spring-boot-starter-test</artifactId>
+
+			<scope>test</scope>
+
+		</dependency>
+
+		<!-- not in maven repo, must be installed on local machine and EC2 instance -->
+
+		<dependency>
+
+			<groupId>com.oracle</groupId>
+
+			<artifactId>ojdbc7</artifactId>
+
+			<version>12.1.0</version>
+
+		</dependency>
+
+		<!-- <dependency>
+
+    		<groupId>org.springframework.security</groupId>
+
+    		<artifactId>spring-security-jwt</artifactId>
+
+		</dependency> -->
+
+		<dependency>
+
+    		<groupId>com.auth0</groupId>
+
+    		<artifactId>java-jwt</artifactId>
+
+    		<version>3.2.0</version>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>org.springframework.boot</groupId>
+
+			<artifactId>spring-boot-configuration-processor</artifactId>
+
+			<optional>true</optional>
+
+		</dependency>
+
+	</dependencies>
+
+
+
+	<build>
+
+		<finalName>rideshare</finalName>
+
+		<pluginManagement>
+
+			<plugins>
+
+			<!--  	<plugin>
+
+					<groupId>org.apache.maven.plugins</groupId>
+
+					<artifactId>maven-compiler-plugin</artifactId>
+
+					<version>3.6.0</version>
+
+					<configuration>
+
+						<source>1.8</source>
+
+						<target>1.8</target>
+
+					</configuration>
+
+				</plugin>
+
+-->
+
+				<!-- <plugin> <groupId>org.apache.tomcat.maven</groupId> <artifactId>tomcat7-maven-plugin</artifactId> 
+
+					<version>2.0</version> <configuration> <url>http://localhost:80/manager/text</url> 
+
+					<update>true</update> <server>caliberbot</server> <path>/</path> </configuration> 
+
+					</plugin> -->
+
+
+
+				<plugin>
+
+					<groupId>org.springframework.boot</groupId>
+
+					<artifactId>spring-boot-maven-plugin</artifactId>
+
+				</plugin>
+
+			</plugins>
+
+		</pluginManagement>
+
+	</build>
+
+</project>
+
