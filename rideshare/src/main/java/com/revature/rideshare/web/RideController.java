@@ -1,5 +1,5 @@
 package com.revature.rideshare.web;
-import java.security.Principal;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.AvailableRide;
@@ -25,7 +26,7 @@ public class RideController {
 
 	@Autowired
 	private RideService rideService;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -33,7 +34,7 @@ public class RideController {
 	@GetMapping
 	public List<Ride> getAllRides() {
 		return rideService.getAll();
-	}	
+	}
 
 	// TODO: move to util class
 	private User getUserFromToken(String token) {
@@ -46,7 +47,7 @@ public class RideController {
 			return null;
 		}
 	}
-	
+
 	// REQUESTS
 	@GetMapping("/request")
 	public List<RideRequest> getRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
@@ -55,78 +56,91 @@ public class RideController {
 	}
 
 	@GetMapping("/request/accept/{id}")
-	public boolean acceptRequest(@PathVariable(value="id") long id, @RequestHeader(name="Authorization") String token) {
+	public boolean acceptRequest(@PathVariable(value = "id") long id,
+			@RequestHeader(name = "Authorization") String token) {
 		User u = getUserFromToken(token);
 		return rideService.acceptRequest(id, u);
 	}
-    
+
 	@GetMapping("/request/cancel/{id}")
-	public boolean cancelRequest(@PathVariable(value="id") long id, @RequestHeader(name="Authorization") String token) {
+	public boolean cancelRequest(@PathVariable(value = "id") long id,
+			@RequestHeader(name = "Authorization") String token) {
 		User u = getUserFromToken(token);
 		return rideService.cancelRequest(id, u);
 	}
-    
-    @PostMapping("/request/add")
-    public void addRequest(@RequestBody RideRequest req) {
-        rideService.addRequest(req);
-    }
+
+	@PostMapping("/request/add")
+	public void addRequest(@RequestBody RideRequest req) {
+		rideService.addRequest(req);
+	}
 
 	@GetMapping("/request/open/{id}")
-	public List<RideRequest> getOpenRequests(@PathVariable(value="id") int id) {
+	public List<RideRequest> getOpenRequests(@PathVariable(value = "id") int id) {
 		return rideService.getOpenRequests(id);
 	}
 
+	@GetMapping("/request/open")
+	public List<RideRequest> getOpenRequests() {
+		// TODO: get actual poi id in req
+		return rideService.getOpenRequests(1);
+	}
+
 	@GetMapping("/request/active")
-	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name="Authorization") String token) {
+	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
 		User u = getUserFromToken(token);
 		return rideService.getActiveRequestsForUser(u);
 	}
 
 	@GetMapping("/request/history")
-	public List<Ride> getRequestHistoryForCurrentUser(@RequestHeader(name="Authorization") String token) {
+	public List<Ride> getRequestHistoryForCurrentUser(@RequestHeader(name = "Authorization") String token) {
 		User u = getUserFromToken(token);
 		return rideService.getRequestHistoryForUser(u);
 	}
 
-
 	// OFFERS
 	@GetMapping("/offer")
-	public List<AvailableRide> getOffersForCurrentUser(@RequestHeader(name="Authorization") String token) {
+	public List<AvailableRide> getOffersForCurrentUser(@RequestHeader(name = "Authorization") String token) {
 		User u = getUserFromToken(token);
 		return rideService.getOffersForUser(u);
 	}
 
-    @PostMapping("/offer/add")
-    public void addOffer(@RequestBody AvailableRide offer) {
-        rideService.addOffer(offer);
-    }
+	@PostMapping("/offer/add")
+	public void addOffer(@RequestBody AvailableRide offer) {
+		rideService.addOffer(offer);
+	}
 
 	@GetMapping("/offer/accept/{id}")
-	public boolean acceptOffer(@PathVariable(value="id") long id, @RequestHeader(name="Authorization") String token) {
+	public boolean acceptOffer(@PathVariable(value = "id") long id,
+			@RequestHeader(name = "Authorization") String token) {
 		User u = getUserFromToken(token);
 		return rideService.acceptOffer(id, u);
 	}
-    
+
 	@GetMapping("/offer/cancel/{id}")
 	public boolean cancelOffer(@PathVariable(value = "id") long id,
-		@RequestHeader(name = "Authorization") String token) {
+			@RequestHeader(name = "Authorization") String token) {
 		User u = User.getUserFromToken(token);
 		return rideService.cancelOffer(id, u);
 	}
-    
+
 	@GetMapping("/offer/open/{id}")
-	public List<AvailableRide> getOpenOffers(@PathVariable(value="id") int id) {
+	public List<AvailableRide> getOpenOffers(@PathVariable(value = "id") int id) {
 		return rideService.getOpenOffers(id);
 	}
 
+	@GetMapping("/offer/open")
+	public List<AvailableRide> getOpenOffers() {
+		// TODO: get actual poi id in req
+		return rideService.getOpenOffers(1);
+	}
+
 	@GetMapping("/offer/active")
-	public List<Ride> getActiveOffersForCurrentUser(@RequestHeader(name="Authorization") String token) {
+	public List<Ride> getActiveOffersForCurrentUser(@RequestHeader(name = "Authorization") String token) {
 		User u = getUserFromToken(token);
 		return rideService.getActiveOffersForUser(u);
 	}
 
 	@GetMapping("/offer/history")
-
 	public List<Ride> getOfferHistoryForCurrentUser(@RequestHeader(name = "Authorization") String token) {
 		User u = User.getUserFromToken(token);
 		return rideService.getOfferHistoryForUser(u);

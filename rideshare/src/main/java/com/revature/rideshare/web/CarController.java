@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,27 +18,26 @@ import com.revature.rideshare.service.UserService;
 @RestController
 @RequestMapping("car")
 public class CarController {
-	
+
 	@Autowired
 	private CarService carService;
-	
+
 	@Autowired
 	private UserService userService;
-	
-	 @GetMapping
-	    public List<Car> getAll(){
-	        return carService.getAll();
-	    }
-	 
-	 @GetMapping("/myCar")
-	 public Car getCar()
-	 {
-		 User u = userService.getUser(50);
-		 return carService.getCarForUser(u);
-	 }
-	
+
+	@GetMapping
+	public List<Car> getAll() {
+		return carService.getAll();
+	}
+
+	@GetMapping("/myCar")
+	public Car getCar() {
+		User u = userService.getUser(50);
+		return carService.getCarForUser(u);
+	}
+
 	@PostMapping
-	public boolean addCar(@RequestBody Car c, Authentication authentication){
+	public boolean addCar(@RequestBody Car c, Authentication authentication) {
 		System.out.println("before");
 		User u = userService.getUser(50);
 		System.out.println("test");
@@ -48,17 +46,15 @@ public class CarController {
 		c.setUser(u);
 		carService.addCar(c);
 		return true;
-	}	
-	
+	}
 
-    @PostMapping("/removeCar")
-    public void removeCar(@RequestBody Car car){
-        carService.removeCar(car);
-    }
+	@PostMapping("/removeCar")
+	public void removeCar(@RequestBody Car car) {
+		carService.removeCar(car);
+	}
 
-    @PostMapping("/updateCar")
-    public void updateCar(@RequestBody Car car){
-        carService.updateCar(car);
-    }
+	@PostMapping("/updateCar")
+	public void updateCar(@RequestBody Car car) {
+		carService.updateCar(car);
+	}
 }
-

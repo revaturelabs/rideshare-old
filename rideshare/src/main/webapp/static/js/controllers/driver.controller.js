@@ -1,4 +1,3 @@
-
 export let driverController = function($scope, $http, $state){
 
 	// scope and function used to pass ride data to front end
@@ -10,8 +9,8 @@ export let driverController = function($scope, $http, $state){
 		$scope.rides = response.data;
 	});
 
-	
-	//get data that shows all active ride offers for user
+
+	// get data that shows all active ride offers for user
 	$scope.activeRides = {};
 
 	$http.get("/ride/offer/active")
@@ -19,42 +18,42 @@ export let driverController = function($scope, $http, $state){
 		$scope.activeRides = response.data;
 	});
 
-	//get data that shows all past ride offers for user
+	// get data that shows all past ride offers for user
 	$scope.pastRides = {};
 
 	$http.get("/ride/offer/history")
 	.then(function(response){
 		$scope.pastRides = response.data;
 	});
-	
-	
-	//scope provides structure of object needed to crreate an offer
-		$scope.offer = {car : {}, pickupPOI : {}, dropoffPOI : {}, seatsAvailable:0, time:"", notes:"",open: true};
+
+
+	// scope provides structure of object needed to crreate an offer
+	$scope.offer = {car : {}, pickupPOI : {}, dropoffPOI : {}, seatsAvailable:0, time:"", notes:"",open: true};
+	console.log($scope.offer);
+
+
+	// method to add offer through http post
+	$scope.addOffer = function(pickup,dropoff,notes,time,seats) {
+
+		$scope.offer.car = $scope.car;
+		$scope.offer.pickupPOI = pickup;
+		$scope.offer.dropoffPOI = dropoff;
+		$scope.offer.notes = notes;
+		$scope.offer.time = new Date(time);
+		$scope.offer.seatsAvailable = seats;
 		console.log($scope.offer);
-		
-		
-		//method to add offer through http post
-		$scope.addOffer = function(pickup,dropoff,notes,time,seats) {
-			
-			$scope.offer.car = $scope.car;
-			$scope.offer.pickupPOI = pickup;
-			$scope.offer.dropoffPOI = dropoff;
-			$scope.offer.notes = notes;
-			$scope.offer.time = new Date(time);
-			$scope.offer.seatsAvailable = seats;
-			console.log($scope.offer);
-			
-			$http.post('/ride/offer/add', $scope.offer).then(
+
+		$http.post('/ride/offer/add', $scope.offer).then(
 				(formResponse) => {
 					$state.go('driver');
 				},
 				(failedResponse) => {
-						alert('Failure');
+					alert('Failure');
 				}
-			)
+		)
 	};
-	
-	//get all info needed to make a new offer
+
+	// get all info needed to make a new offer
 	$scope.car = {};
 
 	$http.get("/car/myCar")
@@ -62,8 +61,8 @@ export let driverController = function($scope, $http, $state){
 		$scope.car = response.data;
 		console.log($scope.car);
 	});
-	
-	
+
+
 	$scope.allPoi = {};
 
 	$http.get("/poiController")
@@ -71,5 +70,5 @@ export let driverController = function($scope, $http, $state){
 		$scope.allPoi = response.data;
 		console.log($scope.allPoi);
 	});
-	
+
 };

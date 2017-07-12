@@ -16,26 +16,26 @@ import com.revature.rideshare.service.PointOfInterestService;
 @RequestMapping("poiController")
 public class PointOfInterestController {
 
-    @Autowired
-    private PointOfInterestService poiService;
+	@Autowired
+	private PointOfInterestService poiService;
 
-    @GetMapping
-    public List<PointOfInterest> getAll(){
-        return poiService.getAll();
-    }
+	@GetMapping
+	public List<PointOfInterest> getAll() {
+		return poiService.getAll();
+	}
 
-    @PostMapping("/addPoi")
-    public void addPoi(@RequestBody PointOfInterest poi){
-        poiService.addPoi(poi);
-    }
+	@PostMapping("/addPoi")
+	public void addPoi(@RequestBody PointOfInterest poi) {
+		poiService.addPoi(poi);
+	}
 
-    @PostMapping("/removePoi")
-    public void removePoi(@RequestBody PointOfInterest poi){
-        poiService.removePoi(poi);
-    }
+	@PostMapping("/removePoi")
+	public void removePoi(@RequestBody PointOfInterest poi) {
+		poiService.removePoi(poi);
+	}
 
-    @PostMapping("/updatePoi")
-    public void updatePoi(@RequestBody PointOfInterest poi){
-        poiService.updatePoi(poi);
-    }
+	@PostMapping("/updatePoi")
+	public void updatePoi(@RequestBody PointOfInterest poi) {
+		poiService.updatePoi(poi);
+	}
 }

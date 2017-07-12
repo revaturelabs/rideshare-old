@@ -3,7 +3,6 @@ package com.revature.rideshare.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,42 +18,43 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.Check;
 
 @Entity
-@Table(name="AVAILABLE_RIDES")
-@Check(constraints="AVAILABLE_SEATS >= 0")
-public class AvailableRide implements Serializable, Comparable<AvailableRide>{
-	
+@Table(name = "AVAILABLE_RIDES")
+@Check(constraints = "AVAILABLE_SEATS >= 0")
+public class AvailableRide implements Serializable, Comparable<AvailableRide> {
+
 	private static final long serialVersionUID = -5753230302496991697L;
 
 	@Id
-	@Column(name="AVAILABLE_RIDE_ID")
+	@Column(name = "AVAILABLE_RIDE_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AR_ID_SEQUENCE")
-	@SequenceGenerator(name="AR_ID_SEQUENCE", sequenceName="AR_ID_SEQUENCE")
+	@SequenceGenerator(name = "AR_ID_SEQUENCE", sequenceName = "AR_ID_SEQUENCE")
 	private long availRideId;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Car car;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterest pickupPOI;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterest dropoffPOI;
-	
-	@Column(name="AVAILABLE_SEATS", nullable=false)
+
+	@Column(name = "AVAILABLE_SEATS", nullable = false)
 	private short seatsAvailable;
-	
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="TIME", nullable=false)
+	@Column(name = "TIME", nullable = false)
 	private Date time;
-	
-	@Column(name="NOTES")
+
+	@Column(name = "NOTES")
 	private String notes;
 
-	@Column(name="IS_OPEN", nullable=false)
+	@Column(name = "IS_OPEN", nullable = false)
 	private boolean isOpen;
-	
-	public AvailableRide(){}
-	
+
+	public AvailableRide() {
+	}
+
 	public AvailableRide(long availRideId, Car car, PointOfInterest pickupPOI, PointOfInterest dropoffPOI,
 			short seatsAvailable, Date time, String notes, boolean isOpen) {
 		super();

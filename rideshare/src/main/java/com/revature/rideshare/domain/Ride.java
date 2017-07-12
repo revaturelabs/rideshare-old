@@ -13,31 +13,32 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Rides")
-public class Ride implements Serializable{
+@Table(name = "Rides")
+public class Ride implements Serializable {
 
 	private static final long serialVersionUID = -2957865032918745458L;
 
 	@Id
-	@Column(name="RIDE_ID")
+	@Column(name = "RIDE_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "R_ID_SEQUENCE")
-	@SequenceGenerator(name="R_ID_SEQUENCE", sequenceName="R_ID_SEQUENCE")
+	@SequenceGenerator(name = "R_ID_SEQUENCE", sequenceName = "R_ID_SEQUENCE")
 	private long rideId;
-	
-	@OneToOne(fetch=FetchType.LAZY)
+
+	@OneToOne(fetch = FetchType.LAZY)
 	private AvailableRide availRide;
-	
-	@OneToOne(fetch=FetchType.LAZY)
+
+	@OneToOne(fetch = FetchType.LAZY)
 	private RideRequest request;
-	
-	@Column(name="WAS_SUCCESSFUL")
+
+	@Column(name = "WAS_SUCCESSFUL")
 	private Boolean wasSuccessful;
-	
-	@Column(name="COMPLAINT")
+
+	@Column(name = "COMPLAINT")
 	private String complaint;
-	
-	public Ride(){}
-	
+
+	public Ride() {
+	}
+
 	public Ride(long rideId, AvailableRide availRide, RideRequest request, Boolean wasSuccessful, String complaint) {
 		this.rideId = rideId;
 		this.availRide = availRide;
@@ -85,9 +86,11 @@ public class Ride implements Serializable{
 	public void setComplaint(String complaint) {
 		this.complaint = complaint;
 	}
+
 	@Override
 	public String toString() {
 		return "Ride [rideId=" + rideId + ", availRide=" + availRide + ", request=" + request + ", wasSuccessful="
 				+ wasSuccessful + ", complaint=" + complaint + "]";
 	}
+
 }

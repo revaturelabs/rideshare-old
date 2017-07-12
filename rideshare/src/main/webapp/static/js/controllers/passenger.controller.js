@@ -1,4 +1,5 @@
 export let passengerController = function($scope, $http, $state, $location){
+
 	$scope.logout = function() {
 		// view that is the parent of all the main views
 
