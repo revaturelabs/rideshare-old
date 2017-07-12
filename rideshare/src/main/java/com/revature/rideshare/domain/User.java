@@ -153,6 +153,8 @@ public class User implements Serializable {
 			String userJson = JWT.decode(token).getClaim("user").asString();
 			return (User) mapper.readValue(userJson, User.class);
 		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
 			return null;
 		}
 	}
