@@ -5,6 +5,10 @@ export let passengerController = function($scope, $http, $state, $location){
 		$http.get('auth/current').then((res) => { console.log(res); });
 	};
 
+	$scope.testAuth = function() {
+		$http.get('auth/test').then((res) => { console.log(res); });
+	}
+
 	$scope.logout = function() { // TODO: move this to a main controller for a view that is the parent of all the main views
 
     $http.post('/logout', {})
