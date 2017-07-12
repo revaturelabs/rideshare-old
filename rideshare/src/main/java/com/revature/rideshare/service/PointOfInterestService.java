@@ -36,4 +36,8 @@ public class PointOfInterestService {
     public void updatePoi(PointOfInterest poi){
         poiRepo.saveAndFlush(poi);
     }
+    
+    public PointOfInterest getPoi(long id) {
+    	return poiRepo.getOne(id);
+    }
 }

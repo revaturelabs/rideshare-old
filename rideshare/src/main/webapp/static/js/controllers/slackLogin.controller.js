@@ -23,5 +23,4 @@ export let slackLoginController = function($scope, $http, $state) {
 		localStorage.setItem('RideShare_auth_token', res.headers('token'));
 	});
 
-
 }
