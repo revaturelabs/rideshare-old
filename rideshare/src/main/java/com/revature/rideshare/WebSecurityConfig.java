@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		OAuth2ClientAuthenticationProcessingFilter slackFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/slack");
 		OAuth2RestTemplate slackTemplate = new OAuth2RestTemplate(slack(), oauth2ClientContext);
 		slackFilter.setRestTemplate(slackTemplate);
-		UserInfoTokenServices tokenServices = new UserInfoTokenServices(slackProfileResource().getUserInfoUri(), slack().getClientId());
+		UserInfoTokenServices tokenServices = new UserInfoTokenServices(slackIdentityResource().getUserInfoUri(), slack().getClientId());
 		tokenServices.setRestTemplate(slackTemplate);
 		slackFilter.setTokenServices(tokenServices);
 		return slackFilter;

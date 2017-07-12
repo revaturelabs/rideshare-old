@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,6 +52,14 @@ public class AuthController {
 	@RequestMapping("/check")
 	public Boolean isAuthenticated(Principal principal) {
 		return principal != null;
+	}
+	
+	@RequestMapping("/test")
+	public void testAuthentication(OAuth2Authentication authentication, HttpServletRequest request) {
+		for (Enumeration<String> headers = request.getHeaderNames(); headers.hasMoreElements();) {
+			String name = headers.nextElement();
+			System.out.println(name + ": " + request.getHeader(name));
+		}
 	}
 	
 	/*
