@@ -36,6 +36,14 @@ public class RideService {
 		return rideRepo.findAll();
 	}
 
+	public List<Ride> getAllActiveRides() {
+		return rideRepo.findByWasSuccessfulNull();
+	}
+	
+	public List<Ride> getAllInactiveRides() {
+		return rideRepo.findByWasSuccessfulNotNull();
+	}
+
 	// REQUESTS
 	public boolean addRequest(RideRequest req) {
 		rideReqRepo.saveAndFlush(req);
