@@ -94,7 +94,6 @@ public class RideService {
 	}
 
 	public List<RideRequest> getOpenRequests(int poiId) {
-		RideRequest rr = new RideRequest();
 		List<RideRequest> openReqs = rideReqRepo.findByStatus(RequestStatus.OPEN);
 
 		Collections.sort(openReqs);
