@@ -149,7 +149,4 @@ public class PointOfInterest implements Serializable {
 	public void setType(PointOfInterestType type) {
 		this.type = type;
 	}
-	
-	
-	
 }
