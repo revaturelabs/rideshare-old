@@ -107,6 +107,7 @@ public class AuthController {
 				u.setEmail(email);
 				u.setAdmin(false);
 				userService.addUser(u);
+				
 			}
 			String userJson;
 			userJson = mapper.writeValueAsString(u);
