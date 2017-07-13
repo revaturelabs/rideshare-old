@@ -24,4 +24,6 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 	List<Ride> findByWasSuccessfulNull();
 
 	List<Ride> findByWasSuccessfulNotNull();
+	
+	List<Ride> findAllByAvailRideAvailRideId(long id);
 }
