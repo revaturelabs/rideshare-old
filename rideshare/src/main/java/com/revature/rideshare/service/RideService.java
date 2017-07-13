@@ -92,27 +92,28 @@ public class RideService {
 	/**
 	 * Takes in a Ride ID. Closes the open RideRequest and deletes the Ride.
 	 *
-	 * @param  long id  The id of the request to cancel.
+	 * @param long
+	 *            id The id of the request to cancel.
 	 * @return true on success, false on failure.
 	 */
 	public boolean cancelRequest(long id, User u) {
 		try {
-			System.out.println("\n\nTRYING\n cancelRequest");
 			Ride ride = rideRepo.findOne(id);
 			RideRequest req = ride.getRequest();
-			
-//			if(u.getSlackId() != req.getUser().getSlackId()) return false;
-			
+
+			// if(u.getSlackId() != req.getUser().getSlackId()) return false;
+
 			AvailableRide availRide = ride.getAvailRide();
-			if(!availRide.isOpen()) availRide.setOpen(true); //reopen if closed (because a seat is now available)
-	
+			if (!availRide.isOpen()) {
+				// reopen if closed (because a seat is now available)
+				availRide.setOpen(true);
+			}
+
 			rideRepo.delete(ride);
 			rideReqRepo.delete(req);
-			System.out.println("\n\nSUCCESS\n cancelRequest");
 			return true;
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("\n\nFAILURE\n cancelRequest");
 			return false;
 		}
 	}
@@ -202,30 +203,33 @@ public class RideService {
 	}
 
 	/**
-	 * Takes in an AvailableRide id and deletes ALL Rides associated with it. Sets the RequestStatus of ALL
-	 * RideRequest objects associated to 'OPEN' and deletes the AvailableRide object.
+	 * Takes in an AvailableRide id and deletes ALL Rides associated with it.
+	 * Sets the RequestStatus of ALL RideRequest objects associated to 'OPEN'
+	 * and deletes the AvailableRide object.
 	 *
-	 * @param  long id  The id of the Ride to cancel.
+	 * @param long
+	 *            id The id of the Ride to cancel.
 	 * @return true on success, false on failure.
 	 */
 	public boolean cancelOffer(long id, User u) {
 		try {
 			List<Ride> rides = rideRepo.findAllByAvailRideAvailRideId(id);
 			AvailableRide availRide = rides.get(0).getAvailRide();
-			
-//			if( u.getSlackId() != availRide.getCar().getUser().getSlackId()) return false;
-			
-			for(Ride r : rides){
+
+			// if( u.getSlackId() != availRide.getCar().getUser().getSlackId())
+			// return false;
+
+			for (Ride r : rides) {
 				RideRequest temp = r.getRequest();
-				temp.setStatus(RequestStatus.OPEN); //reopen request
+				temp.setStatus(RequestStatus.OPEN); // reopen request
 				rideReqRepo.save(temp); // update Request
-				
+
 				rideRepo.delete(r);
 			}
-			
-			availRideRepo.delete(availRide);			
+
+			availRideRepo.delete(availRide);
 			return true;
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -283,20 +287,14 @@ public class RideService {
 		List<PointOfInterest> pois = poiService.getAll();
 
 		int[] poisByDistance = calculateDistance(pois, poi);
-		System.out.println(reqs.get(1).toString());
 		for (int i : poisByDistance) {
 			for (RideRequest rq : reqs) {
-				System.out.println("POI IDs: " + i + " --> dropOff ID: " + rq.getDropOffLocation().getPoiId());
 				if (rq.getDropOffLocation().getPoiId() == i) {
 					temp.add(rq);
 				}
 			}
 		}
 
-		System.out.println("----------LIST OF ALL REQUESTS SORTED BY POI AND TIME! :D?");
-		for (RideRequest rq : temp) {
-			System.out.println(rq.toString());
-		}
 		return temp;
 	}
 
@@ -316,19 +314,12 @@ public class RideService {
 		List<PointOfInterest> pois = poiService.getAll();
 
 		int[] poisByDistance = calculateDistance(pois, poi);
-		System.out.println(reqs.get(1).toString());
 		for (int i : poisByDistance) {
 			for (AvailableRide rq : reqs) {
-				System.out.println("POI IDs: " + i + " --> dropOff ID: " + rq.getDropoffPOI().getPoiId());
 				if (rq.getDropoffPOI().getPoiId() == i) {
 					temp.add(rq);
 				}
 			}
-		}
-
-		System.out.println("----------LIST OF ALL REQUESTS SORTED BY POI AND TIME! :D?");
-		for (AvailableRide rq : temp) {
-			System.out.println(rq.toString());
 		}
 		return temp;
 	}
