@@ -6,7 +6,7 @@ export let slackLoginController = function($scope, $http, $state) {
 			console.log(res);
 			if (res.data !== null && res.data === true) {
 				$scope.authenticated = true;
-				$state.go('passenger');
+				$state.go('main.passenger');
 			} else {
 				$scope.authenticated = false;
 			}

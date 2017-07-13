@@ -62,6 +62,9 @@ public class RideController {
 		return rideService.acceptRequest(id, u);
 	}
 
+	/**
+	 * Takes in a Ride ID and deleted the Ride and RideRequest objects associated.
+	 */
 	@GetMapping("/request/cancel/{id}")
 	public boolean cancelRequest(@PathVariable(value = "id") long id,
 			@RequestHeader(name = "Authorization") String token) {
@@ -116,6 +119,9 @@ public class RideController {
 		return rideService.acceptOffer(id, u);
 	}
 
+	/**
+	 * Takes in an AvailableRide ID, deletes all associated Rides and reopens all associated RideRequests.
+	 */
 	@GetMapping("/offer/cancel/{id}")
 	public boolean cancelOffer(@PathVariable(value = "id") long id,
 			@RequestHeader(name = "Authorization") String token) {
