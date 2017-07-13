@@ -6,6 +6,7 @@ import { historyController } from './js/controllers/history.controller.js';
 import { slackLoginController } from './js/controllers/slackLogin.controller.js';
 import { addCarController } from './js/controllers/addCar.controller.js';
 import { adminRidesController } from './js/controllers/adminRides.controller.js';
+import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 
 //var = function scope
 //const and let = block scope 
@@ -61,6 +62,12 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			url: '/adminRides', 
 			templateUrl : 'partials/adminRides.html',
 			controller : adminRidesController
+		})
+		
+		.state('adminUsers', {
+			url: '/adminUsers',
+			templateUrl: 'partials/adminUsers.html',
+			controller : adminUsersController
 		})
 	
 	
