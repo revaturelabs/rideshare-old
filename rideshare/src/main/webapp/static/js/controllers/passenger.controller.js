@@ -42,10 +42,11 @@ export let passengerController = function($scope, $http, $state, $location){
 	$http.get("user/me").then(function(response){
 		// get current user
 		user = response.data;
-//		console.log(user.mainPOI.poiId);
+		console.log(user);
+		
 		//gets user main poi then sets the starting point
 		//dropdown to the users main poi
-		if(user.mainPOI.poiId == null){
+		if(user.mainPOI == null){
 			let userPOI = 'user1';
 			$scope[userPOI] = true;
 		}else{
@@ -60,7 +61,7 @@ export let passengerController = function($scope, $http, $state, $location){
 		$scope.allMainPOI = allPOI;
 
 		// get the current user main POI {lat: user.mainPOI.latitude, lng: user.mainPOI.longitude}
-		let userMainPOI = {lat: allPOI[1].longitude, lng: allPOI[1].longitude};//user main poi check
+		let userMainPOI = {lat: 38.9533932, lng: -77.35044779};//user main poi check 
 
 		// create markers for all the current POI
 		let locations = [];
