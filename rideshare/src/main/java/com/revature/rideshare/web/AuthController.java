@@ -54,7 +54,7 @@ public class AuthController {
 	public Boolean isAuthenticated(Principal principal) {
 		return principal != null;
 	}
-	
+
 	@RequestMapping("/test")
 	public void testAuthentication(OAuth2Authentication authentication, HttpServletRequest request) {
 		for (Enumeration<String> headers = request.getHeaderNames(); headers.hasMoreElements();) {
@@ -62,13 +62,14 @@ public class AuthController {
 			System.out.println(name + ": " + request.getHeader(name));
 		}
 	}
-	
+
 	/*
-	 * TODO: this method is currently a hackish quick fix, find a better solution
-	 * NOTE: slack user IDs are only unique within a specific team, but team IDs are unique across all of slack
+	 * TODO: this method is currently a hackish quick fix, find a better
+	 * solution NOTE: slack user IDs are only unique within a specific team, but
+	 * team IDs are unique across all of slack
 	 */
 	@RequestMapping("/current")
-	public User getCurrentUser(OAuth2Authentication authentication, HttpServletRequest request) {	
+	public User getCurrentUser(OAuth2Authentication authentication, HttpServletRequest request) {
 		String[] nameTokens = authentication.getName().split(", ");
 		String fullName = nameTokens[0].substring(6);
 		System.out.println(fullName);
@@ -88,7 +89,7 @@ public class AuthController {
 		}
 		return u;
 	}
-	
+
 	@GetMapping("/token")
 	public User getJsonWebToken(OAuth2Authentication authentication, HttpServletResponse response) {
 		try {
@@ -120,6 +121,7 @@ public class AuthController {
 			return null;
 		}
 	}
+
 	@RequestMapping("/getCode")
 	public void loginUser(@RequestParam("code") String code, HttpServletResponse response) {
 		String destination = "/login?error=true";
