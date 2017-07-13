@@ -8,7 +8,38 @@ export let driverController = function($scope, $http, $state){
 	.then(function(response) {
 		$scope.rides = response.data;
 	});
+	
+	//changes poi that is used in the openRequest
+	//TODO: get default scope from user
+	$scope.poiId = {id : 0};
+	
+	$scope.updateSort = function (){
+		
+		$scope.poiId.id = $scope.selectedItem.poiId;
+		console.log($scope.poiId.id);
+		
+		$http.get("/ride/request/open/"+$scope.poiId.id)
+		.then(function(response) {
+			$scope.openRequest = response.data;
+		});
+		
+	}
+	
+	//show open requests from a poi
+	$scope.openRequest = {};
 
+	$http.get("/ride/request/open/"+$scope.poiId.id)
+	.then(function(response) {
+		$scope.openRequest = response.data;
+	});
+	
+	//shows all open (unconfirmed) offers for a user
+	$scope.openRides = {};
+
+	$http.get("/ride/offer/open/")
+	.then(function(response) {
+		$scope.openRides = response.data;
+	});
 
 	// get data that shows all active ride offers for user
 	$scope.activeRides = {};
