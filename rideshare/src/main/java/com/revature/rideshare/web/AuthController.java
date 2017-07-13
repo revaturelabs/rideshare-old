@@ -157,18 +157,9 @@ public class AuthController {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			destination = "/";
 			response.sendRedirect(destination);
-		} catch (IOException e) {
-			e.printStackTrace(); // TODO: change this when logging is set up
-			try {
-				response.sendRedirect(destination);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+		} catch (IOException ex) {
+			ex.printStackTrace(); // TODO: change this when logging is set up
 		}
-	}
-	
-	private User removeSensitiveInformation(User u) {
-		return null;
 	}
 	
 }
