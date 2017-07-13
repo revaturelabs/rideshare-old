@@ -20,7 +20,7 @@
 
 <!--view all pois-->
 <div class="container">
-    <table id="pois" class="table .table-striped" ng-model="allpois.getPois()">
+    <table id="pois" class="table .table-striped">
         <th>
             <tr>
                 <td style="display:none">Id</td>
@@ -36,13 +36,15 @@
         <tbody>
             <tr ng-repeat="poi in allpois">
                 <td style="display:none" id="poiId"/>
-                <td id="poiName"/>
-                <td id="addressLine1"/>
-                <td id="addressLine2"/>
-                <td id="city"/>
-                <td id="state"/>
-                <td id="zipCode"/>
-                <td id="type"/>
+                <td id="poiName">{{poi.poiName}}</td>
+                <td id="addressLine1">{{poi.addressLine1}}</td>
+                <td id="addressLine2">{{poi.addressLine2}}</td>
+                <td id="city">{{poi.city}}</td>
+                <td id="state">{{poi.state}}</td>
+                <td id="zipCode">{{poi.zipCode}}</td>
+                <td id="type">{{poi.type.typeName}}</td>
+                <td><button ng-click="">Edit POI</button></td>
+                <td><button ng-click="removePoi($index)">Remove POI</button></td>
             </tr>
         </tbody>
     </table>

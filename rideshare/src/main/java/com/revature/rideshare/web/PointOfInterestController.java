@@ -33,15 +33,13 @@ public class PointOfInterestController {
 
     @PostMapping("/addPoi")
     public void addPoi(@RequestBody String jsonPoi){
-        System.out.println("in addPoi");
-        PointOfInterest poi = getPoi(jsonPoi);
-        System.out.println("\n\n\n" + poi.toString() + "\n\n\n");
-        poiService.addPoi(poi);
+        poiService.addPoi(getPoi(jsonPoi));
     }
 
     @PostMapping("/removePoi")
-    public void removePoi(@RequestBody PointOfInterest poi){
-        poiService.removePoi(poi);
+    public void removePoi(@RequestBody String jsonPoi){
+    	System.out.println("\n\n\n" + jsonPoi + "\n\n\n");
+        poiService.removePoi(getPoi(jsonPoi));
     }
 
     @PostMapping("/updatePoi")
@@ -52,13 +50,11 @@ public class PointOfInterestController {
     public PointOfInterest getPoi(String jsonString){
         ObjectMapper mapper = new ObjectMapper();
         
-        System.out.println("in getPoi \n\n\n" + jsonString + "\n\n\n\n"); 
         try{
-                return (PointOfInterest)mapper.readValue(jsonString, PointOfInterest.class);            
+        	return (PointOfInterest)mapper.readValue(jsonString, PointOfInterest.class);            
         } catch(Exception e){
-            System.out.println("\n\n\n exception returns null \n\n\n");
             e.printStackTrace();
-                return null; 
+            return null; 
         }
     }
 }

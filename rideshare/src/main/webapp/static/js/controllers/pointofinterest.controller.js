@@ -1,6 +1,6 @@
 export let poiController = function ($scope, $http, $state) {
     $scope.poi = {};
-    $scope.allpois = [];
+    $scope.allpois = {};
 
     // retrieve the poiType objects
     $scope.types = {};
@@ -60,10 +60,8 @@ export let poiController = function ($scope, $http, $state) {
 			
             $scope.poi.latitude = result.results[0].geometry.location.lat;
             $scope.poi.longitude = result.results[0].geometry.location.lng;
-            console.log('Lat: ' + $scope.poi.latitude);
             $http.post("/poiController/addPoi", $scope.poi)
             	.then((formResponse) => {
-            		console.log('hello woild');
             		$state.go('poi');
             		document.getElementById("addPoi-form").reset();
             	},
@@ -75,19 +73,24 @@ export let poiController = function ($scope, $http, $state) {
     }   // end of addPoi() function
 
     // removePoi() 
-    $scope.removePoi = function () {
-        console.log($scope.poi);
+    $scope.removePoi = function (index) {
+        // modal asks "Are you sure you want to remove this POI?"
+        console.log("index " + index);
+        $http.post("/poiController/removePoi", $scope.allpois[index])
+            .then((response) => {
+                $state.go('poi');
+        },
+        (failedResponse) => {
+            alert('failure');
+        })
     }   // end of removePoi() function
 
-    console.log("sanity check #" + 19);  // sanity cache check 
+    console.log("sanity check #" + 32);  // sanity cache check 
 
     // retrieve all pois
-    $scope.getPois = function () {
-        $http.get("/poiController")
-            .then(function (response) {
-                console.log("getting poicontroller" + response.data);
-                $scope.allpois = response.data;
-            });
-    }   // end of getPois () function 
+    $http.get("/poiController")
+        .then(function (response) {
+            $scope.allpois = response.data;
+    });
 };
 
