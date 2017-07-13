@@ -38,8 +38,8 @@ public class RideService {
 	@Autowired
 	private CarRepository carRepo;
 
-//	@Autowired
-//	private PointOfInterestService poiService;
+	@Autowired
+	private PointOfInterestService poiService;
 
 	// REQUESTS
 	public boolean addRequest(RideRequest req) {
