@@ -24,8 +24,7 @@
 					{{ride.availRide.pickupPOI.addressLine1}} <br> Drop off at:
 					{{ride.availRide.dropoffPOI.poiName}},
 					{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
-					{{ride.availRide.car.user.firstName}}
-					{{ride.availRide.car.user.lastName}}<br> Driver note:
+					{{ride.availRide.car.user.fullName}}<br> Driver note:
 					{{ride.availRide.car.notes}} <span
 					ng-show=" ride.availRide.car.notes == null"> n/a </span> <br>
 					Rider: {{ride.request.user.firstName}}
@@ -33,6 +32,11 @@
 					{{ride.request.notes}} <span ng-show=" ride.request.notes == null">
 						n/a </span> <br> Compliant: {{ride.compliant}} <span
 					ng-show=" ride.compliant == null"> n/a </span> <br> <br>
+
+					<br>
+					<button type="submit" class="btn btn-primary"
+						ng-click="offerCancel(ride.availRide.availRideId)"
+						data-dismiss="modal">Cancel Offer</button>
 
 				</li>
 
@@ -54,8 +58,7 @@
 					{{ride.availRide.pickupPOI.addressLine1}} <br> Drop off at:
 					{{ride.availRide.dropoffPOI.poiName}},
 					{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
-					{{ride.availRide.car.user.firstName}}
-					{{ride.availRide.car.user.lastName}}<br> Driver note:
+					{{ride.availRide.car.user.fullName}}<br> Driver note:
 					{{ride.availRide.car.notes}} <span
 					ng-show=" ride.availRide.car.notes == null"> n/a </span> <br>
 					Rider: {{ride.request.user.firstName}}
