@@ -1,4 +1,21 @@
 <div>
   <button ng-click="getActiveRides()" class="btn btn-primary">Active Rides</button>
   <button ng-click="getRideHistory()" class="btn btn-primary">Ride History</button>
+    <table>
+  	<thead>
+  		<tr>
+  			<th>Ride Id</th>
+  			<th>Requester Name</th>
+  			<th>Drive Name</th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		<tr ng-repeat="r in rideHistory">
+  			<td>{{r.rideId}}</td>	
+  			<td>{{r.request.user.fullName}}</td>
+  			<td>{{r.availRide.car.user.fullName}}</td>
+  			
+  		</tr>
+  	</tbody>
+  </table>
 </div>

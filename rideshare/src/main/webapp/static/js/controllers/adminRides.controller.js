@@ -7,9 +7,11 @@ export let adminRidesController = function($scope, $http, $state) {
 	}
 	
 	$scope.getRideHistory = function() {
+		$scope.rideHistory;
 		$http.get('admin/rideHistory')
 		.then((res) => {
 			console.log(res);
+			$scope.rideHistory = res.data;
 		})
 	}
 }

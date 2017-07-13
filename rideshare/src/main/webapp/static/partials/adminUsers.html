@@ -1,3 +1,17 @@
 <div>
   <button ng-click="getUsers()" class="btn btn-primary">Users</button>
+  <table>
+  	<thead>
+  		<tr>
+  			<th>Full Name</th>
+  			<th>Email</th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		<tr ng-repeat="u in users">
+  			<td>{{u.fullName}}</td>
+  			<td>{{u.email}}</td>
+  		</tr>
+  	</tbody>
+  </table>
 </div>
