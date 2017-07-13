@@ -53,6 +53,18 @@ export let driverController = function($scope, $http, $state){
 		)
 	};
 
+	$scope.offerCancel = function(activeRideId) {
+		console.log(activeRideId);
+		$http.get('/ride/offer/cancel/' + activeRideId).then(
+				(response) => {
+					console.log(response.data);
+					$state.go('main.driver');
+
+				}
+		)
+	};
+
+
 	// get all info needed to make a new offer
 	$scope.car = {};
 
