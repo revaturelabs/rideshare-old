@@ -1,22 +1,49 @@
 <!--add new poi-->
 <div class="container">
-    <input type="text" id="poiName" ng-model="poi.poiName" placeholder="Point of Interest Name" required>
-    <input type="text" id="poiAddress1" ng-model="poi.addressLine1" placeholder="Address Line" required>
-    <input type="text" id="poiAddress2" ng-model="poi.addressLine2" value="" placeholder="Address Line 2">
-    <input type="text" id="poiCity" ng-model="poi.city" placeholder="City" required>
-    <input type="text" id="poiState" ng-model="poi.state" placeholder="State" required>
-    <!--not currently doing anything to check state abbreviations atm-->
-    <input type="text" id="poiZipcode" ng-model="poi.zipCode" placeholder="Zip Code" required>
-    <!--latitude/longitude taken when form address submitted-->
-    <input type="number" id="poiLat" ng-model="poi.latitude" style="display:none">
-    <input type="number" id="poiLng" ng-model="poi.longitude" style="display:none">
-    Point of Interest Type
-    <select id="poiType" ng-model="poi.type">
-        <option value="office" selected>Office</option>
-        <option value="housing">Housing</option>
-        <option value="other">Other</option>
-    </select>
-    <input type="submit" value="addPoi" ng-click="addPoi()">
+    <form id="addPoi-form">
+        <input type="text" id="poiName" ng-model="poi.poiName" placeholder="Point of Interest Name" required>
+        <input type="text" id="poiAddress1" ng-model="poi.addressLine1" placeholder="Address Line" required>
+        <input type="text" id="poiAddress2" ng-model="poi.addressLine2" value="" placeholder="Address Line 2">
+        <input type="text" id="poiCity" ng-model="poi.city" placeholder="City" required>
+        <input type="text" id="poiState" ng-model="poi.state" placeholder="State" required>
+        <!--not currently doing anything to check state abbreviations atm-->
+        <input type="text" id="poiZipcode" ng-model="poi.zipCode" placeholder="Zip Code" required>
+        <!--latitude/longitude taken when form address submitted-->
+        <input type="number" id="poiLat" ng-model="poi.latitude" style="display:none">
+        <input type="number" id="poiLng" ng-model="poi.longitude" style="display:none">
+        Point of Interest Type
+        <select id="poiType" ng-model="poi.type" ng-options="type.typeName for type in types"/>
+        <input type="submit" value="addPoi" ng-click="addPoi()">
+    </form>
 </div>
+<!--clear form data after successful submit-->
 
-<!--note- add poi controller js to app.js-->
+<!--view all pois-->
+<div class="container">
+    <table id="pois" class="table .table-striped" ng-model="allpois.getPois()">
+        <th>
+            <tr>
+                <td style="display:none">Id</td>
+                <td>Name</td>
+                <td>Address</td>
+                <td>Address 2</td>
+                <td>City</td>
+                <td>State</td>
+                <td>Zip Code</td>
+                <td>Type</td>
+            </tr>
+        </th>
+        <tbody>
+            <tr ng-repeat="poi in allpois">
+                <td style="display:none" id="poiId"/>
+                <td id="poiName"/>
+                <td id="addressLine1"/>
+                <td id="addressLine2"/>
+                <td id="city"/>
+                <td id="state"/>
+                <td id="zipCode"/>
+                <td id="type"/>
+            </tr>
+        </tbody>
+    </table>
+</div>
