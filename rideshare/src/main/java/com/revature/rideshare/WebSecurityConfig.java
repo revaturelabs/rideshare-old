@@ -3,7 +3,10 @@ package com.revature.rideshare;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Value;
+=======
+>>>>>>> 4963591607629ce6c6997c3cff4546cd80075389
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -67,25 +70,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		slackFilter.setTokenServices(tokenServices);
 		return slackFilter;
 	}
-	
 	@Bean
 	@ConfigurationProperties("slack.client")
 	public AuthorizationCodeResourceDetails slack() {
 		return new AuthorizationCodeResourceDetails();
 	}
-	
 	@Bean
 	@ConfigurationProperties("slack.resource.identity")
 	public ResourceServerProperties slackIdentityResource() {
 		return new ResourceServerProperties();
 	}
-	
 	@Bean
 	@ConfigurationProperties("slack.resource.profile")
 	public ResourceServerProperties slackProfileResource() {
 		return new ResourceServerProperties();
 	}
-	
 	@Bean
 	public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
 		FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -93,5 +92,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		registration.setOrder(-100);
 		return registration;
 	}
-   
 }

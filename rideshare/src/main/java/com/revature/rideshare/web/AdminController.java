@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.PointOfInterest;
-import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.CarService;
 import com.revature.rideshare.service.PointOfInterestService;
@@ -25,49 +24,49 @@ import com.revature.rideshare.service.UserService;
 public class AdminController {
 
 	@Autowired
-	private RideService rideService; 
-	
+	private RideService rideService;
+
 	@Autowired
 	private UserService userService;
-	 
+
 	@Autowired
 	private CarService carService;
-	 
+
 	@Autowired
 	private PointOfInterestService poiService;
-	 
+
 	@GetMapping("/admin/cars")
-	    public List<Car> getAllCars(){
-		 	List<Car> cars = new ArrayList<Car>();
-		 	cars = carService.getAll();
-		 	System.out.println(cars);
-		 	return carService.getAll();
+	public List<Car> getAllCars() {
+		List<Car> cars = new ArrayList<Car>();
+		cars = carService.getAll();
+		System.out.println(cars);
+		return carService.getAll();
 	}
-	 
+
 	@GetMapping("/admin/users")
-		public List<User> getAllUsers(){
-			return userService.getAll();
+	public List<User> getAllUsers() {
+		return userService.getAll();
 	}
-	 
-	@PostMapping("/admin/updateStatus/{id}") 
-		public void updateStatus(@PathVariable(value="id") long id) {
-			User user = userService.getUser(id);
-			userService.updateUser(user);
+
+	@PostMapping("/admin/updateStatus/{id}")
+	public void updateStatus(@PathVariable(value = "id") long id) {
+		User user = userService.getUser(id);
+		userService.updateUser(user);
 	}
-	 
+
 	@PostMapping("/admin/removeUser/{id}")
-	public void removeUser(@PathVariable(value="id") long id) {
+	public void removeUser(@PathVariable(value = "id") long id) {
 		User user = userService.getUser(id);
 		userService.removeUser(user);
 	}
-	 
+
 	@PostMapping("/admin/addPOI")
-	public void addPoi(@RequestBody PointOfInterest poi){
+	public void addPoi(@RequestBody PointOfInterest poi) {
 		poiService.addPoi(poi);
 	}
-	 
+
 	@PostMapping("/admin/removePOI")
-	public void removePoi(@RequestBody PointOfInterest poi){
+	public void removePoi(@RequestBody PointOfInterest poi) {
 		poiService.removePoi(poi);
 	}
 }
