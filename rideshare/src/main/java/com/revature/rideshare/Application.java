@@ -9,9 +9,9 @@ public class Application {
 
 	public static void main(String[] args) throws Exception {
 		ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
-//		for (String s: context.getBeanDefinitionNames()) {
-//			System.out.println(s);
-//		}
+		// for (String s: context.getBeanDefinitionNames()) {
+		// System.out.println(s);
+		// }
 	}
 
 }
