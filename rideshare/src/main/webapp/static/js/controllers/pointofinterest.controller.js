@@ -1,6 +1,31 @@
 export let poiController = function ($scope, $http, $state) {
     $scope.poi = {};
 
+    // Used to bypass Same Origin Policy
+    $scope.createCORSRequest = function(method, url)
+    {
+        var xhr = new XMLHttpRequest();
+
+        if ("withCredentials" in xhr) 
+        {
+            // XHR for Chrome/Firefox/Opera/Safari.
+            xhr.open(method, url, true);
+        } 
+        else if (typeof XDomainRequest != "undefined") 
+        {
+            // XDomainRequest for IE.
+            xhr = new XDomainRequest();
+            xhr.open(method, url);
+        } 
+        else 
+        {
+            // CORS not supported.
+            xhr = null;
+        }
+
+        return xhr;
+    }
+    
     // addPoi function()
     $scope.addPoi = function () {
         console.log($scope.poi); //for debugging later
@@ -22,25 +47,23 @@ export let poiController = function ($scope, $http, $state) {
             "&key=AIzaSyB_mhIdxsdRfwiAHVm8qPufCklQ0iMOt6A";
         // console.log("url " + url); // debugging
 
-        var jsonresponse = []; 
-
-        $http.get(url)
-            .then(function (response) {
-                console.log("sanity check #" + 2);
-
-                $scope.result = response; 
-                $scope.poi.latitude = $scope.result.data.results[0].geometry.location.lat;
-                $scope.poi.longitude = $scope.result.data.results[0].geometry.location.lng;
-            });
-
-        // add poi
-        $http.post("/poiController/addPoi", $scope.poi)
-            .then((formResponse) => {
-                $state.go('poi');
-            },
-            (failedResponse) => {
-                alert('failure');
-            })
+        var xhr = $scope.createCORSRequest('GET', url);
+        
+        xhr.onload = function(response) {
+        	var result = JSON.parse(xhr.responseText);
+            $scope.poi.latitude = result.results[0].geometry.location.lat;
+            $scope.poi.longitude = result.results[0].geometry.location.lng;
+            
+            // add poi
+            $http.post("/poiController/addPoi", $scope.poi)
+                .then((formResponse) => {
+                    $state.go('poi');
+                },
+                (failedResponse) => {
+                    alert('failure');
+                })
+        }
+        xhr.send();
     }   // end of addPoi function()
 };
 
