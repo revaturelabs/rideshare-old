@@ -129,9 +129,9 @@ public class RideController {
 	}
 
 	@GetMapping("/offer/open")
-	public List<AvailableRide> getOpenOffers() {
-		// TODO: get actual poi id in req
-		return rideService.getOpenOffers(1);
+	public List<AvailableRide> getOpenOffers( @RequestHeader (name = "Authorization") String token)  {
+		User u = getUserFromToken(token);
+		return rideService.getOpenOffersForUser(u);
 	}
 
 	@GetMapping("/offer/active")
