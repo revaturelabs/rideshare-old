@@ -42,7 +42,7 @@ public class PointOfInterest implements Serializable {
 	private String state;
 	
 	@Column(name="ZIP", nullable=false)
-	private short zipCode;
+	private String zipCode;
 	
 	@Column(name="LATITUDE", nullable=false, scale=6)
 	private double latitude;
@@ -56,7 +56,7 @@ public class PointOfInterest implements Serializable {
 	public PointOfInterest(){}
 
 	public PointOfInterest(int poiId, String poiName, String addressLine1, String addressLine2, String city,
-			String state, short zipCode, double latitude, double longitude, PointOfInterestType type) {
+			String state, String zipCode, double latitude, double longitude, PointOfInterestType type) {
 		super();
 		this.poiId = poiId;
 		this.poiName = poiName;
@@ -118,11 +118,11 @@ public class PointOfInterest implements Serializable {
 		this.state = state;
 	}
 
-	public short getZipCode() {
+	public String getZipCode() {
 		return zipCode;
 	}
 
-	public void setZipCode(short zipCode) {
+	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
 

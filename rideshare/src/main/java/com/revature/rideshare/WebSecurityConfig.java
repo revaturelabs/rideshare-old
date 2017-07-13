@@ -3,6 +3,7 @@ package com.revature.rideshare;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -34,10 +35,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
 	
+	@Value("${server.http.port}")
+	private String httpPort;
+	@Value("${server.port}")
+	private String httpsPort;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http//.requiresChannel().antMatchers("/**").requiresSecure()
-			.antMatcher("/**")
+//		http.portMapper()
+//			.http(Integer.parseInt(httpPort)).mapsTo(Integer.parseInt(httpsPort));
+		
+		http.requiresChannel().antMatchers("/**").requiresSecure();
+		
+		http.antMatcher("/**")
 			.authorizeRequests()
 				.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html", "/auth/check")
 				.permitAll()

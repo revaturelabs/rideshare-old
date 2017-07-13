@@ -50,10 +50,13 @@ public class AvailableRide implements Serializable{
 	@Column(name="NOTES")
 	private String notes;
 
+	@Column(name="IS_OPEN", nullable=false)
+	private boolean isOpen;
+	
 	public AvailableRide(){}
 	
 	public AvailableRide(long availRideId, Car car, PointOfInterest pickupPOI, PointOfInterest dropoffPOI,
-			short seatsAvailable, Date time, String notes) {
+			short seatsAvailable, Date time, String notes, boolean isOpen) {
 		super();
 		this.availRideId = availRideId;
 		this.car = car;
@@ -62,6 +65,7 @@ public class AvailableRide implements Serializable{
 		this.seatsAvailable = seatsAvailable;
 		this.time = time;
 		this.notes = notes;
+		this.isOpen = isOpen;
 	}
 
 	public long getAvailRideId() {
@@ -119,8 +123,12 @@ public class AvailableRide implements Serializable{
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
-	
 
-	
+	public boolean isOpen() {
+		return isOpen;
+	}
+
+	public void setOpen(boolean isOpen) {
+		this.isOpen = isOpen;
+	}
 }
