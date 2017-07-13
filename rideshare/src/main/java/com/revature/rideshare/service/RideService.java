@@ -245,6 +245,24 @@ public class RideService {
 
 		return openOffers;
 	}
+	
+	public List<AvailableRide> getOpenOffersForUser(User u) {
+		
+		List<AvailableRide> allOpenOffers = availRideRepo.findAllByIsOpenTrue();
+		List<AvailableRide> openOffers =  new ArrayList<AvailableRide>();
+		
+		//filter rides to get ride for user
+		for(AvailableRide a: allOpenOffers)
+		{
+			if(a.getCar().getUser().getUserId() == u.getUserId())
+			{
+				openOffers.add(a);
+			}
+		}
+		
+
+		return openOffers;
+	}
 
 	public List<Ride> getActiveOffersForUser(User u) {
 		List<Ride> allRides = rideRepo.findByAvailRideCarUser(u);
