@@ -1,5 +1,6 @@
 package com.revature.rideshare.web;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,34 +37,18 @@ public class SlackController {
 
 	// REQUESTS
 	@PostMapping("/request/add")
-	public void addRequest(@RequestParam(name = "user_id") String userId,
-			@RequestParam(name = "command") String command, @RequestParam(name = "text") String text) {
-		// /request YYYY/MM/DD tt:tt pickupid dropoffid
+	public void addRequest(@RequestParam(name = "user_id") String userId, @RequestParam(name = "text") String text) {
+		// /request MM/DD tt:tt
 		User u = userService.getUserBySlackId(userId);
 		RideRequest request = new RideRequest();
 		// Split the input by a space
 		String delim = " ";
 		String[] tokens = text.split(delim);
-		// Split the variables for the LocalDateTime Object
+		// Split the variables for the Date Object
 		String[] dateTokens = tokens[0].split("/");
 		String[] timeTokens = tokens[1].split(":");
-		String checkPoi = tokens[2] + tokens[3];
-		if (checkPoi.equalsIgnoreCase(("to work")) || tokens[2].equalsIgnoreCase("W")) {
-			request.setPickupLocation(u.getMainPOI());
-			request.setDropOffLocation(u.getWorkPOI());
-		} else if (checkPoi.equalsIgnoreCase("to home") || tokens[2].equalsIgnoreCase("H")) {
-			request.setPickupLocation(u.getWorkPOI());
-			request.setDropOffLocation(u.getMainPOI());
-		} else {
-			int pickupLocationId = Integer.parseInt(tokens[2]);
-			int dropoffLocationId = Integer.parseInt(tokens[3]);
-			PointOfInterest pickupLocation = poiService.getPoi(pickupLocationId);
-			PointOfInterest dropoffLocation = poiService.getPoi(dropoffLocationId);
-			request.setPickupLocation(pickupLocation);
-			request.setDropOffLocation(dropoffLocation);
-		}
-		Date rideDate = new Date(Integer.parseInt(dateTokens[0]) - 1900, Integer.parseInt(dateTokens[1]),
-				Integer.parseInt(dateTokens[2]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
+		Date rideDate = new Date(LocalDate.now().getYear()-1900, Integer.parseInt(dateTokens[0])-1,
+				Integer.parseInt(dateTokens[1]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
 
 		request.setUser(u);
 		// request.setTime(rideDate);
