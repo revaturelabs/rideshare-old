@@ -45,7 +45,7 @@ export let driverController = function($scope, $http, $state){
 
 		$http.post('/ride/offer/add', $scope.offer).then(
 				(formResponse) => {
-					$state.go('driver');
+					$state.go('main.driver');
 				},
 				(failedResponse) => {
 					alert('Failure');
