@@ -28,7 +28,7 @@ export let passengerController = function($scope, $http, $state, $location){
 	}
 
 
-
+	//global user
 	let user;
 
 	$scope.getDisplay = function() {
@@ -40,9 +40,18 @@ export let passengerController = function($scope, $http, $state, $location){
 	};
 
 	$http.get("user/me").then(function(response){
-		user = response.data;// get current user
-		let userPOI = 'user'+user.mainPOI.poiId;
-		$scope[userPOI] = true;
+		// get current user
+		user = response.data;
+//		console.log(user.mainPOI.poiId);
+		//gets user main poi then sets the starting point
+		//dropdown to the users main poi
+		if(user.mainPOI.poiId == null){
+			let userPOI = 'user1';
+			$scope[userPOI] = true;
+		}else{
+			let userPOI = 'user'+user.mainPOI.poiId;
+			$scope[userPOI] = true;
+		}
 	});
 
 	$http.get('poiController').then(function(response){
@@ -50,13 +59,13 @@ export let passengerController = function($scope, $http, $state, $location){
 
 		$scope.allMainPOI = allPOI;
 
-		// get the current user main POI
-		let userMainPOI = {lat: user.mainPOI.latitude, lng: user.mainPOI.longitude};
+		// get the current user main POI {lat: user.mainPOI.latitude, lng: user.mainPOI.longitude}
+		let userMainPOI = {lat: allPOI[1].longitude, lng: allPOI[1].longitude};//user main poi check
 
 		// create markers for all the current POI
 		let locations = [];
 		for(let x = 0; x < response.data.length; x++){
-			let temp = {lat: response.data[x].latitude, lng: response.data[x].longitude};
+			let temp = {lat: allPOI[x].latitude, lng: allPOI[x].longitude};
 			locations.push(temp);
 		};
 
