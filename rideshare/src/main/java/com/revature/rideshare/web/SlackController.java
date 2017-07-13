@@ -51,7 +51,7 @@ public class SlackController {
 				Integer.parseInt(dateTokens[1]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
 
 		request.setUser(u);
-		// request.setTime(rideDate);
+		request.setTime(rideDate);
 
 		rideService.addRequest(request);
 	}
