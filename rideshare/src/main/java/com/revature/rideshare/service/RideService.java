@@ -89,9 +89,32 @@ public class RideService {
 		}
 	}
 
-	// TODO: implement
+	/**
+	 * Takes in a Ride ID. Closes the open RideRequest and deletes the Ride.
+	 *
+	 * @param  long id  The id of the request to cancel.
+	 * @return true on success, false on failure.
+	 */
 	public boolean cancelRequest(long id, User u) {
-		return false;
+		try {
+			System.out.println("\n\nTRYING\n cancelRequest");
+			Ride ride = rideRepo.findOne(id);
+			RideRequest req = ride.getRequest();
+			
+//			if(u.getSlackId() != req.getUser().getSlackId()) return false;
+			
+			AvailableRide availRide = ride.getAvailRide();
+			if(!availRide.isOpen()) availRide.setOpen(true); //reopen if closed (because a seat is now available)
+	
+			rideRepo.delete(ride);
+			rideReqRepo.delete(req);
+			System.out.println("\n\nSUCCESS\n cancelRequest");
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("\n\nFAILURE\n cancelRequest");
+			return false;
+		}
 	}
 
 	public List<RideRequest> getOpenRequests(int poiId) {
@@ -178,9 +201,34 @@ public class RideService {
 		}
 	}
 
-	// TODO: implement
+	/**
+	 * Takes in an AvailableRide id and deletes ALL Rides associated with it. Sets the RequestStatus of ALL
+	 * RideRequest objects associated to 'OPEN' and deletes the AvailableRide object.
+	 *
+	 * @param  long id  The id of the Ride to cancel.
+	 * @return true on success, false on failure.
+	 */
 	public boolean cancelOffer(long id, User u) {
-		return false;
+		try {
+			List<Ride> rides = rideRepo.findAllByAvailRideAvailRideId(id);
+			AvailableRide availRide = rides.get(0).getAvailRide();
+			
+//			if( u.getSlackId() != availRide.getCar().getUser().getSlackId()) return false;
+			
+			for(Ride r : rides){
+				RideRequest temp = r.getRequest();
+				temp.setStatus(RequestStatus.OPEN); //reopen request
+				rideReqRepo.save(temp); // update Request
+				
+				rideRepo.delete(r);
+			}
+			
+			availRideRepo.delete(availRide);			
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public List<AvailableRide> getOpenOffers(int poiId) {
