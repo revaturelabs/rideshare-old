@@ -19,7 +19,8 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 	jwtOptionsProvider.config({
 	      tokenGetter: [function() {
 	        return localStorage.getItem('RideShare_auth_token');
-	      }]
+	      }],
+	      whiteListedDomains: ['maps.googleapis.com']
 	    });
 
 	$httpProvider.interceptors.push('jwtInterceptor');
@@ -71,3 +72,4 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		})
 	
 });
+s

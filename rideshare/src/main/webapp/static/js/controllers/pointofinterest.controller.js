@@ -9,6 +9,31 @@ export let poiController = function ($scope, $http, $state) {
             $scope.types = response.data;
         })  // end of poiType retrieval 
 
+    // Used to bypass Same Origin Policy
+    $scope.createCORSRequest = function(method, url)
+    {
+        var xhr = new XMLHttpRequest();
+
+        if ("withCredentials" in xhr) 
+        {
+            // XHR for Chrome/Firefox/Opera/Safari.
+            xhr.open(method, url, true);
+        } 
+        else if (typeof XDomainRequest != "undefined") 
+        {
+            // XDomainRequest for IE.
+            xhr = new XDomainRequest();
+            xhr.open(method, url);
+        } 
+        else 
+        {
+            // CORS not supported.
+            xhr = null;
+        }
+
+        return xhr;
+    }
+    
     // addPoi function()
     $scope.addPoi = function () {
         // must first get lat/lng THEN sumbit data to backend
@@ -26,25 +51,27 @@ export let poiController = function ($scope, $http, $state) {
         var url = "https://maps.googleapis.com/maps/api/geocode/" +
             "json?address=" + address +
             "&key=AIzaSyB_mhIdxsdRfwiAHVm8qPufCklQ0iMOt6A";
-
-        // extract latitude and longitude with google maps api
-        $http.get(url)
-            .then(function (response) {
-                $scope.result = response;
-                $scope.poi.latitude = $scope.result.data.results[0].geometry.location.lat;
-                $scope.poi.longitude = $scope.result.data.results[0].geometry.location.lng;
-            })
-            .then(function () {
-                // send poi to backend
-                $http.post("/poiController/addPoi", $scope.poi)
-                    .then((formResponse) => {
-                        $state.go('poi');
-                        document.getElementById("addPoi-form").reset();
-                    },
-                    (failedResponse) => {
-                        alert('failure');
-                    })
-            });
+		
+		var xhr = $scope.createCORSRequest('GET', url)
+		
+		// extract latitude and longitude with google maps api
+		xhr.onload = function(response) {
+			var result = JSON.parse(xhr.responseText);
+			
+            $scope.poi.latitude = result.results[0].geometry.location.lat;
+            $scope.poi.longitude = result.results[0].geometry.location.lng;
+            console.log('Lat: ' + $scope.poi.latitude);
+            $http.post("/poiController/addPoi", $scope.poi)
+            	.then((formResponse) => {
+            		console.log('hello woild');
+            		$state.go('poi');
+            		document.getElementById("addPoi-form").reset();
+            	},
+            	(failedResponse) => {
+            		alert('failure');
+            	})
+		}
+		xhr.send();
     }   // end of addPoi() function
 
     // removePoi() 
