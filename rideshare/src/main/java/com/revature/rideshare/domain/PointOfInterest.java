@@ -1,7 +1,6 @@
 package com.revature.rideshare.domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,48 +14,49 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="POINTS_OF_INTEREST")
+@Table(name = "POINTS_OF_INTEREST")
 public class PointOfInterest implements Serializable {
 
 	private static final long serialVersionUID = 1610039859397834102L;
 
 	@Id
-	@Column(name="POI_ID")
+	@Column(name = "POI_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "POI_ID_SEQUENCE")
-	@SequenceGenerator(name="POI_ID_SEQUENCE", sequenceName="POI_ID_SEQUENCE")
+	@SequenceGenerator(name = "POI_ID_SEQUENCE", sequenceName = "POI_ID_SEQUENCE")
 	private int poiId;
-	
-	@Column(name="NAME", nullable=false)
+
+	@Column(name = "NAME", nullable = false)
 	private String poiName;
-	
-	@Column(name="ADDRESS_1", nullable=false)
+
+	@Column(name = "ADDRESS_1", nullable = false)
 	private String addressLine1;
-	
-	@Column(name="ADDRESS_2")
+
+	@Column(name = "ADDRESS_2")
 	private String addressLine2;
-	
-	@Column(name="CITY", nullable=false)
+
+	@Column(name = "CITY", nullable = false)
 	private String city;
-	
-	@Column(name="STATE", nullable=false)
+
+	@Column(name = "STATE", nullable = false)
 	private String state;
-	
-	@Column(name="ZIP", nullable=false)
-	private short zipCode;
-	
-	@Column(name="LATITUDE", nullable=false, scale=6)
+
+	@Column(name = "ZIP", nullable = false)
+	private String zipCode;
+
+	@Column(name = "LATITUDE", nullable = false, scale = 6)
 	private double latitude;
-	
-	@Column(name="LONGITUDE", nullable=false, scale=6)
+
+	@Column(name = "LONGITUDE", nullable = false, scale = 6)
 	private double longitude;
-	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE )
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private PointOfInterestType type;
-	
-	public PointOfInterest(){}
+
+	public PointOfInterest() {
+	}
 
 	public PointOfInterest(int poiId, String poiName, String addressLine1, String addressLine2, String city,
-			String state, short zipCode, double latitude, double longitude, PointOfInterestType type) {
+			String state, String zipCode, double latitude, double longitude, PointOfInterestType type) {
 		super();
 		this.poiId = poiId;
 		this.poiName = poiName;
@@ -118,11 +118,11 @@ public class PointOfInterest implements Serializable {
 		this.state = state;
 	}
 
-	public short getZipCode() {
+	public String getZipCode() {
 		return zipCode;
 	}
 
-	public void setZipCode(short zipCode) {
+	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
 
@@ -149,7 +149,12 @@ public class PointOfInterest implements Serializable {
 	public void setType(PointOfInterestType type) {
 		this.type = type;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "PointOfInterest [poiId=" + poiId + ", poiName=" + poiName + ", addressLine1=" + addressLine1
+				+ ", addressLine2=" + addressLine2 + ", city=" + city + ", state=" + state + ", zipCode=" + zipCode
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", type=" + type + "]";
+	}
+
 }
