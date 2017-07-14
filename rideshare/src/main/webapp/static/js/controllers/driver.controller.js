@@ -29,7 +29,7 @@ export let driverController = function($scope, $http, $state){
 	}
 	
 	//show open requests from a poi
-	$http.get("/ride/request/open")
+	$http.get("/ride/request/open/"+$scope.poiId.id)
 	.then(function(response) {
 		$scope.openRequest = response.data;
 	});
@@ -37,7 +37,7 @@ export let driverController = function($scope, $http, $state){
 	//shows all open (unconfirmed) offers for a user
 	$scope.openRides = {};
 
-	$http.get("/ride/offer/open/")
+	$http.get("/ride/offer/open/"+$scope.poiId.id)
 	.then(function(response) {
 		$scope.openRides = response.data;
 	});
