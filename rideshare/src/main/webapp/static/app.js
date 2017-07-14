@@ -55,12 +55,6 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			controller : driverController
 		})
 	
-		.state('main.history',{
-			url: '/history',
-			templateUrl : 'partials/history.html',
-			controller : historyController
-		})
-	
 		.state('main.addCar' ,{
 			url: '/addCar',
 			templateUrl : 'partials/addCar.html',
