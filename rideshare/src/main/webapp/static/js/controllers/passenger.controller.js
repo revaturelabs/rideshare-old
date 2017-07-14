@@ -40,11 +40,11 @@ export let passengerController = function($scope, $http, $state, $location){
 		//drop down to the users main POI
 		if(user.mainPOI == null){
 			//sets the default drop down option to 1
-			let userPOI = 'user1';
+			let userPOI = 'start1';
 			$scope[userPOI] = true;
 		}else{
 			//sets the start drop down to the users main POI
-			let userPOI = 'user'+user.mainPOI.poiId;
+			let userPOI = 'start'+user.mainPOI.poiId;
 			$scope[userPOI] = true;
 		}
 	});
@@ -54,7 +54,7 @@ export let passengerController = function($scope, $http, $state, $location){
 		let userMainPOI;
 		
 		$scope.allMainPOI = allPOI;
-
+		
 		// check if the user main POI is null
 		if(user.mainPOI == null){
 			//if null set the default coordinates to 1st address in the database
@@ -81,7 +81,8 @@ export let passengerController = function($scope, $http, $state, $location){
 		function initMap() {
 			var map = new google.maps.Map(document.getElementById('map'), {
 				zoom: 15,
-				center: userMainPOI
+				center: userMainPOI,
+				disableDefaultUI: true
 			});
 
 			var infowindow = new google.maps.InfoWindow({
@@ -108,39 +109,40 @@ export let passengerController = function($scope, $http, $state, $location){
 				markers[x].addListener('click',function(){
 					// set each ng-selected value to false
 					for(let x = 0; x<markers.length; x++){
-						let temp1 = 'user' + id;
-						let temp2 = 'selected' + id;
+						let temp1 = 'start' + id;
+						let temp2 = 'destination' + id;
 						
 						$scope[temp1] = false;
 						$scope[temp2] = false;
-					}
-
-					if(poiLimit === 0){
-						markers[x].setIcon('http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png');
 						
-						let temp1 = 'user' + id;
-						$scope[temp1] = true;
-						$scope.$apply();
+						if(poiLimit === 2){
+							poiLimit = 1;
+						}
+					}
 					
-						poiLimit = 1;
-					}else if(poiLimit === 1){
+					if(poiLimit === 1){
 						markers[x].setIcon('http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png');
 						
-						let temp2 = 'selected' + id;
+						let temp2 = 'destination' + id;
 						$scope[temp2] = true;
 						$scope.$apply();
-						
 						poiLimit = 2;
 					}
 					
-					let temp = 'selected' + id;
-					$scope[temp] = true;
-					$scope.$apply();
+					if(poiLimit === 0){
+						markers[x].setIcon('http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png');
+						console.log('limit0 '+poiLimit);
+						let temp1 = 'start' + id;
+						$scope[temp1] = true;
+						$scope.$apply();
+						poiLimit = 1;
+					}
 					
 				}, false);
 
 			}
 			
+			//remove push pins from map, by setting the markers to default
 			$scope.clearMapMarkers = function() {
 				poiLimit = 0;
 				for(let x = 0; x < markers.length; x++){
