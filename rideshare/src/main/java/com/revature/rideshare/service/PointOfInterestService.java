@@ -51,7 +51,7 @@ public class PointOfInterestService {
 		poiRepo.saveAndFlush(poi);
 	}
 
-	public PointOfInterest getPoi(long id) {
-		return poiRepo.getOne(id);
+	public PointOfInterest getPoi(int id) {
+		return poiRepo.findBypoiId(id);
 	}
 }

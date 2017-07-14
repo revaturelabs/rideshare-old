@@ -11,12 +11,15 @@ export let driverController = function($scope, $http, $state){
 	
 	//changes poi that is used in the openRequest
 	//TODO: get default scope from user
-	$scope.poiId = {id : 0};
+	$scope.poiId = {id : 1};
+	
+	$scope.openRequest = {};
 	
 	$scope.updateSort = function (){
 		
 		$scope.poiId.id = $scope.selectedItem.poiId;
 		console.log($scope.poiId.id);
+		console.log($scope.openRequest)
 		
 		$http.get("/ride/request/open/"+$scope.poiId.id)
 		.then(function(response) {
@@ -26,9 +29,7 @@ export let driverController = function($scope, $http, $state){
 	}
 	
 	//show open requests from a poi
-	$scope.openRequest = {};
-
-	$http.get("/ride/request/open/"+$scope.poiId.id)
+	$http.get("/ride/request/open")
 	.then(function(response) {
 		$scope.openRequest = response.data;
 	});
