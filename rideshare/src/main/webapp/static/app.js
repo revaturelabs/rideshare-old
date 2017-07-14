@@ -8,7 +8,7 @@ import { slackLoginController } from './js/controllers/slackLogin.controller.js'
 import { addCarController } from './js/controllers/addCar.controller.js';
 import { adminRidesController } from './js/controllers/adminRides.controller.js';
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
-import { poiController } from './js/controllers/pointofinterest.controller.js';
+import { adminPoiController } from './js/controllers/adminPOI.controller.js';
 
 //var = function scope
 //const and let = block scope 
@@ -79,9 +79,9 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			controller : adminUsersController
 		})
 		
-		.state('main.poi',{
-			url: '/poi',
+		.state('main.adminPoi',{
+			url: '/adminPoi',
 			templateUrl : 'partials/poi.html',
-			controller : poiController
+			controller : adminPoiController
 		})
 });
