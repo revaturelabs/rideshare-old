@@ -82,11 +82,11 @@ public class RideController {
 		return rideService.getOpenRequests(id);
 	}
 
-	@GetMapping("/request/open")
-	public List<RideRequest> getOpenRequests() {
-		// TODO: get actual poi id in req
-		return rideService.getOpenRequests(1);
-	}
+//	@GetMapping("/request/open")
+//	public List<RideRequest> getOpenRequests() {
+//		// TODO: get actual poi id in req
+//		return rideService.getOpenRequests(1);
+//	}
 
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {

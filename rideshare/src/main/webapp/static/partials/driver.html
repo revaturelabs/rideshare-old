@@ -25,11 +25,15 @@
 					{{ride.availRide.dropoffPOI.poiName}},
 					{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
 					{{ride.availRide.car.user.fullName}}<br> Driver note:
-					{{ride.availRide.car.notes}} <span
+					{{ride.availRide.car.notes}} 
+					<span
 					ng-show=" ride.availRide.car.notes == null"> n/a </span> <br>
-					Rider: {{ride.request.user.firstName}}
-					{{ride.request.user.lastName}}<br> Rider note:
-					{{ride.request.notes}} <span ng-show=" ride.request.notes == null">
+					
+					<p ng-repeat="request in ride.request">
+					Rider: {{request.user.fullName}}
+					<br> Rider note:
+					{{request.notes}} </p> 
+					<span ng-show=" ride.request.notes == null">
 						n/a </span> <br> Compliant: {{ride.compliant}} <span
 					ng-show=" ride.compliant == null"> n/a </span> <br> <br>
 
