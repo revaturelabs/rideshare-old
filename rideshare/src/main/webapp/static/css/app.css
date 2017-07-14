@@ -108,6 +108,10 @@ a {
 	text-decoration: underline;
 }
 
+.active {
+	color: #ffffff !important;
+}
+
 #login-container {
 	text-align: center;
 }
