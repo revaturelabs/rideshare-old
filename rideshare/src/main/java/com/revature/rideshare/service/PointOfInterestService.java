@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.rideshare.dao.PointOfInterestRepository;
+import com.revature.rideshare.dao.PointOfInterestTypeRepository;
 import com.revature.rideshare.domain.PointOfInterest;
+import com.revature.rideshare.domain.PointOfInterestType;
 
 @Component("poiService")
 @Transactional // need??
@@ -15,6 +17,8 @@ public class PointOfInterestService {
 
 	@Autowired
 	private PointOfInterestRepository poiRepo;
+	@Autowired
+	private PointOfInterestTypeRepository poiTypeRepo;
 
 	public PointOfInterestService() {
 	}
@@ -23,8 +27,16 @@ public class PointOfInterestService {
 		this.poiRepo = poiRepo;
 	}
 
+	public void setPoiTypeRepo(PointOfInterestTypeRepository poiTypeRepo) {
+		this.poiTypeRepo = poiTypeRepo;
+	}
+
 	public List<PointOfInterest> getAll() {
 		return poiRepo.findAll();
+	}
+
+	public List<PointOfInterestType> getAllTypes() {
+		return poiTypeRepo.findAll();
 	}
 
 	public void addPoi(PointOfInterest poi) {
