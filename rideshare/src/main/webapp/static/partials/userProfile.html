@@ -1,0 +1,12 @@
+<!--User can set POI-->
+<div>
+    <form>
+        Select Main POI
+        <select id="mainPoi" ng-model="user.mainPOI" ng-options="poi.poiName for poi in allpois"/>
+        <br>
+        Select Work POI
+        <select id="workPoi" ng-model="user.workPOI" ng-options="poi.poiName for poi in allpois"/>
+        <br>
+        <input type="submit" value="Save Changes" ng-click="setPois()">
+    </form>
+</div>

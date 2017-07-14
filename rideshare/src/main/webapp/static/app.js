@@ -9,6 +9,7 @@ import { addCarController } from './js/controllers/addCar.controller.js';
 import { adminRidesController } from './js/controllers/adminRides.controller.js';
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
+import { userProfileController } from './js/controllers/userProfile.controller.js';
 
 //var = function scope
 //const and let = block scope 
@@ -78,4 +79,10 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			templateUrl : 'partials/poi.html',
 			controller : adminPoiController
 		})
+    
+        .state('main.userProfile', {
+            url: '/userProfile',
+            templateUrl : 'partials/userProfile.html',
+            controller : userProfileController 
+        })
 });
