@@ -1,29 +1,37 @@
-<div>
-	<button ng-click="logout()" class="btn btn-primary">Logout</button>
-	<button ng-click="getActiveRequests()" class="btn btn-primary">Active
-		Requests</button>
-	<button ng-click="getRequestHistory()" class="btn btn-primary">Request
-		History</button>
-	<button type="button" ng-click="clearMapMarkers()">Reset Map</button>
-</div>
-
-<div id="map" style="height: 400px; width: 600px;"></div>
+<div id="map" style="height: 300px; width: 100%;"></div>
 
 <div class="container">
 	<div class="row">
 		<div class="col">
-			<h5>Starting Point</h5>
-			<select id="fromPOI">
-				<option ng-repeat="x in allMainPOI" ng-selected="start{{ x.poiId }}">{{
+
+			<div class="input-group">
+				<span class="input-group-addon">Starting Point</span> <select
+					id="fromPOI" class="form-control">
+					<option ng-repeat="x in allMainPOI" ng-selected="start{{ x.poiId }}">{{
+						x.poiName + " - " + x.addressLine1 }}</option>
+				</select>
+			</div>
+
+			<div class="input-group">
+				<span class="input-group-addon">Destination</span> <select
+					id="toPOI" class="form-control">
+					<option ng-repeat="x in allMainPOI" ng-selected="destination{{ x.poiId }}">{{ 
 					x.poiName + " - " + x.addressLine1 }}</option>
-			</select>
-			<h5>Destination</h5>
-			<select id="toPOI">
-				<option ng-repeat="x in allMainPOI" ng-selected="destination{{ x.poiId }}">{{ 
-				x.poiName + " - " + x.addressLine1 }}</option>
-			</select>
+				</select>
+			</div>
+
 		</div>
 	</div>
 </div>
+
 <p id="display"></p>
+
+<div>
+	<button ng-click="getActiveRequests()" class="btn btn-primary">Active
+		Requests</button>
+	<button ng-click="getRequestHistory()" class="btn btn-primary">Request
+		History</button>
+	<button type="button" ng-click="getDisplay()">Get Info</button>
+</div>
+
 <script src="../js/googleMapAPI/markerclusterer.js"></script>

@@ -3,15 +3,44 @@
 
 	<!-- Nav tabs -->
 	<ul class="nav nav-tabs" role="tablist">
-		<li role="presentation" class="active"><a href="#active"
-			aria-controls="active" role="tab" data-toggle="tab" target="_self">Active</a></li>
+		<li role="presentation" class="active"><a href="#open"
+			aria-controls="open" role="tab" data-toggle="tab" target="_self">Available</a></li>
+		<li role="presentation"><a href="#active" aria-controls="active"
+			role="tab" data-toggle="tab" target="_self">In Progress</a></li>
 		<li role="presentation"><a href="#history"
 			aria-controls="history" role="tab" data-toggle="tab" target="_self">History</a></li>
 	</ul>
 
 	<!-- Tab panes -->
 	<div class="tab-content">
-		<div role="tabpanel" class="tab-pane active" id="active">
+
+		<div role="tabpanel" class="tab-pane active" id="open">
+
+			<br> <select ng-model="selectedItem"
+				ng-options="poi.poiName for poi in allPoi" ng-change="updateSort()"></select>
+			<br> <br>
+
+			<!-- html and angular function used to display open rides -->
+			<ul style="list-style-type: none;">
+
+				<li ng-if="openRequest.length == 0">No open requests for this
+					point of intrest</li>
+
+				<li ng-repeat="ride in openRequest">Time: {{ride.time}}<br>
+					Pick up at: {{ride.pickupLocation.poiName}},
+					{{ride.pickupLocation.addressLine1}} <br> Drop off at:
+					{{ride.dropOffLocation.poiName}},
+					{{ride.dropOffLocation.addressLine1}}<br> Rider:
+					{{ride.user.fullName}} <br> Rider note: {{ride.notes}} <span
+					ng-show=" ride.notes == null"> n/a </span> <br> <br>
+
+				</li>
+
+			</ul>
+
+		</div>
+
+		<div role="tabpanel" class="tab-pane" id="active">
 
 			<!-- html and angular function used to display open rides -->
 			<ul style="list-style-type: none;">
@@ -24,15 +53,23 @@
 					{{ride.availRide.pickupPOI.addressLine1}} <br> Drop off at:
 					{{ride.availRide.dropoffPOI.poiName}},
 					{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
-					{{ride.availRide.car.user.firstName}}
-					{{ride.availRide.car.user.lastName}}<br> Driver note:
-					{{ride.availRide.car.notes}} <span
+					{{ride.availRide.car.user.fullName}}<br> Driver note:
+					{{ride.availRide.car.notes}} 
+					<span
 					ng-show=" ride.availRide.car.notes == null"> n/a </span> <br>
-					Rider: {{ride.request.user.firstName}}
-					{{ride.request.user.lastName}}<br> Rider note:
-					{{ride.request.notes}} <span ng-show=" ride.request.notes == null">
+	
+					<p ng-repeat="request in ride.request">
+					Rider: {{request.user.fullName}}
+					<br> Rider note:
+					{{request.notes}} </p> 
+					<span ng-show=" ride.request.notes == null">
 						n/a </span> <br> Compliant: {{ride.compliant}} <span
 					ng-show=" ride.compliant == null"> n/a </span> <br> <br>
+
+					<br>
+					<button type="submit" class="btn btn-primary"
+						ng-click="offerCancel(ride.availRide.availRideId)"
+						data-dismiss="modal">Cancel Offer</button>
 
 				</li>
 
@@ -54,12 +91,10 @@
 					{{ride.availRide.pickupPOI.addressLine1}} <br> Drop off at:
 					{{ride.availRide.dropoffPOI.poiName}},
 					{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
-					{{ride.availRide.car.user.firstName}}
-					{{ride.availRide.car.user.lastName}}<br> Driver note:
+					{{ride.availRide.car.user.fullName}}<br> Driver note:
 					{{ride.availRide.car.notes}} <span
 					ng-show=" ride.availRide.car.notes == null"> n/a </span> <br>
-					Rider: {{ride.request.user.firstName}}
-					{{ride.request.user.lastName}}<br> Rider note:
+					Rider: {{ride.request.user.fullName}} <br> Rider note:
 					{{ride.request.notes}} <span ng-show=" ride.request.notes == null">
 						n/a </span> <br> Compliant: {{ride.compliant}} <span
 					ng-show=" ride.compliant == null"> n/a </span> <br> <br>

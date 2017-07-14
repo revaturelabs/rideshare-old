@@ -30,13 +30,13 @@ public class RideRequest implements Serializable, Comparable<RideRequest> {
 	@SequenceGenerator(name = "RR_ID_SEQUENCE", sequenceName = "RR_ID_SEQUENCE")
 	private long requestId;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterest pickupLocation;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterest dropOffLocation;
 
 	@Temporal(TemporalType.DATE)
