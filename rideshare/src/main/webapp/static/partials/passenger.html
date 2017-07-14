@@ -11,17 +11,23 @@
 <div class="container">
 	<div class="row">
 		<div class="col">
-			<h5>Starting Point</h5>
-			<select id="fromPOI">
-				<option ng-repeat="x in allMainPOI" ng-selected="user{{ x.poiId }}">{{
-					x.poiName + " - " + x.addressLine1 }}</option>
-			</select>
-			<h5>Destination</h5>
-			<select id="toPOI">
-				<option ng-repeat="x in allMainPOI"
-					ng-selected="selected{{ x.poiId }}">{{ x.poiName + " - " +
-					x.addressLine1 }}</option>
-			</select>
+			<div class="input-group">
+				<span class="input-group-addon">Starting Point</span>
+				<select id="fromPOI" class="form-control">
+					<option ng-repeat="x in allMainPOI" ng-selected="user{{ x.poiId }}">{{
+						x.poiName + " - " + x.addressLine1 }}</option>
+				</select>
+			</div>
+
+			<div class="input-group">
+				<span class="input-group-addon">Destination</span>
+				<select id="toPOI" class="form-control">
+					<option ng-repeat="x in allMainPOI"
+						ng-selected="selected{{ x.poiId }}">{{ x.poiName + " - " +
+						x.addressLine1 }}</option>
+				</select>
+			</div>
+
 		</div>
 	</div>
 </div>
