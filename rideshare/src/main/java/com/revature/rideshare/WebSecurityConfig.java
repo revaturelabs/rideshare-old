@@ -37,12 +37,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http// .requiresChannel().antMatchers("/**").requiresSecure()
-		.antMatcher("/**").authorizeRequests()
-		.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html",
-				"/auth/check")
-		.permitAll().anyRequest().authenticated().and().logout().logoutSuccessUrl("/").permitAll().and().csrf()
-		.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
-		.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+				.antMatcher("/**").authorizeRequests()
+				.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html",
+						"/auth/check")
+				.permitAll().anyRequest().authenticated().and().logout().logoutSuccessUrl("/").permitAll().and().csrf()
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
+				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 	}
 
 	private Filter ssoFilter() {

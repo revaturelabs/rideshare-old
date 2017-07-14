@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "RIDE_REQUEST")
-public class RideRequest implements Serializable {
+public class RideRequest implements Serializable, Comparable<RideRequest> {
 
 	private static final long serialVersionUID = 7337880503973485600L;
 
@@ -30,13 +30,13 @@ public class RideRequest implements Serializable {
 	@SequenceGenerator(name = "RR_ID_SEQUENCE", sequenceName = "RR_ID_SEQUENCE")
 	private long requestId;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterest pickupLocation;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterest dropOffLocation;
 
 	@Temporal(TemporalType.DATE)
@@ -126,4 +126,15 @@ public class RideRequest implements Serializable {
 	public void setStatus(RequestStatus status) {
 		this.status = status;
 	}
+
+	public int compareTo(RideRequest ar) {
+		return this.getTime().compareTo(ar.getTime());
+	}
+
+	@Override
+	public String toString() {
+		return "RideRequest [requestId=" + requestId + ", user=" + user + ", pickupLocation=" + pickupLocation
+				+ ", dropOffLocation=" + dropOffLocation + ", time=" + time + ", notes=" + notes + "]";
+	}
+
 }

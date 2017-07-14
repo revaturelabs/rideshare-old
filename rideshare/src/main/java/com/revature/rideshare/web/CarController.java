@@ -18,51 +18,88 @@ import com.revature.rideshare.service.CarService;
 import com.revature.rideshare.service.UserService;
 
 @RestController
+
 @RequestMapping("car")
+
 public class CarController {
 
 	@Autowired
+
 	private CarService carService;
 
 	@Autowired
+
 	private UserService userService;
 
 	@GetMapping
+
 	public List<Car> getAll() {
+
 		return carService.getAll();
+
 	}
 
 	private User getUserFromToken(String token) {
+
 		ObjectMapper mapper = new ObjectMapper();
+
 		try {
+
 			System.out.println("before userJson");
+
 			String userJson = JWT.decode(token).getClaim("user").asString();
+
 			System.out.println("in get user token " + userJson);
+
 			return (User) mapper.readValue(userJson, User.class);
+
 		} catch (Exception e) {
+
 			return null;
+
 		}
+
 	}
 
 	@PostMapping
+
 	public boolean addCar(@RequestHeader(name = "Authorization") String token, @RequestBody Car c) {
+
 		System.out.println("before");
+
 		System.out.println(c.toString());
+
 		User u = getUserFromToken(token);
+
 		System.out.println("Car user " + u.toString());
+
 		c.setUser(u);
 
 		carService.addCar(c);
+
 		return true;
+
 	}
 
 	@PostMapping("/removeCar")
+
 	public void removeCar(@RequestBody Car car) {
+
 		carService.removeCar(car);
+
 	}
 
 	@PostMapping("/updateCar")
+
 	public void updateCar(@RequestBody Car car) {
+
 		carService.updateCar(car);
+
+	}
+
+	@GetMapping("/myCar")
+	public Car getCar() {
+		User u = userService.getUser(50);
+		return carService.getCarForUser(u);
 	}
 }

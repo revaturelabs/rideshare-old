@@ -3,7 +3,6 @@ package com.revature.rideshare.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +20,7 @@ import org.hibernate.annotations.Check;
 @Entity
 @Table(name = "AVAILABLE_RIDES")
 @Check(constraints = "AVAILABLE_SEATS >= 0")
-public class AvailableRide implements Serializable {
+public class AvailableRide implements Serializable, Comparable<AvailableRide> {
 
 	private static final long serialVersionUID = -5753230302496991697L;
 
@@ -31,13 +30,13 @@ public class AvailableRide implements Serializable {
 	@SequenceGenerator(name = "AR_ID_SEQUENCE", sequenceName = "AR_ID_SEQUENCE")
 	private long availRideId;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Car car;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterest pickupPOI;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterest dropoffPOI;
 
 	@Column(name = "AVAILABLE_SEATS", nullable = false)
@@ -132,4 +131,17 @@ public class AvailableRide implements Serializable {
 	public void setOpen(boolean isOpen) {
 		this.isOpen = isOpen;
 	}
+
+	@Override
+	public int compareTo(AvailableRide ar) {
+		return this.getTime().compareTo(ar.getTime());
+	}
+
+	@Override
+	public String toString() {
+		return "AvailableRide [availRideId=" + availRideId + ", car=" + car + ", pickupPOI=" + pickupPOI
+				+ ", dropoffPOI=" + dropoffPOI + ", seatsAvailable=" + seatsAvailable + ", time=" + time + ", notes="
+				+ notes + "]";
+	}
+
 }
