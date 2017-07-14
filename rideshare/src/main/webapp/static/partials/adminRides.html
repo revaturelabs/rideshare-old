@@ -8,7 +8,7 @@
   		<tr>
   			<th>Ride Id </th>
   			<th>Requester Name </th>
-  			<th>Drive Name </th>
+  			<th>Driver Name </th>
   		</tr>
   	</thead>
   	<tbody>
@@ -16,6 +16,7 @@
   			<td>{{r.rideId}}</td>	
   			<td>{{r.request.user.fullName}}</td>
   			<td>{{r.availRide.car.user.fullName}}</td>
+            <td><button ng-click="openARModal($index)" data-toggle="modal" data-target="#activeRidesModal">More Info</button></td>
   		</tr>
   	</tbody>
   </table>
@@ -34,7 +35,106 @@
   			<td>{{r.rideId}}</td>	
   			<td>{{r.request.user.fullName}}</td>
   			<td>{{r.availRide.car.user.fullName}}</td>
+            <td><button ng-click="openRHModal($index)" data-toggle="modal" data-target="#rideHistoryModal">More Info</button></td>
   		</tr>
   	</tbody>
   </table>
 </div>
+
+<!--More Info active Rides Modal -->
+<div class="modal" id="activeRidesModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Active Ride</h4>
+			</div>
+			<div class="modal-body">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Ride Id</td>
+                            <td>{{ride.rideId}}</td>
+                        </tr>
+                        <tr>
+                            <td>Requester Name</td>
+                            <td>{{ride.request.user.fullName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Driver Name</td>
+                            <td>{{ride.availRide.car.user.fullName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Pickup Location</td>
+                            <td>{{ride.request.pickupLocation.poiName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Drop Off Location</td>
+                            <td>{{ride.request.dropOffLocation.poiName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+			<div class="modal-footer">
+				<input type="button" value="Close" data-dismiss="modal"/>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End of More Info Modal-->
+
+<!--More Info Ride History Modal -->
+<div class="modal" id="rideHistoryModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Active Ride</h4>
+			</div>
+			<div class="modal-body">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Ride Id</td>
+                            <td>{{ride.rideId}}</td>
+                        </tr>
+                        <tr>
+                            <td>Requester Name</td>
+                            <td>{{ride.request.user.fullName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Driver Name</td>
+                            <td>{{ride.availRide.car.user.fullName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Pickup Location</td>
+                            <td>{{ride.request.pickupLocation.poiName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Drop Off Location</td>
+                            <td>{{ride.request.dropOffLocation.poiName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Complaints</td>
+                            <td>{{ride.complaint}}</td>
+                        </tr>
+                        <tr>
+                            <td>Success</td>
+                            <td>{{ride.wasSuccessful}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+			<div class="modal-footer">
+				<input type="button" value="Close" data-dismiss="modal"/>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End of Ride History Modal-->
