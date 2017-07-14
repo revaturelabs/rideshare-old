@@ -48,6 +48,7 @@
 				<li ng-if="activeRides.length == 0">No active rides</li>
 
 				<li ng-repeat="ride in activeRides">Time:
+					<span data-toggle="collapse" data-target="#{{ride.availRide.availRideId}}">
 					{{ride.availRide.time}}<br> Pick up at:
 					{{ride.availRide.pickupPOI.poiName}},
 					{{ride.availRide.pickupPOI.addressLine1}} <br> Drop off at:
@@ -55,21 +56,28 @@
 					{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
 					{{ride.availRide.car.user.fullName}}<br> Driver note:
 					{{ride.availRide.car.notes}} 
+					</span>
 					<span
-					ng-show=" ride.availRide.car.notes == null"> n/a </span> <br>
-	
-					<p ng-repeat="request in ride.request">
-					Rider: {{request.user.fullName}}
-					<br> Rider note:
-					{{request.notes}} </p> 
-					<span ng-show=" ride.request.notes == null">
-						n/a </span> <br> Compliant: {{ride.compliant}} <span
-					ng-show=" ride.compliant == null"> n/a </span> <br> <br>
-
-					<br>
+					ng-show="ride.availRide.car.notes == null"> n/a </span> <br>
+					<div id="{{ride.availRide.availRideId}}" class="collapse">
+						<div ng-show="isArray(ride.request)">
+						<p ng-repeat="request in ride.request">
+						
+						Rider: {{request.user.fullName}}
+						<br> Rider note:
+						{{request.notes}} 
+						
+						</p> 
+						</div>
+						<div ng-show="!isArray(ride.request)">
+						Rider: {{ride.request.user.fullName}}
+						<br> Rider note:
+						{{ride.request.notes}} 
+						</div>
+					</div>
 					<button type="submit" class="btn btn-primary"
-						ng-click="offerCancel(ride.availRide.availRideId)"
-						data-dismiss="modal">Cancel Offer</button>
+						ng-click="offerCancel(ride.availRide.availRideId)">Cancel Offer
+					</button>
 
 				</li>
 
