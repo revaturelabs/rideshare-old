@@ -68,7 +68,7 @@ a {
 }
 
 .navbar, .navbar-brand, .navbar-collapse, .navbar-nav {
-	min-height: 70px !important;
+	min-height: 60px !important;
 	background-color: #474C55 !important;
 	background-image: none;
 	background-image: none;
@@ -78,12 +78,38 @@ a {
 	background-image: none;
 	background-repeat: no-repeat;
 	filter: none;
+	margin-bottom: 0;
 }
 
 .navbar-toggle {
-	min-height: 70px !important;
+	min-height: 60px !important;
 	padding: 0px 20px;
 	text-align: center;
+}
+
+#secondary-nav ul {
+	width: 100%;
+	text-align: center;
+	padding: 0px;
+	margin: 0px;
+	min-height: 0px !important;
+	height: auto !important;
+	background-color: #555a63 !important;
+}
+
+#secondary-nav ul li {
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+    display: inline-block;
+}
+
+#secondary-nav ul li a {
+	text-decoration: underline;
+}
+
+.active {
+	color: #ffffff !important;
 }
 
 #login-container {
