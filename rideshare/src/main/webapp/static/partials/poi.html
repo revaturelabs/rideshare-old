@@ -49,3 +49,50 @@
 		</tbody>
 	</table>
 </div>
+
+<!--Edit Poi Modal -->
+<div class="modal" id="editPoiModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Edit POI</h4>
+			</div>
+			<div class="modal-body">
+				<input type="text" id="poiId" ng-value="dummyPoi.poiId"
+					style="display: none"> <input type="text" id="poiName"
+					ng-value="dummyPoi.poiName"> <input type="text"
+					id="poiAddress1" ng-value="dummyPoi.addressLine1"> <input
+					type="text" id="poiAddress2" ng-value="dummyPoi.addressLine2">
+				<input type="text" id="poiCity" ng-value="dummyPoi.city"> <input
+					type="text" id="poiState" ng-value="dummyPoi.state"> <input
+					type="text" id="poizipcode" ng-value="dummyPoi.zipCode"> <input
+					type="number" id="poiLat" ng-value="dummyPoi.latitude"
+					style="display: none"> <input type="number" id="poiLng"
+					ng-value="dummyPoi.longitude" style="display: none"> Point
+				of Interest Type <select id="poiType" ng-model="newPoi.type"
+					ng-options="type.typeName for type in types" />
+				<!--
+                <input type="text" id="poiId" ng-value="dummyPoi.poiId" style="display:none">
+                <input type="text" id="poiName" ng-value="dummyPoi.poiName" ng-model="newPoi.poiName">
+                <input type="text" id="poiAddress1" ng-value="dummyPoi.addressLine1" ng-model="newPoi.addressLine1">
+                <input type="text" id="poiAddress2" ng-value="dummyPoi.addressLine2" ng-model="newPoi.addressLine2">
+                <input type="text" id="poiCity" ng-value="dummyPoi.city" ng-model="newPoi.city">
+                <input type="text" id="poiState" ng-value="dummyPoi.state" ng-model="newPoi.state">
+                <input type="text" id="poizipcode" ng-value="dummyPoi.zipCode" ng-model="newPoi.zipCode">
+                <input type="number" id="poiLat" ng-value="dummyPoi.latitude" style="display:none" ng-model="newPoi.latitude">
+                <input type="number" id="poiLng" ng-value="dummyPoi.longitude" style="display:none" ng-model="newPoi.longitude">
+                Point of Interest Type
+                <select id="poiType" ng-model="newPoi.type" ng-options="type.typeName for type in types"/>
+-->
+			</div>
+			<div class="modal-footer">
+				<input type="button" value="Close" data-dismiss="modal"></input> <input
+					type="submit" value="Save Changes" ng-click="updatePoi()" />
+			</div>
+		</div>
+	</div>
+</div>

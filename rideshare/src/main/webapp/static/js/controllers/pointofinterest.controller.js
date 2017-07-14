@@ -1,6 +1,14 @@
 export let poiController = function ($scope, $http, $state) {
 	$scope.poi = {};
 	$scope.allpois = {};
+	$scope.newPoi = {}; 
+	$scope.dummyPoi = {}; 
+
+	// retrieve all pois
+	$http.get("/poiController")
+	.then(function (response) {
+		$scope.allpois = response.data;
+	});
 
 	// retrieve the poiType objects
 	$scope.types = {};
@@ -74,8 +82,7 @@ export let poiController = function ($scope, $http, $state) {
 
 	// removePoi()
 	$scope.removePoi = function (index) {
-		// modal asks "Are you sure you want to remove this POI?"
-		console.log("index " + index);
+		// later add modal asks "Are you sure you want to remove this POI?"
 		$http.post("/poiController/removePoi", $scope.allpois[index])
 		.then((response) => {
 			$state.go('poi');
@@ -85,12 +92,46 @@ export let poiController = function ($scope, $http, $state) {
 		})
 	}   // end of removePoi() function
 
-	console.log("sanity check #" + 32);  // sanity cache check
+	$scope.openModal = function(index){
+		$scope.dummyPoi = $scope.allpois[index];
+	}
 
-	// retrieve all pois
-	$http.get("/poiController")
-	.then(function (response) {
-		$scope.allpois = response.data;
-	});
+//	ng reset
+//	save the information before user edits
+	// edit updatePoi()
+	$scope.updatePoi = function(){
+		if ($scope.newPoi.addressLine2 === null)
+			$scope.newPoi.addressLine2 = "";
+		// get address and format it for google maps response
+		var address = "" + $scope.newPoi.addressLine1 + " "
+		+ $scope.newPoi.addressLine2 + ", " +
+		$scope.newPoi.city +
+		", " + $scope.newPoi.state;
+		address = address.replace(/\s/g, '+'); // replace white space with +
+
+		// store url to retrieve response from google maps api
+		var url = "https://maps.googleapis.com/maps/api/geocode/" +
+		"json?address=" + address +
+		"&key=AIzaSyB_mhIdxsdRfwiAHVm8qPufCklQ0iMOt6A";
+
+		$http.get(url)
+		.then(function (response) {
+			$scope.result = response;
+			$scope.newPoi.latitude = $scope.result.data.results[0].geometry.location.lat;
+			$scope.newPoi.longitude = $scope.result.data.results[0].geometry.location.lng;
+		})
+		.then(function () {
+			// send poi to backend
+			$http.post("/poiController/updatePoi", $scope.newPoi)
+			.then((formResponse) => {
+				$state.go('poi');
+			},
+			(failedResponse) => {
+				alert('failure');
+			})
+		});
+	}   // end of updatePoi() function
+
+	console.log("sanity check #" + 62);  // sanity debug checker
 };
 
