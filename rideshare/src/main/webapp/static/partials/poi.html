@@ -62,38 +62,27 @@
 				</button>
 				<h4 class="modal-title">Edit POI</h4>
 			</div>
+            <form id="updatePoi-form">
+
 			<div class="modal-body">
-                <form id="updatePoi-form" ng-model-options="{updateOn: 'submit'}">
-<!--
-				<input type="text" id="poiId" ng-value="dummyPoi.poiId" style="display: none">
-				<input type="text" id="poiName" ng-value="dummyPoi.poiName">
-				<input type="text" id="poiAddress1" ng-value="dummyPoi.addressLine1">
-				<input type="text" id="poiAddress2" ng-value="dummyPoi.addressLine2">
-				<input type="text" id="poiCity" ng-value="dummyPoi.city">
-				<input type="text" id="poiState" ng-value="dummyPoi.state">
-				<input type="text" id="poizipcode" ng-value="dummyPoi.zipCode">
-				<input type="number" id="poiLat" ng-value="dummyPoi.latitude" style="display: none">
-				<input type="number" id="poiLng" ng-value="dummyPoi.longitude" style="display: none"> 
-				Point of Interest Type
-				<select id="poiType" ng-model="newPoi.type" ng-options="type.typeName for type in types" />
--->
                     <input type="text" id="poiId" style="display:none">
-                    <input type="text" id="poiName" ng-model="newPoi.poiName">
-                    <input type="text" id="poiAddress1" ng-model="newPoi.addressLine1">
-                    <input type="text" id="poiAddress2" ng-model="newPoi.addressLine2">
-                    <input type="text" id="poiCity" ng-model="newPoi.city">
-                    <input type="text" id="poiState" ng-model="newPoi.state">
-                    <input type="text" id="poizipcode" ng-model="newPoi.zipCode">
-                    <input type="number" id="poiLat" style="display:none" ng-model="newPoi.latitude">
-                    <input type="number" id="poiLng" style="display:none" ng-model="newPoi.longitude">
+                    <input type="text" id="poiName" ng-model="newPoi.poiName" ng-model-options="{updateOn: 'submit'}">
+                    <input type="text" id="poiAddress1" ng-model="newPoi.addressLine1" ng-model-options="{updateOn: 'submit'}">
+                    <input type="text" id="poiAddress2" ng-model="newPoi.addressLine2" ng-model-options="{updateOn: 'submit'}">
+                    <input type="text" id="poiCity" ng-model="newPoi.city" ng-model-options="{updateOn: 'submit'}">
+                    <input type="text" id="poiState" ng-model="newPoi.state" ng-model-options="{updateOn: 'submit'}">
+                    <input type="text" id="poizipcode" ng-model="newPoi.zipCode" ng-model-options="{updateOn: 'submit'}">
+                    <input type="number" id="poiLat" style="display:none" ng-model="newPoi.latitude" ng-model-options="{updateOn: 'submit'}">
+                    <input type="number" id="poiLng" style="display:none" ng-model="newPoi.longitude" ng-model-options="{updateOn: 'submit'}">
                     Point of Interest Type
-                    <select id="poiType" ng-model="newPoi.type" ng-options="type.typeName for type in types"/>
-                </form>
+                    <select id="poiType" ng-model="newPoi.type" ng-options="type.typeName for type in types" ng-model-options="{updateOn: 'submit'}"/>
 			</div>
 			<div class="modal-footer">
 				<input type="button" value="Close" data-dismiss="modal"/>
                 <input type="submit" value="Save Changes" ng-click="updatePoi()" />
 			</div>
+                                </form>
+
 		</div>
 	</div>
 </div>
