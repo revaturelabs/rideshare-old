@@ -93,12 +93,10 @@ export let poiController = function ($scope, $http, $state) {
 	}   // end of removePoi() function
 
 	$scope.openModal = function(index){
-		$scope.dummyPoi = $scope.allpois[index];
+		$scope.newPoi = $scope.allpois[index];
 	}
 
-//	ng reset
-//	save the information before user edits
-	// edit updatePoi()
+	// edit/updatePoi()
 	$scope.updatePoi = function(){
 		if ($scope.newPoi.addressLine2 === null)
 			$scope.newPoi.addressLine2 = "";
@@ -132,6 +130,6 @@ export let poiController = function ($scope, $http, $state) {
 		});
 	}   // end of updatePoi() function
 
-	console.log("sanity check #" + 62);  // sanity debug checker
+	console.log("sanity check #" + 70);  // sanity debug checker
 };
 
