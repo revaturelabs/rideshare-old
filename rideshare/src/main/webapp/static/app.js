@@ -22,7 +22,9 @@ app.run(function(authManager) {
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
 
 	jwtOptionsProvider.config({
-		unauthenticatedRedirectPath: '/#/slackLogin',
+		loginPath: '/#/login',
+		unauthenticatedRedirectPath: '/',
+		authHeader: 'rideshare-auth-token',
 		authPrefix: '',
 		tokenGetter: ['options', function(options) {
 			return localStorage.getItem('RideShare_auth_token');
@@ -32,17 +34,18 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 	$httpProvider.interceptors.push('jwtInterceptor');
 
 
-	$urlRouterProvider.otherwise('/slackLogin');
+	$urlRouterProvider.otherwise('/login');
 
 	$stateProvider
 	.state('main', {
 		url: '/main',
 		templateUrl: 'partials/main.html',
-		controller: mainController
+		controller: mainController,
+		data: { requiresLogin: true }
 	})
 
 	.state('slackLogin', {
-		url: '/slackLogin',
+		url: '/login',
 		templateUrl: 'partials/slackLogin.html',
 		controller: slackLoginController
 	})
