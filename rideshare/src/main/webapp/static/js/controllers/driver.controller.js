@@ -25,9 +25,22 @@ export let driverController = function($scope, $http, $state){
 	.then(function(response) {
 		$scope.openRequest = response.data;
 	});
-
-	// shows all open (unconfirmed) offers for a user
-	$scope.openRides = [];
+	
+	//accept open requests
+	$scope.acceptReq = function(id){
+		
+		
+		$http.get("/ride/request/accept/"+id)
+		.then(function(response) {
+			
+		});
+		
+		$state.reload();
+	}
+	
+	
+	//shows all open (unconfirmed) offers for a user
+	$scope.openRides = {};
 
 	$http.get("/ride/offer/open/"+$scope.poiId.id)
 	.then(function(response) {
@@ -122,7 +135,7 @@ export let driverController = function($scope, $http, $state){
 					$state.go('main.driver');
 
 				}
-		)
+		);
 	};
 
 
