@@ -1,34 +1,26 @@
 export let driverController = function($scope, $http, $state){
 
-	// scope and function used to pass ride data to front end
 
-	$scope.rides = {};
-
-	$http.get("/ride")
-	.then(function(response) {
-		$scope.rides = response.data;
-	});
-	
-	//changes poi that is used in the openRequest
-	//TODO: get default scope from user
+	// changes poi that is used in the openRequest
+	// TODO: get default poi from user
 	$scope.poiId = {id : 1};
-	
-	$scope.openRequest = {};
-	
+
+	$scope.openRequest = [];
+
 	$scope.updateSort = function (){
-		
+
 		$scope.poiId.id = $scope.selectedItem.poiId;
 		console.log($scope.poiId.id);
 		console.log($scope.openRequest)
-		
+
 		$http.get("/ride/request/open/"+$scope.poiId.id)
 		.then(function(response) {
 			$scope.openRequest = response.data;
 		});
-		
+
 	}
-	
-	//show open requests from a poi
+
+	// show open requests from a poi
 	$http.get("/ride/request/open/"+$scope.poiId.id)
 	.then(function(response) {
 		$scope.openRequest = response.data;
@@ -56,7 +48,7 @@ export let driverController = function($scope, $http, $state){
 	});
 
 	// get data that shows all active ride offers for user
-	$scope.activeRides = {};
+	$scope.activeRides = [];
 
 	function compare(a,b) {
 		if (a.availRide.availRideId < b.availRide.availRideId)
@@ -65,10 +57,10 @@ export let driverController = function($scope, $http, $state){
 			return 1;
 		return 0;
 	}
-	
+
 	$http.get("/ride/offer/active")
 	.then(function(response){
-		
+
 		let list = response.data;
 		let listReq = [];
 		let temp = [];
@@ -76,25 +68,25 @@ export let driverController = function($scope, $http, $state){
 		let currentAvailId = list[0].availRide.availRideId;
 		list.sort(compare); 
 		listReq = [list[0]];
-		
+
 		for(let i = 0; i < list.length; i++){
 			if((currentAvailId != list[i].availRide.availRideId) ||  i == list.length-1){
 				currentAvailId = list[i].availRide.availRideId;
-				
+
 				if(temp.length > 0){
 					listReq[counter++].request = temp;
 					listReq[counter] = list[i];
 					temp = [];
 				}
 				if(i == list.length-1){
-					//temp.length = 1;
-					//listReq[counter].request = temp;
+					// temp.length = 1;
+					// listReq[counter].request = temp;
 				}
 			} 
 			temp.push(list[i].request);
 		}
 
-		
+
 		$scope.activeRides = listReq;
 		console.log($scope.activeRides);
 	});
