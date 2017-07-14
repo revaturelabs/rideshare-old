@@ -112,14 +112,14 @@ export let poiController = function ($scope, $http, $state) {
 		"json?address=" + address +
 		"&key=AIzaSyB_mhIdxsdRfwiAHVm8qPufCklQ0iMOt6A";
 
-		$http.get(url)
-		.then(function (response) {
-			$scope.result = response;
-			$scope.newPoi.latitude = $scope.result.data.results[0].geometry.location.lat;
-			$scope.newPoi.longitude = $scope.result.data.results[0].geometry.location.lng;
-		})
-		.then(function () {
-			// send poi to backend
+		var xhr = $scope.createCORSRequest('GET', url);
+		
+		xhr.onload = function(response) {
+			var result = JSON.parse(xhr.responseText);
+			
+			$scope.newPoi.latitude = result.results[0].geometry.location.lat;
+			$scope.newPoi.longitude = result.results[0].geometry.location.lng;
+		
 			$http.post("/poiController/updatePoi", $scope.newPoi)
 			.then((formResponse) => {
 				$state.go('poi');
@@ -127,7 +127,9 @@ export let poiController = function ($scope, $http, $state) {
 			(failedResponse) => {
 				alert('failure');
 			})
-		});
+		}
+		
+		xhr.send();
 	}   // end of updatePoi() function
 
 	console.log("sanity check #" + 70);  // sanity debug checker
