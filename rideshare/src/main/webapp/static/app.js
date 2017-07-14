@@ -13,11 +13,17 @@ import { addCarController } from './js/controllers/addCar.controller.js';
 
 const app = angular.module('app', ['ui.router', permission, uiPermission, 'angular-jwt']);
 
+app.run(function(authManager) {
+	authManager.checkAuthOnRefresh();
+	authManager.redirectWhenUnauthenticated();
+});
+
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
 
 	jwtOptionsProvider.config({
+		unauthenticatedRedirectPath: '/#/slackLogin',
 		authPrefix: '',
-		tokenGetter: [function() {
+		tokenGetter: ['options', function(options) {
 			return localStorage.getItem('RideShare_auth_token');
 		}]
 	});
@@ -37,25 +43,29 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 	.state('passenger',{
 		url: '/passenger',
 		templateUrl : 'partials/passenger.html',
-		controller : passengerController
+		controller : passengerController,
+		data: { requiresLogin: true }
 	})
 
 	.state('driver',{
 		url: '/driver',
 		templateUrl : 'partials/driver.html',
-		controller : driverController
+		controller : driverController,
+		data: { requiresLogin: true }
 	})
 
 	.state('history',{
 		url: '/history',
 		templateUrl : 'partials/history.html',
-		controller : historyController
+		controller : historyController,
+		data: { requiresLogin: true }
 	})
 
 	.state('addCar' ,{
 		url: '/addCar',
 		templateUrl : 'partials/addCar.html',
-		controller : addCarController
+		controller : addCarController,
+		data: { requiresLogin: true }
 	})
 
 
