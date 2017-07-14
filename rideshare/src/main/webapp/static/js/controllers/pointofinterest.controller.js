@@ -93,12 +93,12 @@ export let poiController = function ($scope, $http, $state) {
 	}   // end of removePoi() function
 
 	$scope.openModal = function(index){
-		$scope.newPoi = $scope.allpois[index];
+		$scope.dummyPoi = $scope.allpois[index];
+        $scope.newPoi = angular.copy($scope.dummyPoi);
 	}
 
 	// edit/updatePoi()
 	$scope.updatePoi = function(){
-        console.log("update start");
         
 		if ($scope.newPoi.addressLine2 === null)
 			$scope.newPoi.addressLine2 = "";
@@ -108,16 +108,12 @@ export let poiController = function ($scope, $http, $state) {
 		$scope.newPoi.city +
 		", " + $scope.newPoi.state;
 		address = address.replace(/\s/g, '+'); // replace white space with +
-        
-        console.log("new address is " + address);
-        
+                
 		// store url to retrieve response from google maps api
 		var url = "https://maps.googleapis.com/maps/api/geocode/" +
 		"json?address=" + address +
 		"&key=AIzaSyB_mhIdxsdRfwiAHVm8qPufCklQ0iMOt6A";
         
-        console.log("url is " + url); 
-
 		var xhr = $scope.createCORSRequest('GET', url);
 		
 		xhr.onload = function(response) {
@@ -126,15 +122,11 @@ export let poiController = function ($scope, $http, $state) {
 			$scope.newPoi.latitude = result.results[0].geometry.location.lat;
 			$scope.newPoi.longitude = result.results[0].geometry.location.lng;
             
-            console.log("lat/long is " + $scope.newPoi.latitude + " " + $scope.newPoi.longitude);
-            
 			$http.post("/poiController/updatePoi", $scope.newPoi)
 			.then((formResponse) => {
-                console.log("hi");
-				$state.go('poi');
+				$state.reload('poi');
 			},
 			(failedResponse) => {
-                console.log("bye");
 				alert('failure');
 			})
 		}
@@ -142,6 +134,6 @@ export let poiController = function ($scope, $http, $state) {
 		xhr.send();
 	}   // end of updatePoi() function
 
-	console.log("sanity check #" + 77);  // sanity debug checker
+//	console.log("sanity check #" + 82);  // sanity debug checker
 };
 
