@@ -118,7 +118,7 @@ export let passengerController = function($scope, $http, $state, $location){
 					
 					if(poiLimit === 0){
 						markers[x].setIcon('http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png');
-						console.log('limit0 '+poiLimit);
+						
 						let temp1 = 'start' + id;
 						$scope[temp1] = true;
 						$scope.$apply();
