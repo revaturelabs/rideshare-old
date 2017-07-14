@@ -67,6 +67,39 @@ a {
 	color: #F26925;
 }
 
+.navbar, .navbar-brand, .navbar-collapse, .navbar-nav {
+	min-height: 70px !important;
+	background-color: #474C55 !important;
+	background-image: none;
+	background-image: none;
+	background-image: none;
+	background-image: none;
+	background-image: none;
+	background-image: none;
+	background-repeat: no-repeat;
+	filter: none;
+}
+
+.navbar-toggle {
+	min-height: 70px !important;
+	padding: 0px 20px;
+	text-align: center;
+}
+
+#login-container {
+	text-align: center;
+}
+
+#login-container .logo {
+	display: block;
+	margin-top: 7em;
+	margin-bottom: 3em;
+}
+
+#login-container a:hover {
+	text-decoration: none;
+}
+
 /**********************
 	Chart Containers
 **********************/
