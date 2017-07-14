@@ -18,7 +18,8 @@ const app = angular.module('app', ['ui.router', permission, uiPermission, 'angul
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
 	
 	jwtOptionsProvider.config({
-	      tokenGetter: [function() {
+	    authPrefix: '',  
+		tokenGetter: [function() {
 	        return localStorage.getItem('RideShare_auth_token');
 	      }],
 	      whiteListedDomains: ['maps.googleapis.com']

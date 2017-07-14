@@ -69,7 +69,9 @@ public class CarController {
 
 		System.out.println(c.toString());
 
-		User u = getUserFromToken(token);
+		User u = User.getUserFromToken(token);
+		
+		System.out.println(u.toString());
 
 		System.out.println("Car user " + u.toString());
 
