@@ -25,57 +25,57 @@ import com.revature.rideshare.service.UserService;
 public class AdminController {
 
 	@Autowired
-	private RideService rideService; 
-	
+	private RideService rideService;
+
 	@Autowired
 	private UserService userService;
-	 
+
 	@Autowired
 	private CarService carService;
-	 
+
 	@Autowired
 	private PointOfInterestService poiService;
-	 
+
 	@GetMapping("/cars")
-    public List<Car> getAllCars(){
-	 	List<Car> cars = new ArrayList<Car>();
-	 	cars = carService.getAll();
-	 	System.out.println(cars);
-	 	return carService.getAll();
+	public List<Car> getAllCars() {
+		List<Car> cars = new ArrayList<Car>();
+		cars = carService.getAll();
+		System.out.println(cars);
+		return carService.getAll();
 	}
-	 
+
 	@GetMapping("/users")
-	public List<User> getAllUsers(){
+	public List<User> getAllUsers() {
 		return userService.getAll();
 	}
-	 
-	@PostMapping("/updateStatus/{id}") 
-	public void updateStatus(@PathVariable(value="id") long id) {
+
+	@PostMapping("/updateStatus/{id}")
+	public void updateStatus(@PathVariable(value = "id") long id) {
 		User user = userService.getUser(id);
 		userService.updateUser(user);
 	}
-	 
+
 	@PostMapping("/removeUser/{id}")
-	public void removeUser(@PathVariable(value="id") long id) {
+	public void removeUser(@PathVariable(value = "id") long id) {
 		User user = userService.getUser(id);
 		userService.removeUser(user);
 	}
-	 
+
 	@PostMapping("/addPOI")
-	public void addPoi(@RequestBody PointOfInterest poi){
+	public void addPoi(@RequestBody PointOfInterest poi) {
 		poiService.addPoi(poi);
 	}
-	 
+
 	@PostMapping("/removePOI")
-	public void removePoi(@RequestBody PointOfInterest poi){
+	public void removePoi(@RequestBody PointOfInterest poi) {
 		poiService.removePoi(poi);
 	}
-	
+
 	@GetMapping("/activeRides")
 	public List<Ride> getAllActiveRides() {
 		return rideService.getAllActiveRides();
 	}
-	
+
 	@GetMapping("/rideHistory")
 	public List<Ride> getAllInactiveRides() {
 		return rideService.getAllInactiveRides();

@@ -31,34 +31,36 @@ import com.revature.rideshare.service.UserService;
 @RestController
 @RequestMapping("auth")
 public class AuthController {
-	
-	// TODO: start using an environment variable when this application is deployed
-//	@Value("#{systemEnvironment['RIDESHARE_JWT_SECRET']}")
+
+	// TODO: start using an environment variable when this application is
+	// deployed
+	// @Value("#{systemEnvironment['RIDESHARE_JWT_SECRET']}")
 	private String jwtSecret = "Richie is obsessed with chickens!";
-	
+
 	private String slackAppId = "184219023015.209820937091";
 	private String slackAppSecret = "f69b998afcc9b1043adfa2ffdab49308";
 	private String slackAppToken = "xER6r1Zrr0nxUBdSz7Fyq5UU";
 	private String slackAppTeamId = "T5E6F0P0F"; // for 1705may15java
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-	
+
 	@RequestMapping("/check")
 	public Boolean isAuthenticated(Principal principal) {
 		return principal != null;
 	}
-	
+
 	/*
-	 * TODO: this method is currently a hackish quick fix, find a better solution
-	 * NOTE: slack user IDs are only unique within a specific team, but team IDs are unique across all of slack
+	 * TODO: this method is currently a hackish quick fix, find a better
+	 * solution NOTE: slack user IDs are only unique within a specific team, but
+	 * team IDs are unique across all of slack
 	 */
 	@RequestMapping("/current")
-	public User getCurrentUser(OAuth2Authentication authentication, HttpServletRequest request) {	
+	public User getCurrentUser(OAuth2Authentication authentication, HttpServletRequest request) {
 		String[] nameTokens = authentication.getName().split(", ");
 		String fullName = nameTokens[0].substring(6);
 		System.out.println(fullName);
@@ -78,7 +80,7 @@ public class AuthController {
 		}
 		return u;
 	}
-	
+
 	@GetMapping("/token")
 	public User getJsonWebToken(OAuth2Authentication authentication, HttpServletResponse response) {
 		try {
@@ -99,12 +101,8 @@ public class AuthController {
 			}
 			String userJson;
 			userJson = mapper.writeValueAsString(u);
-			String token = JWT.create()
-					.withIssuer("Revature RideShare")
-					.withIssuedAt(new Date())
-					.withAudience("Revature RideShare AngularJS Client")
-					.withClaim("user", userJson)
-					.sign(alg);
+			String token = JWT.create().withIssuer("Revature RideShare").withIssuedAt(new Date())
+					.withAudience("Revature RideShare AngularJS Client").withClaim("user", userJson).sign(alg);
 			System.out.println(token);
 			response.addHeader("token", token);
 			return u;
@@ -114,15 +112,14 @@ public class AuthController {
 			return null;
 		}
 	}
-	
+
 	@RequestMapping("/getCode")
 	public void loginUser(@RequestParam("code") String code, HttpServletResponse response) {
 		String destination = "/login?error=true";
 		RestTemplate restTemplate = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
-		String accessUrl = "https://slack.com/api/oauth.access?client_id=" + slackAppId
-				+ "&client_secret=" + slackAppSecret
-				+ "&code=" + code;
+		String accessUrl = "https://slack.com/api/oauth.access?client_id=" + slackAppId + "&client_secret="
+				+ slackAppSecret + "&code=" + code;
 		ResponseEntity<String> accessResponse = restTemplate.getForEntity(accessUrl, String.class);
 		try {
 			JsonNode root = mapper.readTree(accessResponse.getBody());
@@ -136,15 +133,19 @@ public class AuthController {
 			String userId = tokenRoot.path("user").path("id").asText();
 			System.out.println("userName: " + userName + ", userId: " + userId);
 			User u = userService.getUserBySlackId(userId);
-			//TODO:update user information here
-			if(u==null){
+			// TODO:update user information here
+			if (u == null) {
 				u = new User();
 				u.setFullName(userName);
 				u.setSlackId(userId);
 				userService.addUser(u);
 			}
-			Authentication authentication = new PreAuthenticatedAuthenticationToken(u,
-					"blahblahblah"); // can include authorities as third parameter
+			Authentication authentication = new PreAuthenticatedAuthenticationToken(u, "blahblahblah"); // can
+			// include
+			// authorities
+			// as
+			// third
+			// parameter
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			destination = "/";
 			response.sendRedirect(destination);
@@ -157,9 +158,9 @@ public class AuthController {
 			}
 		}
 	}
-	
+
 	private User removeSensitiveInformation(User u) {
 		return null;
 	}
-	
+
 }

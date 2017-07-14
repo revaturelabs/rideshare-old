@@ -3,12 +3,12 @@ export let addCarController = function($scope, $http, $state){
 	$scope.addCar = function() {
 		console.log($scope.car);
 		$http.post('/car', $scope.car).then(
-			(formResponse) => {
-				$state.go('addCar');
-			},
-			(failedResponse) => {
-				alert('Failure');
-			}
+				(formResponse) => {
+					$state.go('addCar');
+				},
+				(failedResponse) => {
+					alert('Failure');
+				}
 		)
 	}
 };

@@ -1,5 +1,6 @@
 import { angularJwt } from 'angular-jwt';
 import { permission, uiPermission } from 'angular-permission';
+import { mainController } from './js/controllers/main.controller.js';
 import { passengerController } from './js/controllers/passenger.controller.js';
 import { driverController } from './js/controllers/driver.controller.js';
 import { historyController } from './js/controllers/history.controller.js';
@@ -11,7 +12,6 @@ import { poiController } from './js/controllers/pointofinterest.controller.js';
 
 //var = function scope
 //const and let = block scope 
-
 
 const app = angular.module('app', ['ui.router', permission, uiPermission, 'angular-jwt']);
 
@@ -28,55 +28,59 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 
 
 	$urlRouterProvider.otherwise('/slackLogin');
-	
+
 	$stateProvider
+		.state('main', {
+			url: '/main',
+			templateUrl: 'partials/main.html',
+			controller: mainController
+		})
+	
 		.state('slackLogin', {
 			url: '/slackLogin',
 			templateUrl: 'partials/slackLogin.html',
 			controller: slackLoginController
 		})
-
-		.state('passenger',{
+	
+		.state('main.passenger',{
 			url: '/passenger',
 			templateUrl : 'partials/passenger.html',
 			controller : passengerController
 		})
-		
-		.state('driver',{
+	
+		.state('main.driver',{
 			url: '/driver',
 			templateUrl : 'partials/driver.html',
 			controller : driverController
 		})
-		
-		.state('history',{
+	
+		.state('main.history',{
 			url: '/history',
 			templateUrl : 'partials/history.html',
 			controller : historyController
 		})
-
-		.state('addCar' ,{
+	
+		.state('main.addCar' ,{
 			url: '/addCar',
 			templateUrl : 'partials/addCar.html',
 			controller : addCarController
 		})
-		
-		.state('adminRides' , {
+	
+		.state('main.adminRides' , {
 			url: '/adminRides', 
 			templateUrl : 'partials/adminRides.html',
 			controller : adminRidesController
 		})
 		
-		.state('adminUsers', {
+		.state('main.adminUsers', {
 			url: '/adminUsers',
 			templateUrl: 'partials/adminUsers.html',
 			controller : adminUsersController
 		})
-	
-		.state('poi',{
+		
+		.state('main.poi',{
 			url: '/poi',
 			templateUrl : 'partials/poi.html',
 			controller : poiController
 		})
-	
 });
-s
