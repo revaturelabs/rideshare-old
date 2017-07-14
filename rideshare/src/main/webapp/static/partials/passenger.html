@@ -1,3 +1,31 @@
+<div id="map" style="height: 300px; width: 100%;"></div>
+
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<div class="input-group">
+				<span class="input-group-addon">Starting Point</span> <select
+					id="fromPOI" class="form-control">
+					<option ng-repeat="x in allMainPOI" ng-selected="user{{ x.poiId }}">{{
+						x.poiName + " - " + x.addressLine1 }}</option>
+				</select>
+			</div>
+
+			<div class="input-group">
+				<span class="input-group-addon">Destination</span> <select
+					id="toPOI" class="form-control">
+					<option ng-repeat="x in allMainPOI"
+						ng-selected="selected{{ x.poiId }}">{{ x.poiName + " - "
+						+ x.addressLine1 }}</option>
+				</select>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<p id="display"></p>
+
 <div>
 	<button ng-click="getActiveRequests()" class="btn btn-primary">Active
 		Requests</button>
@@ -6,30 +34,4 @@
 	<button type="button" ng-click="getDisplay()">Get Info</button>
 </div>
 
-<div id="map" style="height: 400px; width: 600px;"></div>
-
-<div class="container">
-	<div class="row">
-		<div class="col">
-			<div class="input-group">
-				<span class="input-group-addon">Starting Point</span>
-				<select id="fromPOI" class="form-control">
-					<option ng-repeat="x in allMainPOI" ng-selected="user{{ x.poiId }}">{{
-						x.poiName + " - " + x.addressLine1 }}</option>
-				</select>
-			</div>
-
-			<div class="input-group">
-				<span class="input-group-addon">Destination</span>
-				<select id="toPOI" class="form-control">
-					<option ng-repeat="x in allMainPOI"
-						ng-selected="selected{{ x.poiId }}">{{ x.poiName + " - " +
-						x.addressLine1 }}</option>
-				</select>
-			</div>
-
-		</div>
-	</div>
-</div>
-<p id="display"></p>
 <script src="../js/googleMapAPI/markerclusterer.js"></script>
