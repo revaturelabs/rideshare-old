@@ -1,29 +1,43 @@
 <nav class="navbar navbar-inverse navbar-static-top">
 	<div class="container-fluid">
 
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#myNavbar">
-				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="/"> <img
-				src="images/rev-footer.png" alt="revature" height="100%" />
-			</a>
-		</div>
+		<div class="row">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#myNavbar">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/"> <img
+					src="images/rev-footer.png" alt="revature" height="100%" />
+				</a>
+			</div>
 
-		<div class="collapse navbar-collapse" id="myNavbar">
-			<ul class="nav navbar-nav navbar-right">
-				<li><a data-toggle="collapse" data-target=".navbar-collapse"
-					ui-sref="main.passenger">Passenger</a></li>
-				<li><a data-toggle="collapse" data-target=".navbar-collapse"
-					ui-sref="main.driver">Driver</a></li>
-				<li><a data-toggle="collapse" data-target=".navbar-collapse"
-					ng-click="logout()">Logout</a></li>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a data-toggle="collapse" data-target=".navbar-collapse"
+						ui-sref="main.passenger">Passenger</a></li>
+					<li><a data-toggle="collapse" data-target=".navbar-collapse"
+						ui-sref="main.driver">Driver</a></li>
+					<li><a data-toggle="collapse" data-target=".navbar-collapse"
+						ng-click="logout()">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+		
+		
+		<div id="secondary-nav" class="row">
+			<ul class="nav navbar-nav">
+				<li><a ui-sref="main.passenger" ui-sref-active="active">Passenger</a></li>
+				<li><a ui-sref="main.driver" ui-sref-active="active">Driver</a></li>
 			</ul>
 		</div>
+		
+		
 
 	</div>
 </nav>
+
+
 
 <ui-view></ui-view>
