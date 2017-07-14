@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -71,4 +72,8 @@ public class SlackController {
 		rideService.addRequest(request);
 	}
 
+	@RequestMapping(value = "/testslack", method = RequestMethod.GET)
+	public void sendMessage() {
+		System.out.println("IN SLACK CONTROLLER");
+	}
 }
