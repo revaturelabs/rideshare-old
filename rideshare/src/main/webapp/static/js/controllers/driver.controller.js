@@ -34,6 +34,19 @@ export let driverController = function($scope, $http, $state){
 		$scope.openRequest = response.data;
 	});
 	
+	//accept open requests
+	$scope.acceptReq = function(id){
+		
+		
+		$http.get("/ride/request/accept/"+id)
+		.then(function(response) {
+			
+		});
+		
+		$state.reload();
+	}
+	
+	
 	//shows all open (unconfirmed) offers for a user
 	$scope.openRides = {};
 
@@ -130,7 +143,7 @@ export let driverController = function($scope, $http, $state){
 					$state.go('main.driver');
 
 				}
-		)
+		);
 	};
 
 
