@@ -100,4 +100,11 @@ export let passengerController = function($scope, $http, $state, $location){
 		// initialize the google map
 		initMap();
 	});
+	
+	// Slack Test Button to Slack Spring Controller
+	$scope.sendMessage = function() {
+		$http.get("slack/testslack").then(function() {
+			console.log("Came back from Slack Spring Controller");
+		});
+	}
 };
