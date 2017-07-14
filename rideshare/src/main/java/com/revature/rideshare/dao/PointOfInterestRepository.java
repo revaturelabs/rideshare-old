@@ -6,4 +6,6 @@ import com.revature.rideshare.domain.PointOfInterest;
 
 public interface PointOfInterestRepository extends JpaRepository<PointOfInterest, Long> {
 
+	PointOfInterest findBypoiId(int id);
+	
 }
