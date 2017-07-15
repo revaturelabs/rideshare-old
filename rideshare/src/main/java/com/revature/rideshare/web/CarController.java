@@ -100,8 +100,8 @@ public class CarController {
 	}
 
 	@GetMapping("/myCar")
-	public Car getCar() {
-		User u = userService.getUser(50);
+	public Car getCar(@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
 		return carService.getCarForUser(u);
 	}
 }
