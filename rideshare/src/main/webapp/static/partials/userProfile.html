@@ -10,3 +10,42 @@
         <input type="submit" value="Save Changes" ng-click="setPois()">
     </form>
 </div>
+
+<!--User can add/remove Car info-->
+<div>
+    <button data-toggle="modal" data-target="#carModal">Car</button>
+</div>
+
+
+<!--  remove Car -->
+<div>
+	<button ng-click="removeCar()">remove car</button>
+</div>
+
+<!--Car Modal -->
+<div class="modal" id="carModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Car Info</h4>
+			</div>
+			<div class="modal-body">
+                <input type="text" ng-model="car.brand" placeholder="brand" /> <br>
+                <input type="text" ng-model="car.color" placeholder="color" /> <br>
+                <input type="text" ng-model="car.licensePlate" placeholder="plate" />
+                <br> <input type="text" ng-model="car.model" placeholder="model" />
+                <br> <input type="text" ng-model="car.notes" placeholder="notes" />
+                <br> <label>No Smoking <input type="checkbox"
+                    ng-model="car.smokeFree" ng-init="car.smokeFree=true"></label><br />
+			</div>
+			<div class="modal-footer">
+				<input type="button" value="Close" data-dismiss="modal"/>
+                <input type="submit" value="Save Changes" ng-click="addCar()" data-dismiss="modal"/>
+			</div>
+		</div>
+	</div>
+</div>
