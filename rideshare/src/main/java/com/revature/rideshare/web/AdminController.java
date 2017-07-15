@@ -49,9 +49,10 @@ public class AdminController {
 		return userService.getAll();
 	}
 
-	@PostMapping("/updateStatus/{id}")
-	public void updateStatus(@PathVariable(value = "id") long id) {
+	@PostMapping("/updateStatus/{id}/{isAdmin}")
+	public void updateStatus(@PathVariable(value = "id") long id, @PathVariable(value = "isAdmin") boolean isAdmin) {
 		User user = userService.getUser(id);
+		user.setAdmin(isAdmin);
 		userService.updateUser(user);
 	}
 
