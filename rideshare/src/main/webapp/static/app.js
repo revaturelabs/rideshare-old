@@ -6,6 +6,8 @@ import { driverController } from './js/controllers/driver.controller.js';
 import { historyController } from './js/controllers/history.controller.js';
 import { slackLoginController } from './js/controllers/slackLogin.controller.js';
 import { addCarController } from './js/controllers/addCar.controller.js';
+import { errorController } from './js/controllers/error.controller.js';
+import { loginErrorController } from './js/controllers/loginError.controller.js';
 
 // var = function scope
 // const and let = block scope
@@ -62,6 +64,12 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		url: '/addCar',
 		templateUrl : 'partials/addCar.html',
 		controller : addCarController
+	})
+
+	.state('main.error', {
+		url: '/error',
+		templateUrl: 'partials/error.html',
+		controller: errorController
 	})
 
 
