@@ -141,7 +141,7 @@ a {
 	font-style: normal;
 }
 
-.tabbed-list li .btn-container {
+.btn-container {
 	text-align: center;
 	margin-top: 1em;
 }
@@ -152,6 +152,7 @@ a {
 
 .passenger-list li {
 	border-bottom: none;
+	padding: .1em 1em
 }
 
 /**********************

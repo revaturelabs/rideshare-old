@@ -42,7 +42,7 @@ public class AvailableRide implements Serializable, Comparable<AvailableRide> {
 	@Column(name = "AVAILABLE_SEATS", nullable = false)
 	private short seatsAvailable;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "TIME", nullable = false)
 	private Date time;
 
