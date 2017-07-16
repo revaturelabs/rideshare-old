@@ -40,8 +40,8 @@ public class PointOfInterestController {
 	}
 
 	@PostMapping("/removePoi")
-	public void removePoi(@RequestBody PointOfInterest poi) {
-		poiService.removePoi(poi);
+	public void removePoi(@RequestBody String jsonPoi) {
+		poiService.removePoi(getPoi(jsonPoi));
 	}
 
 	@PostMapping("/updatePoi")

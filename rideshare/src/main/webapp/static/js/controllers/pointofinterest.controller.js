@@ -1,6 +1,14 @@
 export let poiController = function ($scope, $http, $state) {
 	$scope.poi = {};
-	$scope.allpois = [];
+	$scope.allpois = {};
+	$scope.newPoi = {}; 
+	$scope.dummyPoi = {}; 
+
+	// retrieve all pois
+	$http.get("/poiController")
+	.then(function (response) {
+		$scope.allpois = response.data;
+	});
 
 	// retrieve the poiType objects
 	$scope.types = {};
@@ -60,10 +68,8 @@ export let poiController = function ($scope, $http, $state) {
 
 			$scope.poi.latitude = result.results[0].geometry.location.lat;
 			$scope.poi.longitude = result.results[0].geometry.location.lng;
-			console.log('Lat: ' + $scope.poi.latitude);
 			$http.post("/poiController/addPoi", $scope.poi)
 			.then((formResponse) => {
-				console.log('hello woild');
 				$state.go('poi');
 				document.getElementById("addPoi-form").reset();
 			},
@@ -75,19 +81,58 @@ export let poiController = function ($scope, $http, $state) {
 	}   // end of addPoi() function
 
 	// removePoi()
-	$scope.removePoi = function () {
-		console.log($scope.poi);
+	$scope.removePoi = function (index) {
+		// later add modal asks "Are you sure you want to remove this POI?"
+		$http.post("/poiController/removePoi", $scope.allpois[index])
+		.then((response) => {
+			$state.go('poi');
+		},
+		(failedResponse) => {
+			alert('failure');
+		})
 	}   // end of removePoi() function
 
-	console.log("sanity check #" + 19);  // sanity cache check
+	$scope.openModal = function(index){
+		$scope.dummyPoi = $scope.allpois[index];
+        $scope.newPoi = angular.copy($scope.dummyPoi);
+	}
 
-	// retrieve all pois
-	$scope.getPois = function () {
-		$http.get("/poiController")
-		.then(function (response) {
-			console.log("getting poicontroller" + response.data);
-			$scope.allpois = response.data;
-		});
-	}   // end of getPois () function
+	// edit/updatePoi()
+	$scope.updatePoi = function(){
+        
+		if ($scope.newPoi.addressLine2 === null)
+			$scope.newPoi.addressLine2 = "";
+		// get address and format it for google maps response
+		var address = "" + $scope.newPoi.addressLine1 + " "
+		+ $scope.newPoi.addressLine2 + ", " +
+		$scope.newPoi.city +
+		", " + $scope.newPoi.state;
+		address = address.replace(/\s/g, '+'); // replace white space with +
+                
+		// store url to retrieve response from google maps api
+		var url = "https://maps.googleapis.com/maps/api/geocode/" +
+		"json?address=" + address +
+		"&key=AIzaSyB_mhIdxsdRfwiAHVm8qPufCklQ0iMOt6A";
+        
+		var xhr = $scope.createCORSRequest('GET', url);
+		
+		xhr.onload = function(response) {
+			var result = JSON.parse(xhr.responseText);
+			
+			$scope.newPoi.latitude = result.results[0].geometry.location.lat;
+			$scope.newPoi.longitude = result.results[0].geometry.location.lng;
+            
+			$http.post("/poiController/updatePoi", $scope.newPoi)
+			.then((formResponse) => {
+				$state.reload('poi');
+			},
+			(failedResponse) => {
+				alert('failure');
+			})
+		}
+		
+		xhr.send();
+	}   // end of updatePoi() function
+
+//	console.log("sanity check #" + 82);  // sanity debug checker
 };
-
