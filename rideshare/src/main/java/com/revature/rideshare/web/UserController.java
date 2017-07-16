@@ -48,16 +48,10 @@ public class UserController {
 	public User getCurrentUser(@RequestHeader(name = "Authorization") String token) {
 		return User.getUserFromToken(token);
 	}
-
+	
 	@PostMapping("/updateCurrentUser")
 	public void updateUser(@RequestHeader(name = "Authorization") String token, 
-			@RequestBody String response) {
-		User user = User.getUserFromToken(token);
-		System.out.println("UPDATE CALLED \n\n\n" + user.toString() + "\n\n\n");
-		User temp = getUser(response);
-		user.setMainPOI(temp.getMainPOI());
-		user.setWorkPOI(temp.getWorkPOI());
-		System.out.println("UPDATE USER \n\n\n" + user.toString() + "\n\n\n");
+			@RequestBody User user) {
 		userService.updateUser(user);
 	}
 	

@@ -4,8 +4,8 @@ export let userProfileController = function ($scope, $http, $state){
 	$scope.car = {};
 	$scope.originalCar = {};
 	$scope.buttonText = '';
-	$scope.mainPoiOption;
-	$scope.workPoiOption;
+	$scope.mainPoiOption = {};
+	$scope.workPoiOption = {};
 	
 	// Retrieve user's information
 	$http.get("user/me", $scope.user)
@@ -45,10 +45,7 @@ export let userProfileController = function ($scope, $http, $state){
 		.then((response) => {
 			$scope.car = response.data;
 			$scope.originalCar = response.data;
-			console.log('car:')
-			console.log($scope.car);
-			console.log('original car:')
-			console.log($scope.originalCar);
+
 			if($scope.car === '') {
 				$scope.buttonText = 'Add Car';
 			}
@@ -63,19 +60,15 @@ export let userProfileController = function ($scope, $http, $state){
 	// how get poi from selected option 
 	// set the pois to the user 
 	$scope.setPois = function(){  
-		console.log('User main:')
-		console.log($scope.user.mainPoi);
-		console.log('Main option:')
-		console.log($scope.mainPoiOption);
-		$scope.user.mainPoi = $scope.mainPoiOption;
-		$scope.user.workPoi = $scope.workPoiOption;
+		$scope.user.mainPOI = $scope.mainPoiOption;
+		$scope.user.workPOI = $scope.workPoiOption;
 		
 		$http.post("/user/updateCurrentUser", $scope.user)
 		.then((formResponse) => {
 			$state.go('main.userProfile');
 		},
 		(failedResponse) => {
-			alert('failure');
+			alert('failure in setPois');
 		})
 	}
 	
@@ -92,10 +85,6 @@ export let userProfileController = function ($scope, $http, $state){
 	}
 	
 	$scope.updateCar = function() {
-		console.log('before update --- car: ')
-		console.log($scope.car);
-		console.log('before update --- original car')
-		console.log($scope.orignalCar);
 		
 		$http.post('/car/updateCar', $scope.car).then(
 				(formResponse) => {
