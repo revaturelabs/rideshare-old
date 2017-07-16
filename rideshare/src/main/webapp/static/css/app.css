@@ -152,6 +152,7 @@ a {
 
 .passenger-list li {
 	border-bottom: none;
+	padding: .1em 1em
 }
 
 /**********************
