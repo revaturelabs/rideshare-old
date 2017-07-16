@@ -1,3 +1,4 @@
+<!--click button to see populated table of all Users-->
 <div>
   <button ng-click="getUsers()" class="btn btn-primary">Users</button>
   <table>
@@ -11,7 +12,59 @@
   		<tr ng-repeat="u in users">
   			<td>{{u.fullName}}</td>
   			<td>{{u.email}}</td>
+            <td><button ng-click="openModal($index)" data-toggle="modal" data-target="#userInfoModal">More Info</button></td>
   		</tr>
   	</tbody>
   </table>
+</div>
+
+<!--More User Info Modal -->
+<div class="modal" id="userInfoModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">User Info</h4>
+			</div>
+			<div class="modal-body">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>User Id</td>
+                            <td>{{user.userId}}</td>
+                        </tr>
+                        <tr>
+                            <td>Full Name</td>
+                            <td>{{user.fullName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>{{user.email}}</td>
+                        </tr>
+                        <tr>
+                            <td>Main Point of Interest</td>
+                            <td>{{user.mainPOI.poiName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Work Point of Interest</td>
+                            <td>{{user.workPOI.poiName}}</td>
+                        </tr>
+                        <tr>
+                            <td>Admin Status</td>
+                            <td>{{user.admin}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <label>Admin Status</label>
+                <input type="checkbox" ng-checked="user.admin"  ng-model="isAdmin" >
+			</div>
+			<div class="modal-footer">
+				<input type="button" value="Close" data-dismiss="modal"/>
+                <input type="submit" value="Save Changes" ng-click="changeAdmin()" data-dismiss="modal"/>
+			</div>
+		</div>
+	</div>
 </div>
