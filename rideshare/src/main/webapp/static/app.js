@@ -6,15 +6,12 @@ import { driverController } from './js/controllers/driver.controller.js';
 import { historyController } from './js/controllers/history.controller.js';
 import { slackLoginController } from './js/controllers/slackLogin.controller.js';
 import { addCarController } from './js/controllers/addCar.controller.js';
-<<<<<<< HEAD
 import { errorController } from './js/controllers/error.controller.js';
 import { loginErrorController } from './js/controllers/loginError.controller.js';
-=======
 import { adminRidesController } from './js/controllers/adminRides.controller.js';
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
 import { userProfileController } from './js/controllers/userProfile.controller.js';
->>>>>>> 56c3736107b121b6b7aa0a301aa4150ff500b817
 
 //var = function scope
 //const and let = block scope 
