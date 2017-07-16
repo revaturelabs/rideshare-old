@@ -1,5 +1,4 @@
 export let driverController = function($scope, $http, $state){
-
 	// scope and function used to pass ride data to front end
 	$scope.isArray = angular.isArray;
 	$scope.rides = {};
@@ -8,31 +7,44 @@ export let driverController = function($scope, $http, $state){
 	.then(function(response) {
 		$scope.rides = response.data;
 	});
-	
-	//changes poi that is used in the openRequest
-	//TODO: get default scope from user
+
+	// changes poi that is used in the openRequest
+	// TODO: get default scope from user
+
 	$scope.poiId = {id : 1};
-	
-	$scope.openRequest = {};
-	
+
+	$scope.openRequest = [];
+
 	$scope.updateSort = function (){
-		
+
 		$scope.poiId.id = $scope.selectedItem.poiId;
-		
 		$http.get("/ride/request/open/"+$scope.poiId.id)
 		.then(function(response) {
 			$scope.openRequest = response.data;
 		});
-		
+
 	}
-	
-	//show open requests from a poi
+
+	// show open requests from a poi
 	$http.get("/ride/request/open/"+$scope.poiId.id)
 	.then(function(response) {
 		$scope.openRequest = response.data;
 	});
-	
-	//shows all open (unconfirmed) offers for a user
+
+	// accept open requests
+	$scope.acceptReq = function(id){
+
+
+		$http.get("/ride/request/accept/"+id)
+		.then(function(response) {
+
+		});
+
+		$state.reload();
+	}
+
+
+	// shows all open (unconfirmed) offers for a user
 	$scope.openRides = {};
 
 	$http.get("/ride/offer/open/"+$scope.poiId.id)
@@ -41,7 +53,7 @@ export let driverController = function($scope, $http, $state){
 	});
 
 	// get data that shows all active ride offers for user
-	$scope.activeRides = {};
+	$scope.activeRides = [];
 
 	function compare(a,b) {
 		if (a.availRide.availRideId < b.availRide.availRideId)
@@ -50,7 +62,7 @@ export let driverController = function($scope, $http, $state){
 			return 1;
 		return 0;
 	}
-	
+
 	$http.get("/ride/offer/active")
 	.then(function(response){
 		if(response.data.length == 0){
@@ -58,38 +70,38 @@ export let driverController = function($scope, $http, $state){
 			$scope.activeRides = temp;
 			return;
 		}
-			let list = response.data;
-			let listReq = [];
-			let temp = [];
-			let counter = 0;
-			let currentAvailId = list[0].availRide.availRideId;
-			list.sort(compare); 
-			listReq = [list[0]];
-			for(let i = 0; i < list.length; i++){
-				
-				if((currentAvailId != list[i].availRide.availRideId) && i == list.length-1){
-					listReq[counter++].request = temp;
-					temp = [];
-					temp.push(list[i].request);
-					listReq[counter] = list[i];
-					listReq[counter].request = temp;
-				}
-				else if ((currentAvailId == list[i].availRide.availRideId) && i == list.length-1){
-					temp.push(list[i].request);
-					listReq[counter].request = temp;
-				}
-				else if((currentAvailId != list[i].availRide.availRideId)){
-					currentAvailId = list[i].availRide.availRideId;
-					
-					if(temp.length > 0){
-						listReq[counter++].request = temp;
-						listReq[counter] = list[i];
-						temp = [];
-					}
-				} 
-				if(i != list.length-1) temp.push(list[i].request);
+		let list = response.data;
+		let listReq = [];
+		let temp = [];
+		let counter = 0;
+		let currentAvailId = list[0].availRide.availRideId;
+		list.sort(compare); 
+		listReq = [list[0]];
+		for(let i = 0; i < list.length; i++){
+
+			if((currentAvailId != list[i].availRide.availRideId) && i == list.length-1){
+				listReq[counter++].request = temp;
+				temp = [];
+				temp.push(list[i].request);
+				listReq[counter] = list[i];
+				listReq[counter].request = temp;
 			}
-			$scope.activeRides = listReq;
+			else if ((currentAvailId == list[i].availRide.availRideId) && i == list.length-1){
+				temp.push(list[i].request);
+				listReq[counter].request = temp;
+			}
+			else if((currentAvailId != list[i].availRide.availRideId)){
+				currentAvailId = list[i].availRide.availRideId;
+
+				if(temp.length > 0){
+					listReq[counter++].request = temp;
+					listReq[counter] = list[i];
+					temp = [];
+				}
+			} 
+			if(i != list.length-1) temp.push(list[i].request);
+		}
+		$scope.activeRides = listReq;
 	});
 
 	// get data that shows all past ride offers for user
@@ -135,7 +147,7 @@ export let driverController = function($scope, $http, $state){
 						}
 					}
 				}
-		)
+		);
 	};
 
 
