@@ -1,18 +1,35 @@
+<!-- Users can learn more about themselves-->
+<div>
+	<h3>Your Info:</h3>
+	<table>
+		<tr>
+			<td>Name: </td>
+			<td>{{user.fullName}}</td>
+		</tr>
+		<tr>
+			<td>Email: </td>
+			<td>{{user.email}}
+		</tr>
+	</table>
+</div>
 <!--User can set POI-->
 <div>
+	<h3>Your point of interest preferences:</h3>
 	<form>
 		Select Main POI
-		<select id="mainPoi" ng-model="user.mainPOI" ng-options="poi.poiName for poi in allpois"/>
+		<select id="mainPoi" ng-model="mainPoiOption" ng-options="poi as poi.poiName for poi in allpois"/>
 		<br>
 		Select Work POI
-		<select id="workPoi" ng-model="user.workPOI" ng-options="poi.poiName for poi in allpois"/>
+		<select id="workPoi" ng-model="workPoiOption" ng-options="poi as poi.poiName for poi in allpois"/>
 		<br>
+		{{mainPoiOption.poiName}}
 		<input type="submit" value="Save Changes" ng-click="setPois()">
 	</form>
 </div>
 
 <!--User can add/remove Car info-->
 <div>
+	<h3>Your car:</h3>
 	<button data-toggle="modal" data-target="#carModal">{{buttonText}}</button>
 </div>
 
@@ -63,7 +80,7 @@
 				<input type="button" value="Close" data-dismiss="modal"/>
 				<input type="submit" value="Save Changes" ng-click="addCar()" ng-if="buttonText == 'Add Car'" data-dismiss="modal"/>
 				<input type="submit" value="Remove Car" ng-click="removeCar()" ng-if="buttonText == 'Edit Car'" data-dismiss="modal"/>
-				<input type="submit" value="Save Changes" ng-click="addCar()" ng-if="buttonText == 'Edit Car'" data-dismiss="modal"/>
+				<input type="submit" value="Update Car" ng-click="beforeUpdateCar()" ng-if="buttonText == 'Edit Car'" data-dismiss="modal"/>
 			</div>
 		</div>
 	</div>
