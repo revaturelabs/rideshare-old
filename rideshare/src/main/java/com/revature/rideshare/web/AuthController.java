@@ -25,28 +25,32 @@ import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.AuthService;
 import com.revature.rideshare.service.UserService;
 
-@RestController
-@RequestMapping("auth")
+//@RestController
+//@RequestMapping("auth")
 public class AuthController {
 
+//	@Value("#{systemEnvironment['RIDESHARE_SLACK_ID']}")
 	private String slackAppId = "184219023015.209820937091";
+//	@Value("#{systemEnvironment['RIDESHARE_SLACK_SECRET']}")
 	private String slackAppSecret = "f69b998afcc9b1043adfa2ffdab49308";
-	private String slackAppToken = "xER6r1Zrr0nxUBdSz7Fyq5UU";
+//	@Value("#{systemEnvironment['RIDESHARE_SLACK_VERIFICATION']}")
+	private String slackAppVerificationToken = "xER6r1Zrr0nxUBdSz7Fyq5UU";
+//	@Value("#{systemEnvironment['RIDESHARE_SLACK_TEAM']}")
 	private String slackAppTeamId = "T5E6F0P0F"; // for 1705may15java
 
 	@Autowired
 	UserService userService;
 	
-//	@Autowired
-//	AuthService authService;
+	@Autowired
+	AuthService authService;
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 	
-//	public void setAuthService(AuthService authService) {
-//		this.authService = authService;
-//	}
+	public void setAuthService(AuthService authService) {
+		this.authService = authService;
+	}
 
 	@RequestMapping("/check")
 	public Boolean isAuthenticated(Principal principal) {
@@ -61,10 +65,25 @@ public class AuthController {
 //		}
 		
 	}
+	
+	@RequestMapping("/slack/authorize")
+	public ResponseEntity<String> redirectToSlack(HttpServletResponse response) {
+		
+	}
+	
+	@RequestMapping("/slack/login")
+	public ResponseEntity<> loginWithSlack(@RequestParam("code") String code, @RequestParam("error") String error) {
+		
+	}
+	
+	@RequestMapping("/slack/integrate")
+	public ResponseEntity<> integrateWithSlack(@RequestParam("code") String code, @RequestParam("error") String error) {
+		
+	}
 
 	/*
-	 * TODO: this method is currently a hackish quick fix, find a better
-	 * solution NOTE: slack user IDs are only unique within a specific team, but
+	 * TODO: this method is currently a hackish quick fix, find a better solution
+	 * NOTE: slack user IDs are only unique within a specific team, but
 	 * team IDs are unique across all of slack
 	 */
 	@RequestMapping("/current")
@@ -128,12 +147,8 @@ public class AuthController {
 				u.setSlackId(userId);
 				userService.addUser(u);
 			}
-			Authentication authentication = new PreAuthenticatedAuthenticationToken(u, "blahblahblah"); // can
-			// include
-			// authorities
-			// as
-			// third
-			// parameter
+			Authentication authentication = new PreAuthenticatedAuthenticationToken(u, "blahblahblah");
+			// can include authorities as third parameter
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			destination = "/";
 			response.sendRedirect(destination);
@@ -145,10 +160,6 @@ public class AuthController {
 				e1.printStackTrace();
 			}
 		}
-	}
-
-	private User removeSensitiveInformation(User u) {
-		return null;
 	}
 
 }
