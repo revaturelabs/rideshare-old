@@ -31,7 +31,7 @@
 
 				<li ng-repeat="ride in openRequest">
 
-					{{ride.user.fullName}} <em>@</em> {{ride.time}}<br/>
+					{{ride.user.fullName}} <em>@</em> {{ride.time | date: 'h:mm a MMM dd'}}<br/>
 					{{ride.pickupLocation.poiName}}
 					<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
 					{{ride.dropOffLocation.poiName}}
@@ -63,7 +63,7 @@
 
 				<li ng-repeat="ride in activeRides">
 					<div data-toggle="collapse" data-target="#{{ride.availRide.availRideId}}">
-						<em>@</em> {{ride.availRide.time}}
+						<em>@</em> {{ride.availRide.time | date: 'h:mm a MMM dd'}}
 						<br/>
 
 						{{ride.availRide.pickupPOI.poiName}}
@@ -105,7 +105,7 @@
 				<li ng-if="pastRides.length == 0">No ride history</li>
 
 				<li ng-repeat="ride in pastRides">
-						<em>@</em> {{ride.availRide.time}}
+						<em>@</em> {{ride.availRide.time | date: 'h:mm a MMM dd'}}
 						<br/>
 
 						{{ride.availRide.pickupPOI.poiName}}
