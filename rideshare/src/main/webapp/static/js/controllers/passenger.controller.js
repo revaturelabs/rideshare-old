@@ -101,14 +101,10 @@ export let passengerController = function($scope, $http, $state, $location){
 						
 						$scope[temp1] = false;
 						$scope[temp2] = false;
-						
-						if(poiLimit === 2){
-							poiLimit = 1;
-						}
 					}
 					
 					if(poiLimit === 1){
-						markers[x].setIcon('http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png');
+						markers[x].setIcon('http://earth.google.com/images/kml-icons/track-directional/track-8.png');
 						
 						let temp2 = 'destination' + id;
 						$scope[temp2] = true;
@@ -117,7 +113,7 @@ export let passengerController = function($scope, $http, $state, $location){
 					}
 					
 					if(poiLimit === 0){
-						markers[x].setIcon('http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png');
+						markers[x].setIcon('http://earth.google.com/images/kml-icons/track-directional/track-8.png');
 						
 						let temp1 = 'start' + id;
 						$scope[temp1] = true;
