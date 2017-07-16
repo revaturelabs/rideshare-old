@@ -51,6 +51,12 @@ public class User implements Serializable {
 
 	@Column(name = "IS_ADMIN", nullable = false)
 	private boolean isAdmin;
+	
+	@Column(name="IS_BANNED", nullable=false)
+	private boolean isBanned;
+	
+	@Column(name="SLACK_URL")
+	private String slackUrl;
 
 	public User() {
 	}
@@ -67,6 +73,22 @@ public class User implements Serializable {
 		this.email = email;
 		this.slackId = slackId;
 		this.isAdmin = isAdmin;
+	}
+	
+	public User(long userId, String firstName, String lastName, String fullName, PointOfInterest mainPOI,
+			PointOfInterest workPOI, String email, String slackId, boolean isAdmin, boolean isBanned, String slackUrl) {
+		super();
+		this.userId = userId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.fullName = fullName;
+		this.mainPOI = mainPOI;
+		this.workPOI = workPOI;
+		this.email = email;
+		this.slackId = slackId;
+		this.isAdmin = isAdmin;
+		this.isBanned = isBanned;
+		this.slackUrl = slackUrl;
 	}
 
 	public long getUserId() {
@@ -141,16 +163,32 @@ public class User implements Serializable {
 		this.isAdmin = isAdmin;
 	}
 
+	public boolean isBanned() {
+		return isBanned;
+	}
+
+	public void setBanned(boolean isBanned) {
+		this.isBanned = isBanned;
+	}
+
+	public String getSlackUrl() {
+		return slackUrl;
+	}
+
+	public void setSlackUrl(String slackUrl) {
+		this.slackUrl = slackUrl;
+	}
+
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", fullName="
 				+ fullName + ", mainPOI=" + mainPOI + ", workPOI=" + workPOI + ", email=" + email + ", slackId="
-				+ slackId + ", isAdmin=" + isAdmin + "]";
+				+ slackId + ", isAdmin=" + isAdmin + ", isBanned=" + isBanned + ", slackUrl=" + slackUrl + "]";
 	}
 
 	public static User getUserFromToken(String token) {
 		ObjectMapper mapper = new ObjectMapper();
-
+		
 		try {
 			String userJson = JWT.decode(token).getClaim("user").asString();
 			return (User) mapper.readValue(userJson, User.class);
