@@ -44,7 +44,7 @@ public class Car implements Serializable {
 	@Column(name = "IS_SMOKE_FREE", nullable = false)
 	private boolean smokeFree;
 
-	@Column(name = "CAR_NOTES", nullable = false)
+	@Column(name = "CAR_NOTES")
 	private String notes;
 
 	public Car() {
