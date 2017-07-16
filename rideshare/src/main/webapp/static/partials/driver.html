@@ -16,28 +16,38 @@
 
 		<div role="tabpanel" class="tab-pane active" id="open">
 
-			<br> <select ng-model="selectedItem"
-				ng-options="poi.poiName for poi in allPoi" ng-change="updateSort()"></select>
-			<br> <br>
+			<!-- Select location to filter available rides -->
+			<div class="input-group location-selector">
+				<span class="input-group-addon">Location</span>
+				<select class="form-control" ng-model="selectedItem"
+					ng-options="poi.poiName for poi in allPoi" ng-change="updateSort()"></select>
+			</div>
 
 			<!-- html and angular function used to display open rides -->
-			<ul style="list-style-type: none;">
+			<ul class="tabbed-list">
 
 				<li ng-if="openRequest.length == 0">No open requests for this
 					point of interest</li>
 
-				<li ng-repeat="ride in openRequest">Time: {{ride.time}}<br>
-					Pick up at: {{ride.pickupLocation.poiName}},
-					{{ride.pickupLocation.addressLine1}} <br> Drop off at:
-					{{ride.dropOffLocation.poiName}},
-					{{ride.dropOffLocation.addressLine1}}<br> Rider:
-					{{ride.user.fullName}} <br> Rider note: {{ride.notes}} <span
-					ng-show=" ride.notes == null"> n/a </span> <br> <br>
+				<li ng-repeat="ride in openRequest">
 
-					<button type="button" class="btn btn-primary"
-						ng-click="acceptReq(ride.requestId)">Accept Request</button> <br>
-					<br>
+					{{ride.user.fullName}} <em>@</em> {{ride.time}}<br/>
+					{{ride.pickupLocation.poiName}}
+					<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+					{{ride.dropOffLocation.poiName}}
 
+					<!-- Beginning of expanded portion -->
+					<br/><br/>
+ <!-- 					{{ride.pickupLocation.addressLine1}}
+					{{ride.dropOffLocation.addressLine1}}
+ -->
+					Note: <i>{{ride.notes}} <span ng-show=" ride.notes == null"> N/A </span></i>
+
+					<div class="btn-container">
+						<button type="button" class="btn btn-primary"
+							ng-click="acceptReq(ride.requestId)">Accept Request</button>
+					</div>
+					<!-- End of expanded portion -->
 				</li>
 
 			</ul>
