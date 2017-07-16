@@ -46,21 +46,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //		http.portMapper().http(8080).mapsTo(8443);
 
 //		http.requiresChannel().antMatchers("/**").requiresSecure();
-
-//		http.antMatcher("/**")
-//		.authorizeRequests()
-//		.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html", "/auth/check").permitAll()
-//		.anyRequest()
-//		.authenticated()
-//		.and().logout().logoutSuccessUrl("/").permitAll()
-//		.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//		.and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 		
 		http.authorizeRequests()
 				.antMatchers("/admin**").hasRole("ADMIN")
 				.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html", "/auth/check").permitAll()
 				.anyRequest().authenticated()
 			.and().logout()
+				.logoutUrl("/logout")
 				.logoutSuccessUrl("/")
 				.clearAuthentication(true)
 				.invalidateHttpSession(true)
