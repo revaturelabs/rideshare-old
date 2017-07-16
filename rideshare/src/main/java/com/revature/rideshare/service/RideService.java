@@ -123,7 +123,7 @@ public class RideService {
 
 		Collections.sort(openReqs);
 
-		PointOfInterest temp = poiService.getAll().get((int) poiId);
+		PointOfInterest temp = poiService.getPoi(poiId);
 		sortRequestsByPOI(openReqs, temp);
 
 		return openReqs;

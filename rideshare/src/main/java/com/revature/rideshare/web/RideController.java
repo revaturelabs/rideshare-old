@@ -36,18 +36,6 @@ public class RideController {
 		return rideService.getAll();
 	}
 
-	// TODO: move to util class
-	private User getUserFromToken(String token) {
-		ObjectMapper mapper = new ObjectMapper();
-
-		try {
-			String userJson = JWT.decode(token).getClaim("user").asString();
-			return (User) mapper.readValue(userJson, User.class);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
 	// REQUESTS
 	@GetMapping("/request")
 	public List<RideRequest> getRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
@@ -58,7 +46,7 @@ public class RideController {
 	@GetMapping("/request/accept/{id}")
 	public boolean acceptRequest(@PathVariable(value = "id") long id,
 			@RequestHeader(name = "Authorization") String token) {
-		User u = getUserFromToken(token);
+		User u = User.getUserFromToken(token);
 		return rideService.acceptRequest(id, u);
 	}
 
@@ -68,7 +56,7 @@ public class RideController {
 	@GetMapping("/request/cancel/{id}")
 	public boolean cancelRequest(@PathVariable(value = "id") long id,
 			@RequestHeader(name = "Authorization") String token) {
-		User u = getUserFromToken(token);
+		User u = User.getUserFromToken(token);
 		return rideService.cancelRequest(id, u);
 	}
 
@@ -79,31 +67,32 @@ public class RideController {
 
 	@GetMapping("/request/open/{id}")
 	public List<RideRequest> getOpenRequests(@PathVariable(value = "id") int id) {
+		
 		return rideService.getOpenRequests(id);
 	}
 
-	@GetMapping("/request/open")
-	public List<RideRequest> getOpenRequests() {
-		// TODO: get actual poi id in req
-		return rideService.getOpenRequests(1);
-	}
+//	@GetMapping("/request/open")
+//	public List<RideRequest> getOpenRequests() {
+//		// TODO: get actual poi id in req
+//		return rideService.getOpenRequests(1);
+//	}
 
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
-		User u = getUserFromToken(token);
+		User u = User.getUserFromToken(token);
 		return rideService.getActiveRequestsForUser(u);
 	}
 
 	@GetMapping("/request/history")
 	public List<Ride> getRequestHistoryForCurrentUser(@RequestHeader(name = "Authorization") String token) {
-		User u = getUserFromToken(token);
+		User u = User.getUserFromToken(token);
 		return rideService.getRequestHistoryForUser(u);
 	}
 
 	// OFFERS
 	@GetMapping("/offer")
 	public List<AvailableRide> getOffersForCurrentUser(@RequestHeader(name = "Authorization") String token) {
-		User u = getUserFromToken(token);
+		User u = User.getUserFromToken(token);
 		return rideService.getOffersForUser(u);
 	}
 
@@ -115,7 +104,7 @@ public class RideController {
 	@GetMapping("/offer/accept/{id}")
 	public boolean acceptOffer(@PathVariable(value = "id") long id,
 			@RequestHeader(name = "Authorization") String token) {
-		User u = getUserFromToken(token);
+		User u = User.getUserFromToken(token);
 		return rideService.acceptOffer(id, u);
 	}
 
@@ -136,13 +125,13 @@ public class RideController {
 
 	@GetMapping("/offer/open")
 	public List<AvailableRide> getOpenOffers( @RequestHeader (name = "Authorization") String token)  {
-		User u = getUserFromToken(token);
+		User u = User.getUserFromToken(token);
 		return rideService.getOpenOffersForUser(u);
 	}
 
 	@GetMapping("/offer/active")
 	public List<Ride> getActiveOffersForCurrentUser(@RequestHeader(name = "Authorization") String token) {
-		User u = getUserFromToken(token);
+		User u = User.getUserFromToken(token);
 		return rideService.getActiveOffersForUser(u);
 	}
 
