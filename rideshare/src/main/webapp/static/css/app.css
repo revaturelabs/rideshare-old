@@ -150,6 +150,10 @@ a {
 	margin: 1em 2em;
 }
 
+.passenger-list li {
+	border-bottom: none;
+}
+
 /**********************
 	Chart Containers
 **********************/

@@ -57,41 +57,44 @@
 		<div role="tabpanel" class="tab-pane" id="active">
 
 			<!-- html and angular function used to display open rides -->
-			<ul style="list-style-type: none;">
+			<ul class="tabbed-list">
 
 				<li ng-if="activeRides.length == 0">No active rides</li>
 
-				<li ng-repeat="ride in activeRides">Time: <span
-					data-toggle="collapse"
-					data-target="#{{ride.availRide.availRideId}}">
-						{{ride.availRide.time}}<br> Pick up at:
+				<li ng-repeat="ride in activeRides">
+					<div data-toggle="collapse" data-target="#{{ride.availRide.availRideId}}">
+						<em>@</em> {{ride.availRide.time}}
+						<br/>
+
 						{{ride.availRide.pickupPOI.poiName}},
-						{{ride.availRide.pickupPOI.addressLine1}} <br> Drop off at:
-						{{ride.availRide.dropoffPOI.poiName}},
-						{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
-						{{ride.availRide.car.user.fullName}}<br> Driver note:
-						{{ride.availRide.car.notes}}
-				</span> <span ng-show="ride.availRide.car.notes == null"> n/a </span> <br>
+						<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+						{{ride.availRide.dropoffPOI.poiName}}
+					</div>
+
 					<div id="{{ride.availRide.availRideId}}" class="collapse">
+						<br/>
+
+<!-- 						Car: {{ride.availRide.car.color}} {{ride.availRide.car.model}}
+						<br/>
+ -->
 						<div ng-show="isArray(ride.request)">
-							<p ng-repeat="request in ride.request">
-
-								Rider: {{request.user.fullName}} <br> Rider note:
-								{{request.notes}}
-
-							</p>
+							<em>Passengers:</em>
+							<ul class="passenger-list">
+								<li ng-repeat="request in ride.request">
+									{{request.user.fullName}}
+									<span ng-show="request.notes != null"> ( <i>{{request.notes}}</i> )</span>
+								</li>
+							</ul>
 						</div>
-						<div ng-show="!isArray(ride.request)">
-							Rider: {{ride.request.user.fullName}} <br> Rider note:
-							{{ride.request.notes}}
+
+						<div class="btn-container">
+							<button type="submit" class="btn btn-primary"
+								ng-click="offerCancel(ride.availRide.availRideId)">Cancel
+								Offer</button>
 						</div>
 					</div>
-					<button type="submit" class="btn btn-primary"
-						ng-click="offerCancel(ride.availRide.availRideId)">Cancel
-						Offer</button>
 
 				</li>
-
 			</ul>
 
 		</div>
