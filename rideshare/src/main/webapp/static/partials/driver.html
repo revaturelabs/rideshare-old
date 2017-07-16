@@ -66,7 +66,7 @@
 						<em>@</em> {{ride.availRide.time}}
 						<br/>
 
-						{{ride.availRide.pickupPOI.poiName}},
+						{{ride.availRide.pickupPOI.poiName}}
 						<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
 						{{ride.availRide.dropoffPOI.poiName}}
 					</div>
@@ -100,35 +100,29 @@
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="history">
-
-
-			<ul style="list-style-type: none;">
+			<ul class="tabbed-list">
 
 				<li ng-if="pastRides.length == 0">No ride history</li>
 
+				<li ng-repeat="ride in pastRides">
+						<em>@</em> {{ride.availRide.time}}
+						<br/>
 
+						{{ride.availRide.pickupPOI.poiName}}
+						<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+						{{ride.availRide.dropoffPOI.poiName}}
 
-				<li ng-repeat="ride in pastRides">Time: {{ride.availRide.time}}<br>
-					Pick up at: {{ride.availRide.pickupPOI.poiName}},
-					{{ride.availRide.pickupPOI.addressLine1}} <br> Drop off at:
-					{{ride.availRide.dropoffPOI.poiName}},
-					{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
-					{{ride.availRide.car.user.fullName}}<br> Driver note:
-					{{ride.availRide.car.notes}} <span
-					ng-show=" ride.availRide.car.notes == null"> n/a </span> <br>
-					Rider: {{ride.request.user.fullName}} <br> Rider note:
-					{{ride.request.notes}} <span ng-show=" ride.request.notes == null">
-						n/a </span> <br> Compliant: {{ride.compliant}} <span
-					ng-show=" ride.compliant == null"> n/a </span> <br> <br>
+						<!-- Beginning of expanded portion -->
+						<br/>
+						<br/>
+						Complaint: <i>{{ride.complaint}} <span ng-show=" ride.complaint == null">N/A</span></i>
+						<!-- End of expanded portion -->
 
 				</li>
 
 			</ul>
-
 		</div>
-
 	</div>
-
 </div>
 
 <!-- Button trigger modal -->
