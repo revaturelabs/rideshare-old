@@ -51,7 +51,8 @@ public class RideController {
 	}
 
 	/**
-	 * Takes in a Ride ID and deleted the Ride and RideRequest objects associated.
+	 * Takes in a Ride ID and deleted the Ride and RideRequest objects
+	 * associated.
 	 */
 	@GetMapping("/request/cancel/{id}")
 	public boolean cancelRequest(@PathVariable(value = "id") long id,
@@ -70,11 +71,11 @@ public class RideController {
 		return rideService.getOpenRequests(id);
 	}
 
-//	@GetMapping("/request/open")
-//	public List<RideRequest> getOpenRequests() {
-//		// TODO: get actual poi id in req
-//		return rideService.getOpenRequests(1);
-//	}
+	// @GetMapping("/request/open")
+	// public List<RideRequest> getOpenRequests() {
+	// // TODO: get actual poi id in req
+	// return rideService.getOpenRequests(1);
+	// }
 
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
@@ -108,7 +109,8 @@ public class RideController {
 	}
 
 	/**
-	 * Takes in an AvailableRide ID, deletes all associated Rides and reopens all associated RideRequests.
+	 * Takes in an AvailableRide ID, deletes all associated Rides and reopens
+	 * all associated RideRequests.
 	 */
 	@GetMapping("/offer/cancel/{id}")
 	public boolean cancelOffer(@PathVariable(value = "id") long id,
@@ -123,7 +125,7 @@ public class RideController {
 	}
 
 	@GetMapping("/offer/open")
-	public List<AvailableRide> getOpenOffers( @RequestHeader (name = "Authorization") String token)  {
+	public List<AvailableRide> getOpenOffers(@RequestHeader(name = "Authorization") String token) {
 		User u = User.getUserFromToken(token);
 		return rideService.getOpenOffersForUser(u);
 	}
