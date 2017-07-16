@@ -91,19 +91,14 @@ export let userProfileController = function ($scope, $http, $state){
 		)
 	}
 	
-	$scope.beforeUpdateCar = function() {
+	$scope.updateCar = function() {
 		console.log('before update --- car: ')
 		console.log($scope.car);
 		console.log('before update --- original car')
 		console.log($scope.orignalCar);
-		$scope.updateCar($scope);
-	}
-	
-	$scope.updateCar = function($scope) {
-		$http.post('/car/updateCar', $scope.car, $scope.originalCar).then(
+		
+		$http.post('/car/updateCar', $scope.car).then(
 				(formResponse) => {
-					console.log($scope.car);
-					console.log($scope.originalCar);
 				    $state.go('main.userProfile');
 				},
 				(failedResponse) => {

@@ -5,7 +5,6 @@ import { passengerController } from './js/controllers/passenger.controller.js';
 import { driverController } from './js/controllers/driver.controller.js';
 import { historyController } from './js/controllers/history.controller.js';
 import { slackLoginController } from './js/controllers/slackLogin.controller.js';
-import { addCarController } from './js/controllers/addCar.controller.js';
 import { adminRidesController } from './js/controllers/adminRides.controller.js';
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
@@ -54,12 +53,6 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			url: '/driver',
 			templateUrl : 'partials/driver.html',
 			controller : driverController
-		})
-	
-		.state('main.addCar' ,{
-			url: '/addCar',
-			templateUrl : 'partials/addCar.html',
-			controller : addCarController
 		})
 	
 		.state('main.adminRides' , {

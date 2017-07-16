@@ -74,7 +74,7 @@ public class CarController {
 	}
 
 	@PostMapping("/updateCar")
-	public boolean updateCar(@RequestHeader(name = "Authorization") String token, @RequestBody Car newCar, @RequestBody Car originalCar) {
+	public boolean updateCar(@RequestHeader(name = "Authorization") String token, @RequestBody Car newCar) {
 		
 		System.out.println("before");
 		System.out.println(newCar.toString());
@@ -82,8 +82,8 @@ public class CarController {
 		System.out.println(u.toString());
 		System.out.println("Car user " + u.toString());
 		newCar.setUser(u);
+		carService.removeCar(carService.getCarForUser(u));
 		carService.addCar(newCar);
-		carService.removeCar(originalCar);
 		return true;
 	}
 	
