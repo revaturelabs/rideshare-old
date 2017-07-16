@@ -139,32 +139,54 @@
 					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				<h4 class="modal-title" id="myModalLabel">Offer a Ride</h4>
 			</div>
 			<div class="modal-body">
 
 				<form>
-					<select ng-model="pickup"
-						ng-options="poi.poiName for poi in allPoi" required="required">
-						<option style="display: none" value="">select pickup
-							location</option>
-					</select> <br> <select ng-model="dropoff"
-						ng-options="poi.poiName for poi in allPoi" required="required">
-						<option style="display: none" value="">select dropoff
-							location</option>
-					</select> <br> <input type="text" ng-model="notes" placeholder="notes" />
-					<br> <input type="number" ng-model="seats"
-						placeholder="avalible seaats" /> <br> <input
-						type="datetime-local" ng-model="time" placeholder="time" /> <br>
+					<table class="table">
+						<tr>
+							<td>
+								<select class="form-control" ng-model="pickup"
+									ng-options="poi.poiName for poi in allPoi" required="required">
+									<option value="" disabled selected>Starting point</option>
+								</select>
+							</td>
+						</tr>
 
-					<button type="submit" class="btn btn-primary"
-						ng-click="addOffer(pickup,dropoff,notes,time,seats)"
-						data-dismiss="modal">Save changes</button>
+						<tr>
+							<td>
+								<select class="form-control" ng-model="dropoff"
+									ng-options="poi.poiName for poi in allPoi" required="required">
+									<option value="" disabled selected>Destination</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input class="form-control" type="text" ng-model="notes" placeholder="Notes" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input class="form-control" type="number" ng-model="seats"
+									placeholder="Avalible seats" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input class="form-control" type="datetime-local" ng-model="time" placeholder="Time" />
+							</td>
+						</tr>
+
+					</table>
 				</form>
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary"
+					ng-click="addOffer(pickup,dropoff,notes,time,seats)"
+					data-dismiss="modal">Save changes</button>
 			</div>
 		</div>
 	</div>
