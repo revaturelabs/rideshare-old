@@ -132,6 +132,26 @@ export let passengerController = function($scope, $http, $state, $location){
 					markers[x].setIcon();
 				}
 			};
+			
+			
+			
+			$scope.showDirections = function() {
+				let directionsDisplay = new google.maps.DirectionsRenderer();
+				let directionsService = new google.maps.DirectionsService();
+				
+				directionsDisplay.setMap(map);
+				
+				let request = {
+						origin: {lat: allPOI[0].latitude, lng: allPOI[0].longitude},
+						destination: {lat: allPOI[1].latitude, lng: allPOI[1].longitude},
+						travelMode: 'DRIVING'
+				}
+				
+				directionsService.route(request, function(result, status){
+					console.log(result, status);
+					directionsDisplay.setDirections(result);
+				});
+			};
 
 			// Add a marker cluster to manage the markers.
 			var markerCluster = new MarkerClusterer(map, markers,
