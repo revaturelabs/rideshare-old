@@ -12,4 +12,6 @@ public interface PointOfInterestRepository extends JpaRepository<PointOfInterest
 	
 	List<PointOfInterest> findByAddressLine1(String addressLine1);
 
+	PointOfInterest findBypoiId(int id);
+	
 }

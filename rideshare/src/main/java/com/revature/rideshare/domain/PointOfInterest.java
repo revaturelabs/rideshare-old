@@ -156,5 +156,4 @@ public class PointOfInterest implements Serializable {
 				+ ", addressLine2=" + addressLine2 + ", city=" + city + ", state=" + state + ", zipCode=" + zipCode
 				+ ", latitude=" + latitude + ", longitude=" + longitude + ", type=" + type + "]";
 	}
-
 }

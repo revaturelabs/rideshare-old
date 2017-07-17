@@ -4,7 +4,7 @@ export let addCarController = function($scope, $http, $state){
 		console.log($scope.car);
 		$http.post('/car', $scope.car).then(
 				(formResponse) => {
-					$state.go('addCar');
+					$state.go('main.passenger');
 				},
 				(failedResponse) => {
 					alert('Failure');
