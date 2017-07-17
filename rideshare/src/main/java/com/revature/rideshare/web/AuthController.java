@@ -2,12 +2,12 @@ package com.revature.rideshare.web;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,14 +28,14 @@ import com.revature.rideshare.service.UserService;
 //@RequestMapping("auth")
 public class AuthController {
 
-//	@Value("#{systemEnvironment['RIDESHARE_SLACK_ID']}")
-	private String slackAppId = "184219023015.209820937091";
-//	@Value("#{systemEnvironment['RIDESHARE_SLACK_SECRET']}")
-	private String slackAppSecret = "f69b998afcc9b1043adfa2ffdab49308";
-//	@Value("#{systemEnvironment['RIDESHARE_SLACK_VERIFICATION']}")
-	private String slackAppVerificationToken = "xER6r1Zrr0nxUBdSz7Fyq5UU";
-//	@Value("#{systemEnvironment['RIDESHARE_SLACK_TEAM']}")
-	private String slackAppTeamId = "T5E6F0P0F"; // for 1705may15java
+	@Value("${slack.identity.client.clientId}")
+	private String slackAppId;
+	@Value("${slack.identity.client.clientSecret}")
+	private String slackAppSecret;
+	@Value("${slack.verificationToken}")
+	private String slackAppVerificationToken;
+	@Value("${slack.teamId}")
+	private String slackAppTeamId;
 
 	@Autowired
 	UserService userService;
@@ -66,18 +65,20 @@ public class AuthController {
 		
 	}
 	
-	@RequestMapping("/slack/authorize")
-	public ResponseEntity<String> redirectToSlack(HttpServletResponse response) {
-		
-	}
+//	@RequestMapping("/slack/authorize")
+//	public ResponseEntity<String> redirectToSlack(HttpServletResponse response) {
+//		
+//	}
 	
 	@RequestMapping("/slack/login")
-	public ResponseEntity<> loginWithSlack(@RequestParam("code") String code, @RequestParam("error") String error) {
+	public ResponseEntity<> loginWithSlack(@RequestParam(name="code", required=false) String code,
+			@RequestParam(name="error", required=false) String error) {
 		
 	}
 	
 	@RequestMapping("/slack/integrate")
-	public ResponseEntity<> integrateWithSlack(@RequestParam("code") String code, @RequestParam("error") String error) {
+	public ResponseEntity<> integrateWithSlack(@RequestParam(name="code", required=false) String code,
+			@RequestParam(name="error", required=false) String error) {
 		
 	}
 
