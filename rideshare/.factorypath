@@ -82,5 +82,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/bouncycastle/bcprov-jdk15on/1.55/bcprov-jdk15on-1.55.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/boot/spring-boot-configuration-processor/1.4.1.RELEASE/spring-boot-configuration-processor-1.4.1.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/json/json/20140107/json-20140107.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/github/noraui/ojdbc7/12.1.0.2/ojdbc7-12.1.0.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
 </factorypath>

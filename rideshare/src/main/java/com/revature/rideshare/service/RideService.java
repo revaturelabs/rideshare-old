@@ -64,7 +64,6 @@ public class RideService {
 		RideRequest req = rideReqRepo.getOne(id);
 		req.setStatus(RideRequest.RequestStatus.SATISFIED);
 		rideReqRepo.saveAndFlush(req);
-
 		// duplicate request as availRide
 		AvailableRide offer = new AvailableRide();
 		Car car = carRepo.findByUser(u);
@@ -80,7 +79,6 @@ public class RideService {
 		Ride ride = new Ride();
 		ride.setAvailRide(offer);
 		ride.setRequest(req);
-
 		try {
 			rideRepo.saveAndFlush(ride);
 			return true;
@@ -136,20 +134,17 @@ public class RideService {
 	public List<Ride> getActiveRequestsForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> activeRides = new ArrayList<Ride>();
-
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() == null) {
 				activeRides.add(r);
 			}
 		}
-
 		return activeRides;
 	}
 
 	public List<Ride> getRequestHistoryForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> completedRides = new ArrayList<Ride>();
-
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() != null) {
 				completedRides.add(r);
@@ -179,7 +174,6 @@ public class RideService {
 		}
 
 		availRideRepo.saveAndFlush(offer);
-
 		// duplicate offer as request
 		RideRequest req = new RideRequest();
 		req.setUser(u);
@@ -193,7 +187,6 @@ public class RideService {
 		Ride ride = new Ride();
 		ride.setAvailRide(offer);
 		ride.setRequest(req);
-
 		try {
 			rideRepo.saveAndFlush(ride);
 			return true;
@@ -273,7 +266,6 @@ public class RideService {
 				activeRides.add(r);
 			}
 		}
-
 		return activeRides;
 	}
 
