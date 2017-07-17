@@ -2,7 +2,6 @@ export let userProfileController = function ($scope, $http, $state){
 	$scope.allpois = {}; 
 	$scope.user = {}; 
 	$scope.car = {};
-	$scope.originalCar = {};
 	$scope.buttonText = '';
 	$scope.mainPoiOption = {};
 	$scope.workPoiOption = {};
@@ -44,7 +43,6 @@ export let userProfileController = function ($scope, $http, $state){
 	$http.get("/car/myCar", $scope.car)
 		.then((response) => {
 			$scope.car = response.data;
-			$scope.originalCar = response.data;
 
 			if($scope.car === '') {
 				$scope.buttonText = 'Add Car';
@@ -76,7 +74,10 @@ export let userProfileController = function ($scope, $http, $state){
 		$http.post('/car', $scope.car).then(
 			(formResponse) => {
 				$scope.buttonText = 'Edit Car';
-			    $state.go('main.userProfile');
+				
+				// Reloading the view stops the user from adding a new car
+				// after deleting a car.
+			    $state.reload('main.userProfile');
 			},
 			(failedResponse) => {
 			    alert('Failure in addCar');
@@ -100,6 +101,8 @@ export let userProfileController = function ($scope, $http, $state){
 		$http.post("/car/removeCar", $scope.car)
 			.then((response) => {
 				$scope.buttonText = 'Add Car';
+				console.log($scope.car);
+				$scope.car = {};
 				$state.go("main.userProfile");
 			},
 			(failedResponse) => {

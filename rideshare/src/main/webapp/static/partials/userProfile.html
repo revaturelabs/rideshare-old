@@ -22,7 +22,6 @@
 		Select Work POI
 		<select id="workPoi" ng-model="workPoiOption" ng-options="poi as poi.poiName for poi in allpois"/>
 		<br>
-		{{mainPoiOption.poiName}}
 		<input type="submit" value="Save Changes" ng-click="setPois()">
 	</form>
 </div>
@@ -30,14 +29,37 @@
 <!--User can add/remove Car info-->
 <div>
 	<h3>Your car:</h3>
+	<div ng-if="buttonText === 'Edit Car'">
+		<table>
+			<tr>
+				<td>Make:</td>
+				<td>{{car.brand}}</td>
+			</tr>
+			<tr>
+				<td>Model:</td>
+				<td>{{car.model}}</td>
+			</tr>
+			<tr>
+				<td>Color:</td>
+				<td>{{car.color}}</td>
+			</tr>
+			<tr>
+				<td>Plate:</td>
+				<td>{{car.licensePlate}}</td>
+			</tr>
+			<tr>
+				<td>Smoke Free:</td>
+				<td ng-if="car.smokeFree">Yes</td>
+				<td ng-if="!car.smokeFree">No</td>
+			</tr>
+			<tr>
+				<td>Notes:</td>
+				<td>{{car.notes}}</td>
+			</tr>
+		</table>
+	</div>
 	<button data-toggle="modal" data-target="#carModal">{{buttonText}}</button>
 </div>
-
-
-<!--  remove Car -->
-<!-- <div> -->
-<!-- 	<button ng-click="removeCar()">remove car</button> -->
-<!-- </div> -->
 
 <!--Car Modal -->
 <div class="modal" id="carModal" tabindex="-1" role="dialog">
@@ -74,7 +96,9 @@
 				</tr>
 			</table>
 			<br> <label>No Smoking <input type="checkbox"
-					ng-model="car.smokeFree" ng-init="car.smokeFree=true"></label><br />
+								ng-model="car.smokeFree"></label><br />
+			
+<!-- 					ng-model="car.smokeFree" ng-init="car.smokeFree=true"></label><br /> -->
 			</div>
 			<div class="modal-footer">
 				<input type="button" value="Close" data-dismiss="modal"/>
