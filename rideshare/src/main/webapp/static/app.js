@@ -6,10 +6,12 @@ import { driverController } from './js/controllers/driver.controller.js';
 import { historyController } from './js/controllers/history.controller.js';
 import { slackLoginController } from './js/controllers/slackLogin.controller.js';
 import { addCarController } from './js/controllers/addCar.controller.js';
+import { errorController } from './js/controllers/error.controller.js';
 import { adminRidesController } from './js/controllers/adminRides.controller.js';
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
 import { userProfileController } from './js/controllers/userProfile.controller.js';
+import { authProvider } from './js/auth.provider.js'
 
 //var = function scope
 //const and let = block scope 
@@ -29,7 +31,8 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		authPrefix: '',
 		tokenGetter: ['options', function(options) {
 			return localStorage.getItem('RideShare_auth_token');
-		}]
+		}],
+		whiteListedDomains: ['maps.googleapis.com']
 	});
 
 	$httpProvider.interceptors.push('jwtInterceptor');
@@ -96,7 +99,13 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		.state('main.userProfile', {
 			url: '/userProfile',
 			templateUrl : 'partials/userProfile.html',
-			controller : userProfileController ,
+			controller : userProfileController,
 			data: { requiresLogin: true }
+		})
+
+		.state('error', {
+			url: '/error',
+			templateUrl: 'partials/error.html',
+			controller: errorController
 		})
 });
