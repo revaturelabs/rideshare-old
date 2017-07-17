@@ -35,7 +35,7 @@ import org.springframework.web.filter.CompositeFilter;
 //@Configuration
 //@EnableOAuth2Client
 //@EnableAuthorizationServer
-public class OAuth2WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class AlternativeWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	/*
 	 * NOTES: 
@@ -61,7 +61,6 @@ public class OAuth2WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.portMapper().http(Integer.parseInt(httpPort)).mapsTo(Integer.parseInt(httpsPort));
-//		http.portMapper().http(8080).mapsTo(8443);
 
 //		http.requiresChannel().antMatchers("/**").requiresSecure();
 		
