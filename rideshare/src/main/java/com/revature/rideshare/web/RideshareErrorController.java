@@ -1,14 +1,44 @@
-//package com.revature.rideshare.web;
-//
-//import org.springframework.boot.autoconfigure.web.BasicErrorController;
-//import org.springframework.boot.autoconfigure.web.ErrorAttributes;
-//import org.springframework.boot.autoconfigure.web.ErrorProperties;
-//
-//public class RideshareErrorController extends BasicErrorController {
-//
-//	public RideshareErrorController(ErrorAttributes errorAttributes, ErrorProperties errorProperties) {
-//		super(errorAttributes, errorProperties);
-//		// TODO Auto-generated constructor stub
+package com.revature.rideshare.web;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.web.AbstractErrorController;
+import org.springframework.boot.autoconfigure.web.ErrorAttributes;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class RideshareErrorController extends AbstractErrorController {
+	
+	public RideshareErrorController(ErrorAttributes errorAttributes) {
+		super(errorAttributes);
+	}
+
+	@Override
+	public String getErrorPath() {
+		return "/#/error";
+	}
+
+	@RequestMapping("/error")
+	public void handleError(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("handling error");
+		HttpStatus status = getStatus(request);
+		String destination = getErrorPath() + "?status=" + status.value();
+		try {
+			response.sendRedirect(destination);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+//	public ResponseEntity<String> handleError(HttpServletRequest request) {
+//		HttpStatus status = getStatus(request);
+//		String destination = getErrorPath() + "?status=" + status.value();
 //	}
-//
-//}
+	
+}

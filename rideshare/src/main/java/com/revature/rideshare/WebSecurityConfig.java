@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http// .requiresChannel().antMatchers("/**").requiresSecure()
 				.antMatcher("/**").authorizeRequests()
 				.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html",
-						"/auth/check")
+						"/auth/check", "/error", "/partials/error.html")
 				.permitAll().anyRequest().authenticated().and().logout().logoutSuccessUrl("/").permitAll().and().csrf()
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
 				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);

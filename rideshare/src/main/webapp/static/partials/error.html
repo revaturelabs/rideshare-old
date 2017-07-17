@@ -1,0 +1,6 @@
+<h1>Oh No! An Error Occurred!</h1>
+<div>
+	<img ng-if="query.status" ng-src="https://http.cat/{{query.status}}"
+		alt="Oh look, more errors! The image failed to load." class="cat-pic">
+	<h3 ng-if="!query.status">You need to learn how to internet, son!</h3>
+</div>

@@ -7,20 +7,27 @@ import { historyController } from './js/controllers/history.controller.js';
 import { slackLoginController } from './js/controllers/slackLogin.controller.js';
 import { addCarController } from './js/controllers/addCar.controller.js';
 import { errorController } from './js/controllers/error.controller.js';
-import { loginErrorController } from './js/controllers/loginError.controller.js';
 import { adminRidesController } from './js/controllers/adminRides.controller.js';
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
 import { userProfileController } from './js/controllers/userProfile.controller.js';
+import { authProvider } from './js/auth.provider.js'
 
 //var = function scope
 //const and let = block scope 
 
 const app = angular.module('app', ['ui.router', permission, uiPermission, 'angular-jwt']);
 
+app.run(function(authManager) {
+	authManager.checkAuthOnRefresh();
+	authManager.redirectWhenUnauthenticated();
+})
+
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
 	
 	jwtOptionsProvider.config({
+		loginPath: '/#/login',
+		unauthenticatedRedirectPath: '/',
 		authPrefix: '',  
 		tokenGetter: [
 			() => localStorage.getItem('RideShare_auth_token')
@@ -31,17 +38,18 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 	$httpProvider.interceptors.push('jwtInterceptor');
 
 
-	$urlRouterProvider.otherwise('/slackLogin');
+	$urlRouterProvider.otherwise('/login');
 
 	$stateProvider
 		.state('main', {
 			url: '/main',
 			templateUrl: 'partials/main.html',
-			controller: mainController
+			controller: mainController,
+			data: { requiresLogin: true }
 		})
 	
 		.state('slackLogin', {
-			url: '/slackLogin',
+			url: '/login',
 			templateUrl: 'partials/slackLogin.html',
 			controller: slackLoginController
 		})
@@ -49,43 +57,50 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		.state('main.passenger',{
 			url: '/passenger',
 			templateUrl : 'partials/passenger.html',
-			controller : passengerController
+			controller : passengerController,
+			data: { requiresLogin: true }
 		})
 	
 		.state('main.driver',{
 			url: '/driver',
 			templateUrl : 'partials/driver.html',
-			controller : driverController
+			controller : driverController,
+			data: { requiresLogin: true }
 		})
 	
 		.state('main.addCar' ,{
 			url: '/addCar',
 			templateUrl : 'partials/addCar.html',
-			controller : addCarController
+			controller : addCarController,
+			data: { requiresLogin: true }
 		})
 	
 		.state('main.adminRides' , {
 			url: '/adminRides', 
 			templateUrl : 'partials/adminRides.html',
-			controller : adminRidesController
+			controller : adminRidesController,
+			data: { requiresLogin: true }
 		})
 		
 		.state('main.adminUsers', {
 			url: '/adminUsers',
 			templateUrl: 'partials/adminUsers.html',
-			controller : adminUsersController
+			controller : adminUsersController,
+			data: { requiresLogin: true }
 		})
 		
 		.state('main.adminPoi',{
 			url: '/adminPoi',
 			templateUrl : 'partials/poi.html',
-			controller : adminPoiController
+			controller : adminPoiController,
+			data: { requiresLogin: true }
 		})
     
 		.state('main.userProfile', {
-				url: '/userProfile',
-				templateUrl : 'partials/userProfile.html',
-				controller : userProfileController 
+			url: '/userProfile',
+			templateUrl : 'partials/userProfile.html',
+			controller : userProfileController,
+			data: { requiresLogin: true }
 		})
 
 		.state('main.error', {
