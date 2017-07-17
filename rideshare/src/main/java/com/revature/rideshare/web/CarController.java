@@ -24,28 +24,9 @@ public class CarController {
 	@Autowired
 	private CarService carService;
 
-	@Autowired
-
-	private UserService userService;
-
 	@GetMapping
 	public List<Car> getAll() {
 		return carService.getAll();
-	}
-
-	private User getUserFromToken(String token) {
-		ObjectMapper mapper = new ObjectMapper();
-
-		try {
-			String userJson = JWT.decode(token).getClaim("user").asString();
-			return (User) mapper.readValue(userJson, User.class);
-
-		} catch (Exception e) {
-
-			return null;
-
-		}
-
 	}
 
 	@PostMapping

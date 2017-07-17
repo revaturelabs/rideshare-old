@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
 @Entity
 @Table(name = "RIDE_REQUEST")
 public class RideRequest implements Serializable, Comparable<RideRequest> {
@@ -39,7 +40,7 @@ public class RideRequest implements Serializable, Comparable<RideRequest> {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterest dropOffLocation;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "TIME", nullable = false)
 	private Date time;
 

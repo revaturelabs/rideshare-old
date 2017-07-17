@@ -16,24 +16,38 @@
 
 		<div role="tabpanel" class="tab-pane active" id="open">
 
-			<br> <select ng-model="selectedItem"
-				ng-options="poi.poiName for poi in allPoi" ng-change="updateSort()"></select>
-			<br> <br>
+			<!-- Select location to filter available rides -->
+			<div class="input-group location-selector">
+				<span class="input-group-addon">Location</span>
+				<select class="form-control" ng-model="selectedItem"
+					ng-options="poi.poiName for poi in allPoi" ng-change="updateSort()"></select>
+			</div>
 
 			<!-- html and angular function used to display open rides -->
-			<ul style="list-style-type: none;">
+			<ul class="tabbed-list">
 
 				<li ng-if="openRequest.length == 0">No open requests for this
-					point of intrest</li>
+					point of interest</li>
 
-				<li ng-repeat="ride in openRequest">Time: {{ride.time}}<br>
-					Pick up at: {{ride.pickupLocation.poiName}},
-					{{ride.pickupLocation.addressLine1}} <br> Drop off at:
-					{{ride.dropOffLocation.poiName}},
-					{{ride.dropOffLocation.addressLine1}}<br> Rider:
-					{{ride.user.fullName}} <br> Rider note: {{ride.notes}} <span
-					ng-show=" ride.notes == null"> n/a </span> <br> <br>
+				<li ng-repeat="ride in openRequest">
 
+					{{ride.user.fullName}} <em>@</em> {{ride.time | date: 'h:mm a MMM dd'}}<br/>
+					{{ride.pickupLocation.poiName}}
+					<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+					{{ride.dropOffLocation.poiName}}
+
+					<!-- Beginning of expanded portion -->
+					<br/><br/>
+ <!-- 					{{ride.pickupLocation.addressLine1}}
+					{{ride.dropOffLocation.addressLine1}}
+ -->
+					Note: <i>{{ride.notes}} <span ng-show=" ride.notes == null"> N/A </span></i>
+
+					<div class="btn-container">
+						<button type="button" class="btn btn-primary"
+							ng-click="acceptReq(ride.requestId)">Accept Request</button>
+					</div>
+					<!-- End of expanded portion -->
 				</li>
 
 			</ul>
@@ -43,70 +57,72 @@
 		<div role="tabpanel" class="tab-pane" id="active">
 
 			<!-- html and angular function used to display open rides -->
-			<ul style="list-style-type: none;">
+			<ul class="tabbed-list">
 
 				<li ng-if="activeRides.length == 0">No active rides</li>
 
-				<li ng-repeat="ride in activeRides">Time:
-					{{ride.availRide.time}}<br> Pick up at:
-					{{ride.availRide.pickupPOI.poiName}},
-					{{ride.availRide.pickupPOI.addressLine1}} <br> Drop off at:
-					{{ride.availRide.dropoffPOI.poiName}},
-					{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
-					{{ride.availRide.car.user.fullName}}<br> Driver note:
-					{{ride.availRide.car.notes}} 
-					<span
-					ng-show=" ride.availRide.car.notes == null"> n/a </span> <br>
-	
-					<p ng-repeat="request in ride.request">
-					Rider: {{request.user.fullName}}
-					<br> Rider note:
-					{{request.notes}} </p> 
-					<span ng-show=" ride.request.notes == null">
-						n/a </span> <br> Compliant: {{ride.compliant}} <span
-					ng-show=" ride.compliant == null"> n/a </span> <br> <br>
+				<li ng-repeat="ride in activeRides">
+					<div data-toggle="collapse" data-target="#{{ride.availRide.availRideId}}">
+						<em>@</em> {{ride.availRide.time | date: 'h:mm a MMM dd'}}
+						<br/>
 
-					<br>
-					<button type="submit" class="btn btn-primary"
-						ng-click="offerCancel(ride.availRide.availRideId)"
-						data-dismiss="modal">Cancel Offer</button>
+						{{ride.availRide.pickupPOI.poiName}}
+						<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+						{{ride.availRide.dropoffPOI.poiName}}
+					</div>
+
+					<div id="{{ride.availRide.availRideId}}" class="collapse">
+						<br/>
+
+<!-- 						Car: {{ride.availRide.car.color}} {{ride.availRide.car.model}}
+						<br/>
+ -->
+						<div ng-show="isArray(ride.request)">
+							<em>Passengers:</em>
+							<ul class="passenger-list">
+								<li ng-repeat="request in ride.request">
+									{{request.user.fullName}}
+									<span ng-show="request.notes != null"> ( <i>{{request.notes}}</i> )</span>
+								</li>
+							</ul>
+						</div>
+
+						<div class="btn-container">
+							<button type="submit" class="btn btn-primary"
+								ng-click="offerCancel(ride.availRide.availRideId)">Cancel
+								Offer</button>
+						</div>
+					</div>
 
 				</li>
-
 			</ul>
 
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="history">
-
-
-			<ul style="list-style-type: none;">
+			<ul class="tabbed-list">
 
 				<li ng-if="pastRides.length == 0">No ride history</li>
 
+				<li ng-repeat="ride in pastRides">
+						<em>@</em> {{ride.availRide.time | date: 'h:mm a MMM dd'}}
+						<br/>
 
+						{{ride.availRide.pickupPOI.poiName}}
+						<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+						{{ride.availRide.dropoffPOI.poiName}}
 
-				<li ng-repeat="ride in pastRides">Time: {{ride.availRide.time}}<br>
-					Pick up at: {{ride.availRide.pickupPOI.poiName}},
-					{{ride.availRide.pickupPOI.addressLine1}} <br> Drop off at:
-					{{ride.availRide.dropoffPOI.poiName}},
-					{{ride.availRide.dropoffPOI.addressLine1}}<br> Driver:
-					{{ride.availRide.car.user.fullName}}<br> Driver note:
-					{{ride.availRide.car.notes}} <span
-					ng-show=" ride.availRide.car.notes == null"> n/a </span> <br>
-					Rider: {{ride.request.user.fullName}} <br> Rider note:
-					{{ride.request.notes}} <span ng-show=" ride.request.notes == null">
-						n/a </span> <br> Compliant: {{ride.compliant}} <span
-					ng-show=" ride.compliant == null"> n/a </span> <br> <br>
+						<!-- Beginning of expanded portion -->
+						<br/>
+						<br/>
+						Complaint: <i>{{ride.complaint}} <span ng-show=" ride.complaint == null">N/A</span></i>
+						<!-- End of expanded portion -->
 
 				</li>
 
 			</ul>
-
 		</div>
-
 	</div>
-
 </div>
 
 <!-- Button trigger modal -->
@@ -123,32 +139,54 @@
 					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				<h4 class="modal-title" id="myModalLabel">Offer a Ride</h4>
 			</div>
 			<div class="modal-body">
 
 				<form>
-					<select ng-model="pickup"
-						ng-options="poi.poiName for poi in allPoi" required="required">
-						<option style="display: none" value="">select pickup
-							location</option>
-					</select> <br> <select ng-model="dropoff"
-						ng-options="poi.poiName for poi in allPoi" required="required">
-						<option style="display: none" value="">select dropoff
-							location</option>
-					</select> <br> <input type="text" ng-model="notes" placeholder="notes" />
-					<br> <input type="number" ng-model="seats"
-						placeholder="avalible seaats" /> <br> <input
-						type="datetime-local" ng-model="time" placeholder="time" /> <br>
+					<table class="table">
+						<tr>
+							<td>
+								<select class="form-control" ng-model="pickup"
+									ng-options="poi.poiName for poi in allPoi" required="required">
+									<option value="" disabled selected>Starting point</option>
+								</select>
+							</td>
+						</tr>
 
-					<button type="submit" class="btn btn-primary"
-						ng-click="addOffer(pickup,dropoff,notes,time,seats)"
-						data-dismiss="modal">Save changes</button>
+						<tr>
+							<td>
+								<select class="form-control" ng-model="dropoff"
+									ng-options="poi.poiName for poi in allPoi" required="required">
+									<option value="" disabled selected>Destination</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input class="form-control" type="text" ng-model="notes" placeholder="Notes" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input class="form-control" type="number" ng-model="seats"
+									placeholder="Avalible seats" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input class="form-control" type="datetime-local" ng-model="time" placeholder="Time" />
+							</td>
+						</tr>
+
+					</table>
 				</form>
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary"
+					ng-click="addOffer(pickup,dropoff,notes,time,seats)"
+					data-dismiss="modal">Submit</button>
 			</div>
 		</div>
 	</div>

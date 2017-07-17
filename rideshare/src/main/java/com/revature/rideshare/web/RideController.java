@@ -67,6 +67,7 @@ public class RideController {
 
 	@GetMapping("/request/open/{id}")
 	public List<RideRequest> getOpenRequests(@PathVariable(value = "id") int id) {
+		
 		return rideService.getOpenRequests(id);
 	}
 
