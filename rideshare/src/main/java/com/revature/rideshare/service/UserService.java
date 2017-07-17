@@ -2,9 +2,11 @@ package com.revature.rideshare.service;
 
 import java.util.List;
 
+import org.springframework.security.provisioning.UserDetailsManager;
+
 import com.revature.rideshare.domain.User;
 
-public interface UserService {
+public interface UserService extends UserDetailsManager {
 
 	List<User> getAll();
 

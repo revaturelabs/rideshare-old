@@ -1,6 +1,9 @@
 package com.revature.rideshare.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,12 +16,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name = "USERS")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
 
 	private static final long serialVersionUID = -2923889374579038772L;
 
@@ -199,5 +206,75 @@ public class User implements Serializable {
 			return null;
 		}
 	}
+	
+	// Implementations for the methods of the UserDetails interface
+
+	/*
+	 * All users will have the role of USER. Administrators will additionally have the role of ADMIN
+	 */
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		if (this.isAdmin) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		}
+		return authorities;
+	}
+
+	/*
+	 * UNUSED
+	 * (a.k.a. credentials) This will either be null or the current slack api token for the user
+	 */
+	@Override
+	public String getPassword() {
+		return null;
+	}
+
+	/*
+	 * The slackId of a user will be their username
+	 */
+	@Override
+	public String getUsername() {
+		return slackId;
+	}
+	
+	/*
+	 * Accounts will never expire
+	 */
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	/*
+	 * UNUSED
+	 * This is probably meant to be used for preventing multiple simultaneous logins for a single user.
+	 * Taking advantage of this requires the addition of another field in this class, although that field
+	 * may not need to be persisted to the database.
+	 */
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	/*
+	 * Slack API tokens probably do expire eventually, but until the actual expiration date can be determined,
+	 * this will just always return true
+	 */
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	/*
+	 * Enabled will be the same as not banned
+	 */
+	@Override
+	public boolean isEnabled() {
+		return !isBanned;
+	}
+	
+	
 
 }

@@ -2,17 +2,22 @@ package com.revature.rideshare.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.revature.rideshare.dao.PointOfInterestRepository;
-import com.revature.rideshare.dao.UserRepository;
 import com.revature.rideshare.domain.User;
 
 public interface AuthService {
 
-	void setUserRepo(UserRepository userRepo);
+	void setUserService(UserService userService);
 
 	void setPoiRepo(PointOfInterestRepository poiRepo);
 
+	/*
+	 * use this when dealing with requesting the identity scopes to authenticate a user
+	 */
 	String getSlackAccessToken(String code);
 
+	/*
+	 * use this when requesting the incoming-webhook and commands scopes to integrate with slack
+	 */
 	JsonNode getSlackAccessResponse(String code);
 
 	String getUserIdentity(String token);
@@ -21,7 +26,9 @@ public interface AuthService {
 
 	JsonNode getUserInfo(String token, String slackId);
 
-	User getAuthenticatedUser(String code);
+	User authenticateUser(String code);
+
+	User getIntegratedUser(String code);
 
 	String createJsonWebToken(User u);
 

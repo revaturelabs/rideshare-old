@@ -5,12 +5,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -20,13 +16,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.dao.PointOfInterestRepository;
-import com.revature.rideshare.dao.UserRepository;
 import com.revature.rideshare.domain.User;
 
 //@Component
@@ -35,14 +28,14 @@ public class AuthServiceImpl implements AuthService {
 //	TODO: start using environment variables when this application is deployed
 //	@Value("#{systemEnvironment['RIDESHARE_JWT_SECRET']}")
 	private String jwtSecret = "Richie is obsessed with chickens!";
-//	@Value("#{systemEnvironment['RIDESHARE_SLACK_ID']}")
-	private String slackAppId = "184219023015.209820937091";
-//	@Value("#{systemEnvironment['RIDESHARE_SLACK_SECRET']}")
-	private String slackAppSecret = "f69b998afcc9b1043adfa2ffdab49308";
-//	@Value("#{systemEnvironment['RIDESHARE_SLACK_VERIFICATION']}")
-	private String slackAppVerificationToken = "xER6r1Zrr0nxUBdSz7Fyq5UU";
-//	@Value("#{systemEnvironment['RIDESHARE_SLACK_TEAM']}")
-	private String slackAppTeamId = "T5E6F0P0F"; // for 1705may15java
+	@Value("${slack.identity.client.clientId}")
+	private String slackAppId;
+	@Value("${slack.identity.client.clientSecret}")
+	private String slackAppSecret;
+	@Value("${slack.verificationToken}")
+	private String slackAppVerificationToken;
+	@Value("${slack.teamId}")
+	private String slackAppTeamId;
 	
 //	@Autowired
 //	OAuth2ClientContext oauth2ClientContext;
@@ -51,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
 //	AuthorizationCodeResourceDetails slackResource;
 	
 	@Autowired
-	UserRepository userRepo;
+	UserService userService;
 	
 	@Autowired
 	PointOfInterestRepository poiRepo;
@@ -61,8 +54,8 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public void setUserRepo(UserRepository userRepo) {
-		this.userRepo = userRepo;
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 	@Override
@@ -81,6 +74,9 @@ public class AuthServiceImpl implements AuthService {
 //		return new OAuth2RestTemplate(resource, context);
 //	}
 	
+	/*
+	 * use this when dealing with requesting the identity scopes to authenticate a user
+	 */
 	@Override
 	public String getSlackAccessToken(String code) {
 		RestTemplate client = new RestTemplate();
@@ -103,6 +99,9 @@ public class AuthServiceImpl implements AuthService {
 		return result;
 	}
 	
+	/*
+	 * use this when requesting the incoming-webhook and commands scopes to integrate with slack
+	 */
 	@Override
 	public JsonNode getSlackAccessResponse(String code) {
 		RestTemplate client = new RestTemplate();
@@ -184,20 +183,62 @@ public class AuthServiceImpl implements AuthService {
 		return result;
 	}
 	
+//	/*
+//	 * Implementation of the method from the UserDetailsService interface.
+//	 * The username in this implementation is actually a user's slackId
+//	 */
+//	@Override
+//	public UserDetails loadUserByUsername(String slackId) throws UsernameNotFoundException {
+//		return null;
+//	}
+	
 	@Override
-	public User getAuthenticatedUser(String code) {
+	public User authenticateUser(String code) {
+		User result = null;
+		String token = getSlackAccessToken(code);
+		if (token != null) {
+			String slackId = getUserIdentity(token);
+			if (slackId != null) {
+				JsonNode userInfo = getUserInfo(token, slackId);
+				User u = userService.getUserBySlackId(slackId);
+				if (u == null) {
+					u = new User();
+					u.setSlackId(slackId);
+					u.setAdmin(false);
+					u.setEmail(userInfo.path("profile").path("email").asText());
+					u.setFirstName(userInfo.path("profile").path("first_name").asText());
+					u.setLastName(userInfo.path("profile").path("last_name").asText());
+					u.setFullName(userInfo.path("real_name").asText());
+					u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
+					u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
+					u.setBanned(false);
+					userService.addUser(u);
+				} else {
+					u.setEmail(userInfo.path("profile").path("email").asText());
+					u.setFirstName(userInfo.path("profile").path("first_name").asText());
+					u.setLastName(userInfo.path("profile").path("last_name").asText());
+					u.setFullName(userInfo.path("real_name").asText());
+					userService.updateUser(u);
+				}
+				result = u;
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public User getIntegratedUser(String code) {
 		User result = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode accessResponse = getSlackAccessResponse(code);
 			if (accessResponse.path("ok").asBoolean()) {
 				String slackId = accessResponse.path("user_id").asText();
-//				String teamId = accessResponse.path("team_id").asText();
 				String token = accessResponse.path("access_token").asText();
 				JsonNode incomingWebhook = mapper.readTree(accessResponse.path("incoming_webhook").asText());
 				String webhookUrl = incomingWebhook.path("url").asText();
 				JsonNode userInfo = getUserInfo(token, slackId);
-				User u = userRepo.findBySlackId(slackId);
+				User u = userService.getUserBySlackId(slackId);
 				if (u == null) {
 					u = new User();
 					u.setSlackId(slackId);
@@ -210,14 +251,15 @@ public class AuthServiceImpl implements AuthService {
 					u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
 					u.setBanned(false);
 					u.setSlackUrl(webhookUrl);
+					userService.addUser(u);
 				} else {
 					u.setEmail(userInfo.path("profile").path("email").asText());
 					u.setFirstName(userInfo.path("profile").path("first_name").asText());
 					u.setLastName(userInfo.path("profile").path("last_name").asText());
 					u.setFullName(userInfo.path("real_name").asText());
 					u.setSlackUrl(webhookUrl);
+					userService.updateUser(u);
 				}
-				userRepo.saveAndFlush(u);
 				result = u;
 			}
 		} catch (IOException ex) {
