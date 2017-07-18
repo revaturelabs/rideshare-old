@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.auth0.jwt.JWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.AvailableRide;
 import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.domain.RideRequest;
@@ -68,15 +66,9 @@ public class RideController {
 
 	@GetMapping("/request/open/{id}")
 	public List<RideRequest> getOpenRequests(@PathVariable(value = "id") int id) {
-		
+
 		return rideService.getOpenRequests(id);
 	}
-
-	// @GetMapping("/request/open")
-	// public List<RideRequest> getOpenRequests() {
-	// // TODO: get actual poi id in req
-	// return rideService.getOpenRequests(1);
-	// }
 
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
