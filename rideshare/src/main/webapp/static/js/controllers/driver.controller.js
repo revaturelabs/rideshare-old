@@ -176,4 +176,15 @@ export let driverController = function($scope, $http, $state){
 		}
 	}
 	
+	//stops past dates from being selected in date/time picker
+	$scope.startDateBeforeRender = function($dates) {
+		  const todaySinceMidnight = new Date();
+		    todaySinceMidnight.setUTCHours(0,0,0,0);
+		    $dates.filter(function (date) {
+		      return date.utcDateValue < todaySinceMidnight.getTime();
+		    }).forEach(function (date) {
+		      date.selectable = false;
+		    });
+		};
+	
 };
