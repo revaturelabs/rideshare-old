@@ -101,8 +101,6 @@ public class RideService {
 			Ride ride = rideRepo.findOne(id);
 			RideRequest req = ride.getRequest();
 
-			// if(u.getSlackId() != req.getUser().getSlackId()) return false;
-
 			AvailableRide availRide = ride.getAvailRide();
 			if (!availRide.isOpen()) {
 				// reopen if closed (because a seat is now available)
@@ -118,14 +116,22 @@ public class RideService {
 		}
 	}
 
+	/**
+	 * Takes in the main poi's id and returns all open requests starting at said 
+	 * id. List is ordered by closest to farthest POI and within each of those, by date.
+	 *
+	 * @param int
+	 *            id The id of the main POI(Point of Interest).
+	 * @return List<RideRequest> A list of Ride Requests.
+	 */
 	public List<RideRequest> getOpenRequests(int poiId) {
 		List<RideRequest> openReqs = rideReqRepo.findByStatus(RequestStatus.OPEN);
 
-		Collections.sort(openReqs);
+		Collections.sort(openReqs); // sorting by date.
 
+		// Sorting by closest to farthest POI
 		PointOfInterest temp = poiService.getPoi(poiId);
 		openReqs = sortRequestsByPOI(openReqs, temp);
-		
 		
 		return openReqs;
 	}
@@ -217,9 +223,6 @@ public class RideService {
 			List<Ride> rides = rideRepo.findAllByAvailRideAvailRideId(id);
 			AvailableRide availRide = rides.get(0).getAvailRide();
 
-			// if( u.getSlackId() != availRide.getCar().getUser().getSlackId())
-			// return false;
-
 			for (Ride r : rides) {
 				RideRequest temp = r.getRequest();
 				temp.setStatus(RequestStatus.OPEN); // reopen request
@@ -236,11 +239,20 @@ public class RideService {
 		}
 	}
 
+	/**
+	 * Takes in the main poi's id and returns all open requests starting at said 
+	 * id. List is ordered by closest to farthest POI and within each of those, by date.
+	 *
+	 * @param int
+	 *            id The id of the main POI(Point of Interest).
+	 * @return List<AvailableRide> A list of Available Rides.
+	 */
 	public List<AvailableRide> getOpenOffers(int poiId) {
 		List<AvailableRide> openOffers = availRideRepo.findAllByIsOpenTrue();
 
-		Collections.sort(openOffers);
-
+		Collections.sort(openOffers); // Sorting by date.
+		
+		// Sorting by closest to farthest POI
 		PointOfInterest temp = poiService.getAll().get(poiId);
 		openOffers = sortAvailableByPOI(openOffers, temp);
 
@@ -306,9 +318,8 @@ public class RideService {
 		List<PointOfInterest> pois = poiService.getAll();
 
 		int[] poisByDistance = calculateDistance(pois, mpoi);
-		
-		
 		int count = 0;
+
 		for (int i : poisByDistance) {
 			for (int k = 0; k < reqs.size(); k++) {
 				if (reqs.get(k).getDropOffLocation().getPoiId() == i+1 
@@ -323,11 +334,11 @@ public class RideService {
 	}
 
 	/**
-	 * Returns a list of RideRequest Objects in order from closest destination
+	 * Returns a list of AvailableRide Objects in order from closest destination
 	 * point to farthest away.
 	 *
-	 * @param List<RideRequest>
-	 *            reqs a list of all open RideRequests
+	 * @param List<AvailableRide>
+	 *            reqs a list of all open AvailableRide
 	 * @param PointOfInterest
 	 *            mpoi the user's main POI, used as a starting(pickup) point for
 	 *            all calculations.
@@ -350,7 +361,7 @@ public class RideService {
 
 	/**
 	 * Returns a list of PointOfInterest Objects in order from closest to
-	 * farthest away.
+	 * farthest away, excluding the main PointOfInterest.
 	 *
 	 * @param List<PointOfInterest>
 	 *            pois a list of all available POIs
@@ -359,7 +370,6 @@ public class RideService {
 	 * @return list of PointOfInterest objects.
 	 */
 	private int[] calculateDistance(List<PointOfInterest> pois, PointOfInterest mpoi) {
-
 		double mLat = Math.abs(mpoi.getLatitude());
 		double mLong = Math.abs(mpoi.getLongitude());
 		Map<Double, Integer> map = new TreeMap();

@@ -32,7 +32,7 @@
 	</appender>
 
 	<logger name="com.revature.rideshare" additivity="false">
-		<level value="ERROR" />
+		<level value="INFO" />
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE-AUDIT" />
 	</logger>

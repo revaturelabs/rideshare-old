@@ -3,15 +3,9 @@ export let driverController = function($scope, $http, $state){
 	$scope.isArray = angular.isArray;
 	$scope.rides = {};
 	
-
-
-	
 	$http.get("/ride")
 	.then(function(response) {
 		$scope.rides = response.data;
-		console.log("SCOPE");
-		console.log($scope);
-		console.log("SCOPE");
 		
 		$http.get("/user/me")
 		.then(function(response) {
@@ -24,11 +18,10 @@ export let driverController = function($scope, $http, $state){
 		});
 	});
 
-	// changes poi that is used in the openRequest
-	// TODO: get default scope from user
-
+	// Setting mPOI in case a user does not have a mPOI.
 	$scope.poiId = {id : 1};
 
+	// Setting to empty arrays for correct ng-repeat processing.
 	$scope.openRequest = [];
 	$scope.activeRides = [];
 	$scope.pastRides = [];
@@ -37,7 +30,6 @@ export let driverController = function($scope, $http, $state){
 		$http.get("/ride/request/open/"+item.poiId)
 		.then(function(response) {
 			$scope.openRequest = response.data;	
-			console.log(new Date ($scope.openRequest[0].time).getTime());
 		});
 
 	}
@@ -76,15 +68,12 @@ export let driverController = function($scope, $http, $state){
 	$http.get("/ride/offer/active")
 	.then(function(response){
 		organizeData(response, "active");
-		console.log($scope.activeRides);
 		});
 
 	$http.get("/ride/offer/history")
 	.then(function(response){
 		organizeData(response, "history");
-		console.log($scope.pastRides);
 		});
-
 
 	// scope provides structure of object needed to crreate an offer
 	$scope.offer = {car : {}, pickupPOI : {}, dropoffPOI : {}, seatsAvailable:0, time:"", notes:"",open: true};
@@ -123,7 +112,6 @@ export let driverController = function($scope, $http, $state){
 		);
 	};
 
-
 	// get all info needed to make a new offer
 	$scope.car = {};
 
@@ -132,16 +120,16 @@ export let driverController = function($scope, $http, $state){
 		$scope.car = response.data;
 	});
 
-
 	$scope.allPoi = {};
 
 	$http.get("/poiController")
 	.then(function(response){
-		console.log(response.data);
 		$scope.allPoi = response.data;
 	});
-
 	
+	/*
+	 * Organizes Ride list data by combining RideRequests with matching AvailableRide objects.
+	 */
 	function organizeData(response, reqString){
 		if(response.data.length == 0){
 			let temp = [];
