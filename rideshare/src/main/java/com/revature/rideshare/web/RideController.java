@@ -2,6 +2,8 @@ package com.revature.rideshare.web;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,17 +18,15 @@ import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.domain.RideRequest;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.RideService;
-import com.revature.rideshare.service.UserService;
 
 @RestController
 @RequestMapping("ride")
 public class RideController {
 
-	@Autowired
-	private RideService rideService;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private UserService userService;
+	private RideService rideService;
 
 	// ALL RIDES
 	@GetMapping
@@ -66,7 +66,8 @@ public class RideController {
 
 	@GetMapping("/request/open/{id}")
 	public List<RideRequest> getOpenRequests(@PathVariable(value = "id") int id) {
-
+		logger.info("Getting all open requests... (info)");
+		logger.error("Getting all open requests... (error)");
 		return rideService.getOpenRequests(id);
 	}
 
