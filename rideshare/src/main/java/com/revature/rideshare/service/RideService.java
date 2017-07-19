@@ -41,31 +41,71 @@ public class RideService {
 	@Autowired
 	private PointOfInterestService poiService;
 
-	// REQUESTS
+	/**
+	 * Persists a RideRequest to the database.
+	 *
+	 * @param RideRequest
+	 *            req a RideRequest object to be persisted.
+	 *
+	 * @return boolean returns true on success and false on failure.
+	 */
 	public boolean addRequest(RideRequest req) {
-		rideReqRepo.saveAndFlush(req);
-		return true; // TODO: return false on failure
+		RideRequest temp = rideReqRepo.saveAndFlush(req);
+		if (temp == null) {
+			return false;
+		}
+		return true;
 	}
 
+	/**
+	 * Returns a list of all (active and inactive) rides.
+	 *
+	 * @return List<Ride> A list of Rides.
+	 */
 	public List<Ride> getAll() {
 		return rideRepo.findAll();
 	}
 
+	/**
+	 * Returns a list of all active(not complete) rides.
+	 *
+	 * @return List<Ride> A list of active Rides.
+	 */
 	public List<Ride> getAllActiveRides() {
 		return rideRepo.findByWasSuccessfulNull();
 	}
 
+	/**
+	 * Returns a list of all inactive(completed) rides.
+	 *
+	 * @return List<Ride> A list of inactive Rides.
+	 */
 	public List<Ride> getAllInactiveRides() {
 		return rideRepo.findByWasSuccessfulNotNull();
 	}
 
+	/**
+	 * Takes in the RideRequest id and creates a Ride to associate said
+	 * RideRequest with. If the user does not have an open AvailableRide to link
+	 * with the Ride, one will be created with a default of 1 available seat.
+	 *
+	 * @param long
+	 *            id the id of the AvailableRide to assign the Request to.
+	 * 
+	 * @param User
+	 *            u the active user.
+	 * 
+	 * @return boolean returns true on success, false on failure.
+	 */
 	public boolean acceptRequest(long id, User u) {
 		// get request from id and satisfy it
 		RideRequest req = rideReqRepo.getOne(id);
 		req.setStatus(RideRequest.RequestStatus.SATISFIED);
 		rideReqRepo.saveAndFlush(req);
 
-		// duplicate request as availRide
+		// TODO: Optimize the creation of AvailableRides. There is currently no
+		// checks
+		// for if this driver already has an offer opened for these POIs.
 		AvailableRide offer = new AvailableRide();
 		Car car = carRepo.findByUser(u);
 		offer.setCar(car);
@@ -117,8 +157,9 @@ public class RideService {
 	}
 
 	/**
-	 * Takes in the main poi's id and returns all open requests starting at said 
-	 * id. List is ordered by closest to farthest POI and within each of those, by date.
+	 * Takes in the main poi's id and returns all open requests starting at said
+	 * id. List is ordered by closest to farthest POI and within each of those,
+	 * by date.
 	 *
 	 * @param int
 	 *            id The id of the main POI(Point of Interest).
@@ -132,14 +173,33 @@ public class RideService {
 		// Sorting by closest to farthest POI
 		PointOfInterest temp = poiService.getPoi(poiId);
 		openReqs = sortRequestsByPOI(openReqs, temp);
-		
+
 		return openReqs;
 	}
 
+	/**
+	 * Takes in a User and returns a list of all RideRequests associated with
+	 * the User.
+	 *
+	 * @param User
+	 *            u the active user.
+	 * 
+	 * @return List<RideRequest> a list of all requests associated with the
+	 *         User.
+	 */
 	public List<RideRequest> getRequestsForUser(User u) {
 		return rideReqRepo.findByUser(u);
 	}
 
+	/**
+	 * Takes in a User and returns a list of completed Rides associated with the
+	 * User.
+	 *
+	 * @param User
+	 *            u the active user.
+	 * 
+	 * @return List<Ride> a list of completed Rides.
+	 */
 	public List<Ride> getActiveRequestsForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> activeRides = new ArrayList<Ride>();
@@ -153,6 +213,15 @@ public class RideService {
 		return activeRides;
 	}
 
+	/**
+	 * Takes in a User and returns a list of completed Rides associated with the
+	 * User.
+	 *
+	 * @param User
+	 *            u the active user.
+	 * 
+	 * @return List<Ride> a list of completed Rides.
+	 */
 	public List<Ride> getRequestHistoryForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> completedRides = new ArrayList<Ride>();
@@ -165,16 +234,46 @@ public class RideService {
 		return completedRides;
 	}
 
-	// OFFERS
+	/**
+	 * Takes in a User object and uses said object to retrieve a list of all
+	 * AvailableRide objects.
+	 *
+	 * @param User
+	 *            u the active user.
+	 * @return List<AvailableRide> a list of all AvailableRide objects
+	 *         associated with the User.
+	 */
 	public List<AvailableRide> getOffersForUser(User u) {
 		return availRideRepo.findByCarUser(u);
 	}
 
+	/**
+	 * Takes in an AvailableRide object and persists it to the database.
+	 *
+	 * @param AvailableRide
+	 *            offer the AvailableRide to persist.
+	 * @return boolean returns true on success, false on failure.
+	 */
 	public boolean addOffer(AvailableRide offer) {
-		availRideRepo.saveAndFlush(offer);
-		return true; // TODO: return false on failure
+		AvailableRide temp = availRideRepo.saveAndFlush(offer);
+		if (temp == null) {
+			return false;
+		}
+		return true;
 	}
 
+	/**
+	 * Takes in the AvailableRide id and User to create a Ride assigned to the
+	 * Request and Offer.
+	 *
+	 * @param long
+	 *            id the id of the AvailableRide to assign the Request to.
+	 * 
+	 * @param User
+	 *            u the active user.
+	 * 
+	 * @return boolean returns true on success, false on failure.
+	 */
 	public boolean acceptOffer(long id, User u) {
 		// get request from id and satisfy it
 		AvailableRide offer = availRideRepo.getOne(id);
@@ -216,7 +315,7 @@ public class RideService {
 	 *
 	 * @param long
 	 *            id The id of the Ride to cancel.
-	 * @return true on success, false on failure.
+	 * @return boolean true on success, false on failure.
 	 */
 	public boolean cancelOffer(long id, User u) {
 		try {
@@ -240,8 +339,9 @@ public class RideService {
 	}
 
 	/**
-	 * Takes in the main poi's id and returns all open requests starting at said 
-	 * id. List is ordered by closest to farthest POI and within each of those, by date.
+	 * Takes in the main poi's id and returns all open requests starting at said
+	 * id. List is ordered by closest to farthest POI and within each of those,
+	 * by date.
 	 *
 	 * @param int
 	 *            id The id of the main POI(Point of Interest).
@@ -251,32 +351,44 @@ public class RideService {
 		List<AvailableRide> openOffers = availRideRepo.findAllByIsOpenTrue();
 
 		Collections.sort(openOffers); // Sorting by date.
-		
+
 		// Sorting by closest to farthest POI
 		PointOfInterest temp = poiService.getAll().get(poiId);
 		openOffers = sortAvailableByPOI(openOffers, temp);
 
 		return openOffers;
 	}
-	
+
+	/**
+	 * Takes in a User object and uses said object to retrieve a list of
+	 * Available Ride objects.
+	 *
+	 * @param User
+	 *            u the active user.
+	 * @return List<AvailableRide> A list of Available Rides.
+	 */
 	public List<AvailableRide> getOpenOffersForUser(User u) {
-		
+
 		List<AvailableRide> allOpenOffers = availRideRepo.findAllByIsOpenTrue();
-		List<AvailableRide> openOffers =  new ArrayList<AvailableRide>();
-		
-		//filter rides to get ride for user
-		for(AvailableRide a: allOpenOffers)
-		{
-			if(a.getCar().getUser().getUserId() == u.getUserId())
-			{
+		List<AvailableRide> openOffers = new ArrayList<AvailableRide>();
+
+		// filter rides to get ride for user
+		for (AvailableRide a : allOpenOffers) {
+			if (a.getCar().getUser().getUserId() == u.getUserId()) {
 				openOffers.add(a);
 			}
 		}
-		
-
 		return openOffers;
 	}
 
+	/**
+	 * Takes in a User object and uses said object to retrieve a list of
+	 * non-completed Ride objects.
+	 *
+	 * @param User
+	 *            u the active user.
+	 * @return List<Ride> A list of Rides.
+	 */
 	public List<Ride> getActiveOffersForUser(User u) {
 		List<Ride> allRides = rideRepo.findByAvailRideCarUser(u);
 		List<Ride> activeRides = new ArrayList<Ride>();
@@ -290,6 +402,14 @@ public class RideService {
 		return activeRides;
 	}
 
+	/**
+	 * Takes in a User object and uses said object to retrieve a list of
+	 * completed Ride objects.
+	 *
+	 * @param User
+	 *            u the active user.
+	 * @return List<Ride> A list of Rides.
+	 */
 	public List<Ride> getOfferHistoryForUser(User u) {
 		List<Ride> allRides = rideRepo.findByAvailRideCarUser(u);
 		List<Ride> completedRides = new ArrayList<Ride>();
@@ -322,7 +442,7 @@ public class RideService {
 
 		for (int i : poisByDistance) {
 			for (int k = 0; k < reqs.size(); k++) {
-				if (reqs.get(k).getDropOffLocation().getPoiId() == i+1 
+				if (reqs.get(k).getDropOffLocation().getPoiId() == i + 1
 						&& mpoi.getPoiId() == reqs.get(k).getPickupLocation().getPoiId()) {
 					temp.add(reqs.get(k));
 					reqs.remove(k--);
@@ -373,11 +493,14 @@ public class RideService {
 		double mLat = Math.abs(mpoi.getLatitude());
 		double mLong = Math.abs(mpoi.getLongitude());
 		Map<Double, Integer> map = new TreeMap();
-		
+
+		// Calculating distance: sqrt( (|x1|-|x2|) + (|y1|-|y2|)^2 )
+		// distance is then stored in a Treemap which naturally orders.
 		for (int i = 0; i < pois.size(); i++) {
+			// skipping the main POI.
 			if (mpoi.getPoiId() == pois.get(i).getPoiId()) {
 				continue;
-			}			
+			}
 			double poiLat = Math.abs(pois.get(i).getLatitude());
 			double poiLong = Math.abs(pois.get(i).getLongitude());
 
@@ -393,8 +516,10 @@ public class RideService {
 
 		// -1 because it does not include the current poi
 		int[] poiByDistance = new int[pois.size() - 1];
-		
+
 		int counter = pois.size() - 2;
+
+		// creates an array of POI ids in order from closest to farthest away.
 		while (iter.hasNext()) {
 			Map.Entry me = (Map.Entry) iter.next();
 			poiByDistance[counter--] = (Integer) me.getValue();
