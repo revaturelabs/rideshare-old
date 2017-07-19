@@ -318,8 +318,8 @@ public class RideService {
 		List<PointOfInterest> pois = poiService.getAll();
 
 		int[] poisByDistance = calculateDistance(pois, mpoi);
-		
 		int count = 0;
+
 		for (int i : poisByDistance) {
 			for (int k = 0; k < reqs.size(); k++) {
 				if (reqs.get(k).getDropOffLocation().getPoiId() == i+1 
