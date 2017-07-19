@@ -1,5 +1,5 @@
 <!-- Button trigger modal -->
-<div class="btn-container">
+<div class="btn-container" style="margin: 2em;">
 	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
 		data-target="#myModal">Make offer</button>
 </div>
@@ -56,10 +56,6 @@
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapse{{req.requestId}}" >
 						
 					<!-- Beginning of expanded portion -->
-					<br/><br/>
- <!-- 				{{req.pickupLocation.addressLine1}}
-					{{req.dropOffLocation.addressLine1}}
- -->
 					Note: <i>{{req.notes}} <span ng-show=" req.notes == null"> N/A </span></i>
 
 					<div class="btn-container">
@@ -81,7 +77,7 @@
 
 			<!-- html and angular function used to display open rides -->
 			<ul class="tabbed-list">
-			<li ng-if="activeRides.length == 0">No active rides</li>
+				<li ng-if="activeRides.length == 0">No active rides</li>
 			</ul>
 						
 			<div class="panel-group" id="accordionActive">
@@ -103,10 +99,6 @@
 				<div id="collapseA{{ride.availRide.availRideId}}" class="panel-collapse collapse">
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
 						
-						<br/>
-<!-- 					Car: {{ride.availRide.car.color}} {{ride.availRide.car.model}}
-						<br/>
- -->
 						<div ng-show="isArray(ride.request)">
 							<em>Passengers:</em>
 							<ul class="passenger-list">
@@ -154,12 +146,8 @@
 					</h4>
 				</div>
 				<div id="collapseP{{ride.availRide.availRideId}}" class="panel-collapse collapse">
-						<div class="panel-body" data-toggle="collapse" data-target = "#collapseP{{ride.availRide.availRideId}}" >
+					<div class="panel-body" data-toggle="collapse" data-target = "#collapseP{{ride.availRide.availRideId}}" >
 
-						<br/>
-<!-- 					Car: {{ride.availRide.car.color}} {{ride.availRide.car.model}}
-						<br/>
- -->
 						<div ng-show="isArray(ride.request)">
 							<em>Passengers:</em>
 							<ul class="passenger-list">
