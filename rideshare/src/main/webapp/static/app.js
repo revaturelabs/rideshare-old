@@ -17,9 +17,9 @@ import { userProfileController } from './js/controllers/userProfile.controller.j
 const app = angular.module('app', ['ui.router', permission, uiPermission, 'angular-jwt']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
-	
+
 	jwtOptionsProvider.config({
-	    authPrefix: '',  
+	    authPrefix: '',
 		tokenGetter: [function() {
 	        return localStorage.getItem('RideShare_auth_token');
 	      }],
@@ -37,52 +37,52 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			templateUrl: 'partials/main.html',
 			controller: mainController
 		})
-	
+
 		.state('slackLogin', {
 			url: '/slackLogin',
 			templateUrl: 'partials/slackLogin.html',
 			controller: slackLoginController
 		})
-	
+
 		.state('main.passenger',{
 			url: '/passenger',
 			templateUrl : 'partials/passenger.html',
 			controller : passengerController
 		})
-	
+
 		.state('main.driver',{
 			url: '/driver',
 			templateUrl : 'partials/driver.html',
 			controller : driverController
 		})
-	
+
 		.state('main.addCar' ,{
 			url: '/addCar',
 			templateUrl : 'partials/addCar.html',
 			controller : addCarController
 		})
-	
+
 		.state('main.adminRides' , {
-			url: '/adminRides', 
+			url: '/adminRides',
 			templateUrl : 'partials/adminRides.html',
 			controller : adminRidesController
 		})
-		
+
 		.state('main.adminUsers', {
 			url: '/adminUsers',
 			templateUrl: 'partials/adminUsers.html',
 			controller : adminUsersController
 		})
-		
+
 		.state('main.adminPoi',{
 			url: '/adminPoi',
 			templateUrl : 'partials/poi.html',
 			controller : adminPoiController
 		})
-    
+
         .state('main.userProfile', {
             url: '/userProfile',
             templateUrl : 'partials/userProfile.html',
-            controller : userProfileController 
+            controller : userProfileController
         })
 });

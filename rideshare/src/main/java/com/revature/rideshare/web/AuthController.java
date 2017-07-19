@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,6 +55,14 @@ public class AuthController {
 		return principal != null;
 	}
 
+	@RequestMapping("/test")
+	public void testAuthentication(OAuth2Authentication authentication, HttpServletRequest request) {
+		for (Enumeration<String> headers = request.getHeaderNames(); headers.hasMoreElements();) {
+			String name = headers.nextElement();
+			System.out.println(name + ": " + request.getHeader(name));
+		}
+	}
+
 	/*
 	 * TODO: this method is currently a hackish quick fix, find a better
 	 * solution NOTE: slack user IDs are only unique within a specific team, but
@@ -98,6 +107,7 @@ public class AuthController {
 				u.setEmail(email);
 				u.setAdmin(false);
 				userService.addUser(u);
+				
 			}
 			String userJson;
 			userJson = mapper.writeValueAsString(u);
