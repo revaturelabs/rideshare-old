@@ -1,70 +1,42 @@
 <!--click button to see populated table of all Users-->
-<div>
-  <button class="btn btn-primary" ng-click="getUsers()" class="btn btn-primary">Users</button>
-  <table>
-  	<thead>
-  		<tr>
-  			<th>Full Name</th>
-  			<th>Email</th>
-  		</tr>
-  	</thead>
-  	<tbody>
-  		<tr ng-repeat="u in users">
-  			<td>{{u.fullName}}</td>
-  			<td>{{u.email}}</td>
-            <td><button class="btn btn-primary" ng-click="openModal($index)" data-toggle="modal" data-target="#userInfoModal">More Info</button></td>
-  		</tr>
-  	</tbody>
-  </table>
-</div>
-
-<!--More User Info Modal -->
-<div class="modal" id="userInfoModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title">User Info</h4>
-			</div>
-			<div class="modal-body">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>User Id</td>
-                            <td>{{user.userId}}</td>
-                        </tr>
-                        <tr>
-                            <td>Full Name</td>
-                            <td>{{user.fullName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Email</td>
-                            <td>{{user.email}}</td>
-                        </tr>
-                        <tr>
-                            <td>Main Point of Interest</td>
-                            <td>{{user.mainPOI.poiName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Work Point of Interest</td>
-                            <td>{{user.workPOI.poiName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Admin Status</td>
-                            <td>{{user.admin}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <label>Admin Status</label>
-                <input type="checkbox" ng-checked="user.admin"  ng-model="isAdmin" >
-			</div>
-			<div class="modal-footer">
-				<input class="btn btn-primary" type="button" value="Close" data-dismiss="modal"/>
-                <input class="btn btn-primary" type="submit" value="Save Changes" ng-click="changeAdmin()" data-dismiss="modal"/>
-			</div>
-		</div>
-	</div>
+<div class="panel-group" id="userAccordion">
+    <div class="panel panel-default" ng-repeat="u in users" style="border:none">
+        <div class="panel-heading" data-toggle="collapse" data-target="#collapse{{u.userId}}">
+            <h4 class="panel-title">
+                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#userAccordioin" href="#collapse{{u.userId}}" target="_self" style="text-decoration:none">
+                    {{u.fullName}}
+                </a>
+            </h4>
+        </div> 
+        <div id="collapse{{u.userId}}" class="panel-collapse collapse">
+            <div class="panel-body"> 
+                <!-- Expanded Information Section -->
+                <div class="row">
+                    <div class="pull-left">
+                        Full Name: <br> 
+                        First Name: <br>
+                        Last Name: <br>
+                        Email: <br>
+                        Main Point of Interest: <br>
+                        Work Point of Interest: <br> 
+                        Admin: <br> 
+                    </div>
+                    <div class="col-xs-1"></div>
+                    <div class="pull-left">
+                        {{u.fullName}}<br>
+                        {{u.firstName}}<br>
+                        {{u.lastName}}<br>
+                        {{u.email}}<br>
+                        {{u.mainPOI.poiName}}<br>
+                        {{u.workPOI.poiName}}<br>
+                        <input type="checkbox" ng-checked="u.admin"     id="isAdmin"> <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary" ng-click="changeAdmin($index)">Save Changes</button>
+                </div>
+                <!-- End of Expanded Section -->
+            </div>
+        </div>
+    </div>
 </div>
