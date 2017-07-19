@@ -1,4 +1,5 @@
-package com.revature.rideshare.dao;
+package com.revature.rideshare.dao;
+
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
