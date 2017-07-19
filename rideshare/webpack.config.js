@@ -1,13 +1,17 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = (env = {}) => {
   let config = {
     context: path.join(__dirname, 'src', 'main', 'webapp', 'static'),
     target: 'web',
     // devtool: 'source-map',
-    // devServer: {},
+    devServer: {
+      publicPath: '/',
+      contentBase: [ path.join(__dirname, 'src', 'main', 'webapp', 'static') ]
+    },
     resolve: {
       extensions: [ '.js' ],
       modules: [ './node_modules' ]
@@ -27,26 +31,27 @@ module.exports = (env = {}) => {
         {
           test: /\.js$/,
           exclude: [ /\/node_modules\// ],
-          use: [
-            'babel-loader'
-          ]
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [ 'env' ]
+            }
+          }
         }
       ]
-    }//,
-    // plugins: [
-    //   new HtmlWebpackPlugin({
-    //     template: path.join(__dirname, 'src', 'main', 'webapp', 'static', 'index.html'),
-    //     filename: './index.html',
-    //     hash: false,
-    //     inject: true,
-    //     compile: true,
-    //     favicon: false,
-    //     minify: false,
-    //     cache: true,
-    //     showErrors: true,
-    //     title: 'Webpack App'
-    //   })
-    // ]
+    },
+    plugins: [
+      new webpack.optimize.UglifyJsPlugin({
+        mangle: {
+          'screw_ie8': true
+        },
+        compress: {
+          'screw_ie8': true,
+          'warnings': false
+        },
+        sourceMap: false
+      })
+    ]
   };
   return config;
 };
