@@ -2,6 +2,8 @@ package com.revature.rideshare.web;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,24 +13,20 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.auth0.jwt.JWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.AvailableRide;
 import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.domain.RideRequest;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.RideService;
-import com.revature.rideshare.service.UserService;
 
 @RestController
 @RequestMapping("ride")
 public class RideController {
 
-	@Autowired
-	private RideService rideService;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private UserService userService;
+	private RideService rideService;
 
 	// ALL RIDES
 	@GetMapping
@@ -51,7 +49,8 @@ public class RideController {
 	}
 
 	/**
-	 * Takes in a Ride ID and deleted the Ride and RideRequest objects associated.
+	 * Takes in a Ride ID and deleted the Ride and RideRequest objects
+	 * associated.
 	 */
 	@GetMapping("/request/cancel/{id}")
 	public boolean cancelRequest(@PathVariable(value = "id") long id,
@@ -67,15 +66,10 @@ public class RideController {
 
 	@GetMapping("/request/open/{id}")
 	public List<RideRequest> getOpenRequests(@PathVariable(value = "id") int id) {
-		
+		logger.info("Getting all open requests... (info)");
+		logger.error("Getting all open requests... (error)");
 		return rideService.getOpenRequests(id);
 	}
-
-//	@GetMapping("/request/open")
-//	public List<RideRequest> getOpenRequests() {
-//		// TODO: get actual poi id in req
-//		return rideService.getOpenRequests(1);
-//	}
 
 	@GetMapping("/request/active")
 	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
@@ -109,7 +103,8 @@ public class RideController {
 	}
 
 	/**
-	 * Takes in an AvailableRide ID, deletes all associated Rides and reopens all associated RideRequests.
+	 * Takes in an AvailableRide ID, deletes all associated Rides and reopens
+	 * all associated RideRequests.
 	 */
 	@GetMapping("/offer/cancel/{id}")
 	public boolean cancelOffer(@PathVariable(value = "id") long id,
@@ -124,7 +119,7 @@ public class RideController {
 	}
 
 	@GetMapping("/offer/open")
-	public List<AvailableRide> getOpenOffers( @RequestHeader (name = "Authorization") String token)  {
+	public List<AvailableRide> getOpenOffers(@RequestHeader(name = "Authorization") String token) {
 		User u = User.getUserFromToken(token);
 		return rideService.getOpenOffersForUser(u);
 	}

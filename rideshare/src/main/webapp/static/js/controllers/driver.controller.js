@@ -6,23 +6,30 @@ export let driverController = function($scope, $http, $state){
 	$http.get("/ride")
 	.then(function(response) {
 		$scope.rides = response.data;
+		
+		$http.get("/user/me")
+		.then(function(response) {
+			if(response.data.mainPOI != null) {
+				$scope.selectedItem = $scope.allPoi[response.data.mainPOI.poiId-1];
+			}
+			else {
+				$scope.selectedItem = $scope.allPoi[0];
+			}
+		});
 	});
 
-	// changes poi that is used in the openRequest
-	// TODO: get default scope from user
-
+	// Setting mPOI in case a user does not have a mPOI.
 	$scope.poiId = {id : 1};
 
+	// Setting to empty arrays for correct ng-repeat processing.
 	$scope.openRequest = [];
+	$scope.activeRides = [];
+	$scope.pastRides = [];
 
-	$scope.updateSort = function (){
-
-		$scope.poiId.id = $scope.selectedItem.poiId;
-		$http.get("/ride/request/open/"+$scope.poiId.id)
+	$scope.updateSort = function (item){
+		$http.get("/ride/request/open/"+item.poiId)
 		.then(function(response) {
-			$scope.openRequest = response.data;
-			console.log($scope.openRequest);
-			console.log(new Date ($scope.openRequest[0].time).getTime());
+			$scope.openRequest = response.data;	
 		});
 
 	}
@@ -45,17 +52,10 @@ export let driverController = function($scope, $http, $state){
 		$state.reload();
 	}
 
-
-	// shows all open (unconfirmed) offers for a user
-	$scope.openRides = {};
-
 	$http.get("/ride/offer/open/"+$scope.poiId.id)
 	.then(function(response) {
 		$scope.openRides = response.data;
 	});
-
-	// get data that shows all active ride offers for user
-	$scope.activeRides = [];
 
 	function compare(a,b) {
 		if (a.availRide.availRideId < b.availRide.availRideId)
@@ -67,53 +67,13 @@ export let driverController = function($scope, $http, $state){
 
 	$http.get("/ride/offer/active")
 	.then(function(response){
-		if(response.data.length == 0){
-			let temp = [];
-			$scope.activeRides = temp;
-			return;
-		}
-		let list = response.data;
-		let listReq = [];
-		let temp = [];
-		let counter = 0;
-		let currentAvailId = list[0].availRide.availRideId;
-		list.sort(compare); 
-		listReq = [list[0]];
-		for(let i = 0; i < list.length; i++){
-
-			if((currentAvailId != list[i].availRide.availRideId) && i == list.length-1){
-				listReq[counter++].request = temp;
-				temp = [];
-				temp.push(list[i].request);
-				listReq[counter] = list[i];
-				listReq[counter].request = temp;
-			}
-			else if ((currentAvailId == list[i].availRide.availRideId) && i == list.length-1){
-				temp.push(list[i].request);
-				listReq[counter].request = temp;
-			}
-			else if((currentAvailId != list[i].availRide.availRideId)){
-				currentAvailId = list[i].availRide.availRideId;
-
-				if(temp.length > 0){
-					listReq[counter++].request = temp;
-					listReq[counter] = list[i];
-					temp = [];
-				}
-			} 
-			if(i != list.length-1) temp.push(list[i].request);
-		}
-		$scope.activeRides = listReq;
-	});
-
-	// get data that shows all past ride offers for user
-	$scope.pastRides = {};
+		organizeData(response, "active");
+		});
 
 	$http.get("/ride/offer/history")
 	.then(function(response){
-		$scope.pastRides = response.data;
-	});
-
+		organizeData(response, "history");
+		});
 
 	// scope provides structure of object needed to crreate an offer
 	$scope.offer = {car : {}, pickupPOI : {}, dropoffPOI : {}, seatsAvailable:0, time:"", notes:"",open: true};
@@ -152,7 +112,6 @@ export let driverController = function($scope, $http, $state){
 		);
 	};
 
-
 	// get all info needed to make a new offer
 	$scope.car = {};
 
@@ -161,12 +120,60 @@ export let driverController = function($scope, $http, $state){
 		$scope.car = response.data;
 	});
 
-
 	$scope.allPoi = {};
 
 	$http.get("/poiController")
 	.then(function(response){
 		$scope.allPoi = response.data;
 	});
+	
+	/*
+	 * Organizes Ride list data by combining RideRequests with matching AvailableRide objects.
+	 */
+	function organizeData(response, reqString){
+		if(response.data.length == 0){
+			let temp = [];
+			$scope.activeRides = temp;
+			return;
+		}
+		let list = response.data;
+		let listReq = [];
+		let temp = [];
+		let counter = 0;
+		let currentAvailId = list[0].availRide.availRideId;
+		list.sort(compare); 
+		listReq = [list[0]];
+		for(let i = 0; i < list.length; i++){
 
+			if((currentAvailId != list[i].availRide.availRideId) && i == list.length-1){
+				listReq[counter++].request = temp;
+				temp = [];
+				temp.push(list[i].request);
+				listReq[counter] = list[i];
+				listReq[counter].request = temp;
+			}
+			else if ((currentAvailId == list[i].availRide.availRideId) && i == list.length-1){
+				temp.push(list[i].request);
+				listReq[counter].request = temp;
+			}
+			else if((currentAvailId != list[i].availRide.availRideId)){
+				currentAvailId = list[i].availRide.availRideId;
+
+				if(temp.length > 0){
+					listReq[counter++].request = temp;
+					listReq[counter] = list[i];
+					temp = [];
+				}
+			} 
+			if(i != list.length-1) temp.push(list[i].request);
+		}
+		if(reqString == "active") {
+			$scope.activeRides = listReq;
+			
+		}
+		else if (reqString == "history") {
+			$scope.pastRides = listReq;
+		}
+	}
+	
 };
