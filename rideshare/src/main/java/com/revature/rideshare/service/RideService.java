@@ -64,7 +64,6 @@ public class RideService {
 		RideRequest req = rideReqRepo.getOne(id);
 		req.setStatus(RideRequest.RequestStatus.SATISFIED);
 		rideReqRepo.saveAndFlush(req);
-
 		// duplicate request as availRide
 		AvailableRide offer = new AvailableRide();
 		Car car = carRepo.findByUser(u);
@@ -80,7 +79,6 @@ public class RideService {
 		Ride ride = new Ride();
 		ride.setAvailRide(offer);
 		ride.setRequest(req);
-
 		try {
 			rideRepo.saveAndFlush(ride);
 			return true;
@@ -119,13 +117,20 @@ public class RideService {
 	}
 
 	public List<RideRequest> getOpenRequests(int poiId) {
+		System.out.println("ID = " + poiId);
+		
 		List<RideRequest> openReqs = rideReqRepo.findByStatus(RequestStatus.OPEN);
 
 		Collections.sort(openReqs);
 
-		PointOfInterest temp = poiService.getAll().get((int) poiId);
-		sortRequestsByPOI(openReqs, temp);
-
+		PointOfInterest temp = poiService.getPoi(poiId);
+		openReqs = sortRequestsByPOI(openReqs, temp);
+		
+		
+		for(RideRequest rq : openReqs){
+			System.out.println(rq.toString());
+		}
+		
 		return openReqs;
 	}
 
@@ -136,20 +141,17 @@ public class RideService {
 	public List<Ride> getActiveRequestsForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> activeRides = new ArrayList<Ride>();
-
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() == null) {
 				activeRides.add(r);
 			}
 		}
-
 		return activeRides;
 	}
 
 	public List<Ride> getRequestHistoryForUser(User u) {
 		List<Ride> allRides = rideRepo.findByRequestUser(u);
 		List<Ride> completedRides = new ArrayList<Ride>();
-
 		for (Ride r : allRides) {
 			if (r.getWasSuccessful() != null) {
 				completedRides.add(r);
@@ -179,7 +181,6 @@ public class RideService {
 		}
 
 		availRideRepo.saveAndFlush(offer);
-
 		// duplicate offer as request
 		RideRequest req = new RideRequest();
 		req.setUser(u);
@@ -193,7 +194,6 @@ public class RideService {
 		Ride ride = new Ride();
 		ride.setAvailRide(offer);
 		ride.setRequest(req);
-
 		try {
 			rideRepo.saveAndFlush(ride);
 			return true;
@@ -241,7 +241,7 @@ public class RideService {
 		Collections.sort(openOffers);
 
 		PointOfInterest temp = poiService.getAll().get(poiId);
-		sortAvailableByPOI(openOffers, temp);
+		openOffers = sortAvailableByPOI(openOffers, temp);
 
 		return openOffers;
 	}
@@ -273,7 +273,6 @@ public class RideService {
 				activeRides.add(r);
 			}
 		}
-
 		return activeRides;
 	}
 
@@ -300,17 +299,28 @@ public class RideService {
 	 *            all calculations.
 	 * @return list of PointOfInterest objects.
 	 */
-	public List<RideRequest> sortRequestsByPOI(List<RideRequest> reqs, PointOfInterest poi) {
+	public List<RideRequest> sortRequestsByPOI(List<RideRequest> reqs, PointOfInterest mpoi) {
+
+		System.out.println("\nPOI poi = " + mpoi.toString() + "\n");
 		List<RideRequest> temp = new ArrayList<RideRequest>();
 		List<PointOfInterest> pois = poiService.getAll();
 
-		int[] poisByDistance = calculateDistance(pois, poi);
+		int[] poisByDistance = calculateDistance(pois, mpoi);
+		
+		for(int i = 0; i < poisByDistance.length; i++) System.out.print(poisByDistance[i]+1 + ", ");
+		
+		int count = 0;
 		for (int i : poisByDistance) {
-			for (RideRequest rq : reqs) {
-				if (rq.getDropOffLocation().getPoiId() == i) {
-					temp.add(rq);
+			for (int k = 0; k < reqs.size(); k++) {
+				System.out.println("REQ Dropoff ID: " + reqs.get(k).getDropOffLocation().getPoiName() + ", " + reqs.get(k).getDropOffLocation().getPoiId() + ", " + i);
+				if (reqs.get(k).getDropOffLocation().getPoiId() == i+1 
+						&& mpoi.getPoiId() == reqs.get(k).getPickupLocation().getPoiId()) {
+					System.out.println("ADDED REQ: " + reqs.get(k).toString());
+					temp.add(reqs.get(k));
+					reqs.remove(k--);
 				}
 			}
+			System.out.println("----------------" + i);
 		}
 
 		return temp;
@@ -334,7 +344,7 @@ public class RideService {
 		int[] poisByDistance = calculateDistance(pois, poi);
 		for (int i : poisByDistance) {
 			for (AvailableRide rq : reqs) {
-				if (rq.getDropoffPOI().getPoiId() == i) {
+				if (rq.getPickupPOI().getPoiId() == i) {
 					temp.add(rq);
 				}
 			}
@@ -353,29 +363,32 @@ public class RideService {
 	 * @return list of PointOfInterest objects.
 	 */
 	private int[] calculateDistance(List<PointOfInterest> pois, PointOfInterest mpoi) {
+
+		System.out.println("\nPOI mpoi = " + mpoi.toString() + "\n");
 		double mLat = Math.abs(mpoi.getLatitude());
 		double mLong = Math.abs(mpoi.getLongitude());
 		Map<Double, Integer> map = new TreeMap();
-
+		
 		for (int i = 0; i < pois.size(); i++) {
-			if (mpoi.getPoiId() != pois.get(i).getPoiId()) {
-				double poiLat = Math.abs(pois.get(i).getLatitude());
-				double poiLong = Math.abs(pois.get(i).getLongitude());
+			if (mpoi.getPoiId() == pois.get(i).getPoiId()) {
+				continue;
+			}			
+			double poiLat = Math.abs(pois.get(i).getLatitude());
+			double poiLong = Math.abs(pois.get(i).getLongitude());
 
-				double x = mLong - poiLong;
-				double y = mLat - poiLat;
+			double x = mLong - poiLong;
+			double y = mLat - poiLat;
 
-				double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-				map.put(distance, i);
-			}
+			double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+			map.put(distance, i);
 		}
 
 		Set<?> set = map.entrySet();
 		Iterator<?> iter = set.iterator();
 
-		int[] poiByDistance = new int[pois.size() - 1]; // -1 because it does
-		// not include the
-		// current poi
+		// -1 because it does not include the current poi
+		int[] poiByDistance = new int[pois.size() - 1];
+		
 		int counter = pois.size() - 2;
 		while (iter.hasNext()) {
 			Map.Entry me = (Map.Entry) iter.next();

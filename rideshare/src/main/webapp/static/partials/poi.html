@@ -1,0 +1,86 @@
+<!--add new poi-->
+<div class="container">
+	<form id="addPoi-form">
+		<input type="text" id="poiName" ng-model="poi.poiName" placeholder="Point of Interest Name" required>
+		<input type="text" id="poiAddress1" ng-model="poi.addressLine1" placeholder="Address Line" required>
+		<input type="text" id="poiAddress2" ng-model="poi.addressLine2" value="" placeholder="Address Line 2">
+		<input type="text" id="poiCity" ng-model="poi.city" placeholder="City" required>
+		<input type="text" id="poiState" ng-model="poi.state" placeholder="State" required>
+		<!--not currently doing anything to check state abbreviations atm-->
+		<input type="text" id="poiZipcode" ng-model="poi.zipCode" placeholder="Zip Code" required>
+		<!--latitude/longitude taken when form address submitted-->
+		<input type="number" id="poiLat" ng-model="poi.latitude" style="display: none">
+		<input type="number" id="poiLng" ng-model="poi.longitude" style="display: none"> 
+		Point of Interest Type
+		<select id="poiType" ng-model="poi.type" ng-options="type.typeName for type in types" />
+		<input type="submit" value="addPoi" ng-click="addPoi()">
+	</form>
+</div>
+<!--clear form data after successful submit-->
+
+<!--view all pois-->
+<div class="container">
+	<table id="pois" class="table .table-striped">
+		<th>
+			<tr>
+				<td style="display: none">Id</td>
+				<td>Name</td>
+				<td>Address</td>
+				<td>Address 2</td>
+				<td>City</td>
+				<td>State</td>
+				<td>Zip Code</td>
+				<td>Type</td>
+			</tr>
+		</th>
+		<tbody>
+			<tr ng-repeat="poi in allpois">
+				<td style="display: none" id="poiId" />
+				<td id="poiName">{{poi.poiName}}</td>
+				<td id="addressLine1">{{poi.addressLine1}}</td>
+				<td id="addressLine2">{{poi.addressLine2}}</td>
+				<td id="city">{{poi.city}}</td>
+				<td id="state">{{poi.state}}</td>
+				<td id="zipCode">{{poi.zipCode}}</td>
+				<td id="type">{{poi.type.typeName}}</td>
+				<td><button ng-click="openModal($index)" data-toggle="modal" data-target="#editPoiModal">Edit POI</button></td>
+				<td><button ng-click="removePoi($index)">Remove POI</button></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<!-- store current poi somewhere to save info, then allow edit of data and reset table  -->
+<!--Edit Poi Modal -->
+<div class="modal" id="editPoiModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Edit POI</h4>
+			</div>
+			<div class="modal-body">
+                <form id="updatePoi-form">
+                    <input type="text" id="poiId" style="display:none">
+                    <input type="text" id="poiName" ng-model="newPoi.poiName">
+                    <input type="text" id="poiAddress1" ng-model="newPoi.addressLine1">
+                    <input type="text" id="poiAddress2" ng-model="newPoi.addressLine2">
+                    <input type="text" id="poiCity" ng-model="newPoi.city">
+                    <input type="text" id="poiState" ng-model="newPoi.state">
+                    <input type="text" id="poizipcode" ng-model="newPoi.zipCode">
+                    <input type="number" id="poiLat" style="display:none" ng-model="newPoi.latitude">
+                    <input type="number" id="poiLng" style="display:none" ng-model="newPoi.longitude">
+                    Point of Interest Type
+                    <select id="poiType" ng-model="newPoi.type" ng-options="type.typeName for type in types"/>
+                </form>
+			</div>
+			<div class="modal-footer">
+				<input type="button" value="Close" data-dismiss="modal"/>
+                <input type="submit" value="Save Changes" ng-click="updatePoi()" data-dismiss="modal"/>
+			</div>
+		</div>
+	</div>
+</div>
