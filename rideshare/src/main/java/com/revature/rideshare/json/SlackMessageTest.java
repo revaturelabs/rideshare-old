@@ -12,7 +12,7 @@ import com.revature.rideshare.service.PointOfInterestService;
 public class SlackMessageTest {
 	public static void main(String[] args) {
 		RestTemplate restTemplate = new RestTemplate();
-        String messageurl="https://hooks.slack.com/services/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";
+        String messageurl="https://hooks.slack.com/services/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";
 		ObjectMapper mapper = new ObjectMapper();
 		PointOfInterestService service = new PointOfInterestService();
 		
