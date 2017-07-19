@@ -2,7 +2,10 @@ package com.revature.rideshare.web;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +28,8 @@ public class SlackController {
 	private UserService userService;
 	@Autowired
 	private PointOfInterestService poiService;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public void setRideService(RideService rideService) {
 		this.rideService = rideService;
@@ -69,6 +74,15 @@ public class SlackController {
 		// request.setTime(rideDate);
 
 		rideService.addRequest(request);
+	}
+	
+	@GetMapping("/check")
+	public void getCheck(){
+		System.out.println("in slack controller");
+	}
+	@PostMapping("/postcheck")
+	public void postCheck(){
+		System.out.println("in post slack controller");
 	}
 
 }
