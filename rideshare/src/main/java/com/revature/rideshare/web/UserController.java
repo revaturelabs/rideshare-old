@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.rideshare.domain.PointOfInterest;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.UserService;
 
@@ -46,10 +48,20 @@ public class UserController {
 	public User getCurrentUser(@RequestHeader(name = "Authorization") String token) {
 		return User.getUserFromToken(token);
 	}
-
-	@PostMapping("/updateUser")
-	public void updateUser(@RequestBody User user) {
+	
+	@PostMapping("/updateCurrentUser")
+	public void updateUser(@RequestHeader(name = "Authorization") String token, 
+			@RequestBody User user) {
 		userService.updateUser(user);
+	}
+	
+	public User getUser(String jsonString) {
+		try {
+			return (User) new ObjectMapper().readValue(jsonString, User.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

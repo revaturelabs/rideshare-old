@@ -1,0 +1,111 @@
+<!-- Users can learn more about themselves-->
+<div>
+	<h3>Your Info:</h3>
+	<table>
+		<tr>
+			<td>Name: </td>
+			<td>{{user.fullName}}</td>
+		</tr>
+		<tr>
+			<td>Email: </td>
+			<td>{{user.email}}
+		</tr>
+	</table>
+</div>
+<!--User can set POI-->
+<div>
+	<h3>Your point of interest preferences:</h3>
+	<form>
+		Select Main POI
+		<select id="mainPoi" ng-model="mainPoiOption" ng-options="poi as poi.poiName for poi in allpois"/>
+		<br>
+		Select Work POI
+		<select id="workPoi" ng-model="workPoiOption" ng-options="poi as poi.poiName for poi in allpois"/>
+		<br>
+		<input type="submit" value="Save Changes" ng-click="setPois()">
+	</form>
+</div>
+
+<!--User can add/remove Car info-->
+<div>
+	<h3>Your car:</h3>
+	<div ng-if="buttonText === 'Edit Car'">
+		<table>
+			<tr>
+				<td>Make:</td>
+				<td>{{car.brand}}</td>
+			</tr>
+			<tr>
+				<td>Model:</td>
+				<td>{{car.model}}</td>
+			</tr>
+			<tr>
+				<td>Color:</td>
+				<td>{{car.color}}</td>
+			</tr>
+			<tr>
+				<td>Plate:</td>
+				<td>{{car.licensePlate}}</td>
+			</tr>
+			<tr>
+				<td>Smoke Free:</td>
+				<td ng-if="car.smokeFree">Yes</td>
+				<td ng-if="!car.smokeFree">No</td>
+			</tr>
+			<tr>
+				<td>Notes:</td>
+				<td>{{car.notes}}</td>
+			</tr>
+		</table>
+	</div>
+	<button data-toggle="modal" data-target="#carModal">{{buttonText}}</button>
+</div>
+
+<!--Car Modal -->
+<div class="modal" id="carModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Car Info</h4>
+			</div>
+			<div class="modal-body">
+			<table>
+				<tr>
+					<td>Make: </td>
+					<td><input type="text" ng-model="car.brand" placeholder="brand" required/> </td>
+				</tr>
+				<tr>
+					<td>Model: </td>
+					<td> <input type="text" ng-model="car.model" placeholder="model" required/></td>
+				</tr>
+				<tr>
+					<td>Color: </td>
+					<td><input type="text" ng-model="car.color" placeholder="color" required/></td>
+				</tr>
+				<tr>
+					<td>Plate: </td>
+					<td><input type="text" ng-model="car.licensePlate" placeholder="plate" required/></td>
+				</tr>
+				<tr>
+					<td>Notes: </td>
+					<td><input type="text" ng-model="car.notes" placeholder="notes" /></td>
+				</tr>
+			</table>
+			<br> <label>No Smoking <input type="checkbox"
+								ng-model="car.smokeFree"></label><br />
+			
+<!-- 					ng-model="car.smokeFree" ng-init="car.smokeFree=true"></label><br /> -->
+			</div>
+			<div class="modal-footer">
+				<input type="button" value="Close" data-dismiss="modal"/>
+				<input type="submit" value="Save Changes" ng-click="addCar()" ng-if="buttonText == 'Add Car'" data-dismiss="modal"/>
+				<input type="submit" value="Remove Car" ng-click="removeCar()" ng-if="buttonText == 'Edit Car'" data-dismiss="modal"/>
+				<input type="submit" value="Update Car" ng-click="updateCar()" ng-if="buttonText == 'Edit Car'" data-dismiss="modal"/>
+			</div>
+		</div>
+	</div>
+</div>
