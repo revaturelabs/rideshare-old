@@ -6,3 +6,4 @@ npm i -g npm
 # Install all JavaScript dependencies
 npm Install
 # Run webpack
+npm run build
