@@ -1,6 +1,6 @@
 <!--click button to see populated table of all Users-->
 <div>
-  <button ng-click="getUsers()" class="btn btn-primary">Users</button>
+  <button class="btn btn-primary" ng-click="getUsers()" class="btn btn-primary">Users</button>
   <table>
   	<thead>
   		<tr>
@@ -12,7 +12,7 @@
   		<tr ng-repeat="u in users">
   			<td>{{u.fullName}}</td>
   			<td>{{u.email}}</td>
-            <td><button ng-click="openModal($index)" data-toggle="modal" data-target="#userInfoModal">More Info</button></td>
+            <td><button class="btn btn-primary" ng-click="openModal($index)" data-toggle="modal" data-target="#userInfoModal">More Info</button></td>
   		</tr>
   	</tbody>
   </table>
@@ -62,8 +62,8 @@
                 <input type="checkbox" ng-checked="user.admin"  ng-model="isAdmin" >
 			</div>
 			<div class="modal-footer">
-				<input type="button" value="Close" data-dismiss="modal"/>
-                <input type="submit" value="Save Changes" ng-click="changeAdmin()" data-dismiss="modal"/>
+				<input class="btn btn-primary" type="button" value="Close" data-dismiss="modal"/>
+                <input class="btn btn-primary" type="submit" value="Save Changes" ng-click="changeAdmin()" data-dismiss="modal"/>
 			</div>
 		</div>
 	</div>

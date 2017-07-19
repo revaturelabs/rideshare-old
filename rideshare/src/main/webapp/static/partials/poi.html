@@ -13,7 +13,7 @@
 		<input type="number" id="poiLng" ng-model="poi.longitude" style="display: none"> 
 		Point of Interest Type
 		<select id="poiType" ng-model="poi.type" ng-options="type.typeName for type in types" />
-		<input type="submit" value="addPoi" ng-click="addPoi()">
+		<input class="btn btn-primary" type="submit" value="addPoi" ng-click="addPoi()">
 	</form>
 </div>
 <!--clear form data after successful submit-->
@@ -54,8 +54,8 @@
 					</div>
 				</div>
 				<div class="row">
-					<button ng-click="openModal($index)" data-toggle="modal" data-target="#editPoiModal">Edit POI</button>
-					<button ng-click="removePoi($index)">Remove POI</button>
+					<button class="btn btn-primary" ng-click="openModal($index)" data-toggle="modal" data-target="#editPoiModal">Edit POI</button>
+					<button class="btn btn-primary" ng-click="removePoi($index)">Remove POI</button>
 				</div>
 			<!-- End of expanded portion -->
 				
@@ -93,8 +93,8 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<input type="button" value="Close" data-dismiss="modal"/>
-				<input type="submit" value="Save Changes" ng-click="updatePoi()" data-dismiss="modal"/>
+				<input class="btn btn-primary" type="button" value="Close" data-dismiss="modal"/>
+				<input class="btn btn-primary" type="submit" value="Save Changes" ng-click="updatePoi()" data-dismiss="modal"/>
 			</div>
 		</div>
 	</div>

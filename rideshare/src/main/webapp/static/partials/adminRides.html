@@ -16,7 +16,7 @@
   			<td>{{r.rideId}}</td>	
   			<td>{{r.request.user.fullName}}</td>
   			<td>{{r.availRide.car.user.fullName}}</td>
-            <td><button ng-click="openARModal($index)" data-toggle="modal" data-target="#activeRidesModal">More Info</button></td>
+            <td><button class="btn btn-primary" ng-click="openARModal($index)" data-toggle="modal" data-target="#activeRidesModal">More Info</button></td>
   		</tr>
   	</tbody>
   </table>
@@ -35,7 +35,7 @@
   			<td>{{r.rideId}}</td>	
   			<td>{{r.request.user.fullName}}</td>
   			<td>{{r.availRide.car.user.fullName}}</td>
-            <td><button ng-click="openRHModal($index)" data-toggle="modal" data-target="#rideHistoryModal">More Info</button></td>
+            <td><button class="btn btn-primary" ng-click="openRHModal($index)" data-toggle="modal" data-target="#rideHistoryModal">More Info</button></td>
   		</tr>
   	</tbody>
   </table>
@@ -79,7 +79,7 @@
                 </table>
             </div>
 			<div class="modal-footer">
-				<input type="button" value="Close" data-dismiss="modal"/>
+				<input class="btn btn-primary" type="button" value="Close" data-dismiss="modal"/>
 			</div>
 		</div>
 	</div>
@@ -132,7 +132,7 @@
                 </table>
             </div>
 			<div class="modal-footer">
-				<input type="button" value="Close" data-dismiss="modal"/>
+				<input class="btn btn-primary" type="button" value="Close" data-dismiss="modal"/>
 			</div>
 		</div>
 	</div>
