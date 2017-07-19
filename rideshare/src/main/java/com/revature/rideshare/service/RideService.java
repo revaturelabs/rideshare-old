@@ -119,8 +119,6 @@ public class RideService {
 	}
 
 	public List<RideRequest> getOpenRequests(int poiId) {
-		System.out.println("ID = " + poiId);
-		
 		List<RideRequest> openReqs = rideReqRepo.findByStatus(RequestStatus.OPEN);
 
 		Collections.sort(openReqs);
@@ -128,10 +126,6 @@ public class RideService {
 		PointOfInterest temp = poiService.getPoi(poiId);
 		openReqs = sortRequestsByPOI(openReqs, temp);
 		
-		
-		for(RideRequest rq : openReqs){
-			System.out.println(rq.toString());
-		}
 		
 		return openReqs;
 	}
@@ -308,27 +302,21 @@ public class RideService {
 	 * @return list of PointOfInterest objects.
 	 */
 	public List<RideRequest> sortRequestsByPOI(List<RideRequest> reqs, PointOfInterest mpoi) {
-
-		System.out.println("\nPOI poi = " + mpoi.toString() + "\n");
 		List<RideRequest> temp = new ArrayList<RideRequest>();
 		List<PointOfInterest> pois = poiService.getAll();
 
 		int[] poisByDistance = calculateDistance(pois, mpoi);
 		
-		for(int i = 0; i < poisByDistance.length; i++) System.out.print(poisByDistance[i]+1 + ", ");
 		
 		int count = 0;
 		for (int i : poisByDistance) {
 			for (int k = 0; k < reqs.size(); k++) {
-				System.out.println("REQ Dropoff ID: " + reqs.get(k).getDropOffLocation().getPoiName() + ", " + reqs.get(k).getDropOffLocation().getPoiId() + ", " + i);
 				if (reqs.get(k).getDropOffLocation().getPoiId() == i+1 
 						&& mpoi.getPoiId() == reqs.get(k).getPickupLocation().getPoiId()) {
-					System.out.println("ADDED REQ: " + reqs.get(k).toString());
 					temp.add(reqs.get(k));
 					reqs.remove(k--);
 				}
 			}
-			System.out.println("----------------" + i);
 		}
 
 		return temp;
@@ -372,7 +360,6 @@ public class RideService {
 	 */
 	private int[] calculateDistance(List<PointOfInterest> pois, PointOfInterest mpoi) {
 
-		System.out.println("\nPOI mpoi = " + mpoi.toString() + "\n");
 		double mLat = Math.abs(mpoi.getLatitude());
 		double mLong = Math.abs(mpoi.getLongitude());
 		Map<Double, Integer> map = new TreeMap();
