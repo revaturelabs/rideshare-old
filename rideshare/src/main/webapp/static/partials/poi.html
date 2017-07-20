@@ -219,27 +219,27 @@
 						<table class="table">
 							<tr>
 								<td>
-									<input class="form-control" type="text" id="poiName" ng-model="poi.poiName" placeholder="Point of Interest Name" required>
+									<input class="form-control" type="text" id="poiName" ng-model="newPoi.poiName" placeholder="Point of Interest Name" required>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<input class="form-control" type="text" id="poiAddress1" ng-model="poi.addressLine1" placeholder="Address Line" required>
+									<input class="form-control" type="text" id="poiAddress1" ng-model="newPoi.addressLine1" placeholder="Address Line" required>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<input class="form-control" type="text" id="poiAddress2" ng-model="poi.addressLine2" value="" placeholder="Address Line 2">
+									<input class="form-control" type="text" id="poiAddress2" ng-model="newPoi.addressLine2" value="" placeholder="Address Line 2">
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<input type="text" class="form-control" id="poiCity" ng-model="poi.city" placeholder="City" required>
+									<input type="text" class="form-control" id="poiCity" ng-model="newPoi.city" placeholder="City" required>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<select class="form-control" id="poiState" ng-model="poi.state" required size="1">
+									<select class="form-control" id="poiState" ng-model="newPoi.state" required size="1">
 									<option value="" style="display: none" selected>State</option>
 									<option value="AK">AK</option>
 									<option value="AL">AL</option>
@@ -298,19 +298,19 @@
 							<tr>
 								<td>
 									<!--not currently doing anything to check state abbreviations atm-->
-									<input type="number" class="form-control" id="poiZipcode" ng-model="poi.zipCode" placeholder="Zip Code" required>
+									<input type="number" class="form-control" id="poiZipcode" ng-model="newPoi.zipCode" placeholder="Zip Code" required>
 								</td>
 							</tr>
 							<tr style="display: none">
 								<td>
 									<!--latitude/longitude taken when form address submitted-->
-									<input type="number" id="poiLat" ng-model="poi.latitude" style="display: none">
-									<input type="number" id="poiLng" ng-model="poi.longitude" style="display: none">
+									<input type="number" id="poiLat" ng-model="newPoi.latitude" style="display: none">
+									<input type="number" id="poiLng" ng-model="newPoi.longitude" style="display: none">
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<select id="poiType" class="form-control" ng-model="poi.type" ng-options="type.typeName for type in types" required>
+									<select id="poiType" class="form-control" ng-model="newPoi.type" ng-options="type.typeName for type in types" required>
 									<option value="" style="display: none" selected>Type of Point of Interest</option>
 								</select>
 								</td>
