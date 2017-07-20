@@ -39,7 +39,6 @@ export let passengerController = function($scope, $http, $state, $location){
 		$http.get('poiController').then(function(response){
 			let allPOI = response.data;
 			let userMainPOI;
-		
 			$scope.allMainPOI = allPOI;
 			
 			// check if the user main POI is null
@@ -79,11 +78,9 @@ export let passengerController = function($scope, $http, $state, $location){
 
 				// Add some markers to the map.
 				// Note: The code uses the JavaScript Array.prototype.map()
-				// method
-				// to create an array of markers based on a given "locations"
-				// array.
-				// The map() method here has nothing to do with the Google Maps
-				// API.
+				// method to create an array of markers based on a given
+				// "locations" array. The map() method here has nothing
+				// to do with the Google Maps API.
 				var markers = locations.map(function(location, i) {
 					return new google.maps.Marker({
 						position: location,
