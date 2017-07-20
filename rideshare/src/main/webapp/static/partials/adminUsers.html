@@ -1,5 +1,5 @@
 <!--click button to see populated table of all Users-->
-<div class="panel-group" id="userAccordion">
+<div class="panel-group" id="userAccordion" style="padding-top: 1em">
 	<div class="panel panel-default" ng-repeat="u in users"
 		style="border: none">
 		<div class="panel-heading" data-toggle="collapse"
@@ -10,8 +10,8 @@
 					target="_self" style="text-decoration: none"> {{u.fullName}} </a>
 			</h4>
 		</div>
-		<div id="collapse{{u.userId}}" class="panel-collapse collapse" style="padding: 2em">
-			<div class="panel-body">
+		<div id="collapse{{u.userId}}" class="panel-collapse collapse" >
+			<div class="panel-body" style="padding: 2em">
 				<!-- Expanded Information Section -->
 				<div class="row">
 					<table>
