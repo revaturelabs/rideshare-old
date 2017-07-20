@@ -1,82 +1,108 @@
 <h3>Active Rides</h3>
 <div class="panel-group" id="arAccordion">
-    <div class="panel panel-default" ng-repeat="r in activeRides" style="border:none">
-        <div class="panel-heading" data-toggle="collapse" data-target"#collapse{{r.rideId}}">
-            <h4 class="panel-title">
-                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#arAccordion" href="#collapse{{r.rideId}}" target="_self" style="text-decoration:none">
-                    {{r.request.user.fullName}} <em>@</em> {{r.request.time | date: 'h:mm a MMM dd'}}<br/>
-					{{r.request.pickupLocation.poiName}}
-					<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+	<div class="panel panel-default" ng-repeat="r in activeRides"
+		style="border: none">
+		<div class="panel-heading" data-toggle="collapse"data-target"#collapse{{r.rideId}}">
+			<h4 class="panel-title">
+				<a class="accordion-toggle collapsed" data-toggle="collapse"
+					data-parent="#arAccordion" href="#collapse{{r.rideId}}"
+					target="_self" style="text-decoration: none">
+					{{r.request.user.fullName}} <em>@</em> {{r.request.time | date:
+					'h:mm a MMM dd'}}<br /> {{r.request.pickupLocation.poiName}} <span
+					class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
 					{{r.request.dropOffLocation.poiName}}
-                </a>
-            </h4>
-        </div>
-        <div id="collapse{{r.rideId}}" class="panel-collapse collapse">
-            <div class="panel-body" data-toggle="collapse" data-target="#collapse{{r.rideId}}"> 
-                <!-- More Info Expanded Section -->
-                <div class="row">
-                    <div class="pull-left">
-                        Ride Id: <br>
-                        Requester: <br>
-                        Driver: <br>
-                        Pickup: <br>
-                        Dropoff: <br>
-                    </div>
-                    <div class="col-xs-1"></div>
-                    <div class="pull-left">
-                        {{r.rideId}}<br>
-                        {{r.request.user.fullName}}<br>
-                        {{r.availRide.car.user.fullName}}<br>
-                        {{r.request.pickupLocation.poiName}}<br>
-                        {{r.request.dropOffLocation.poiName}}<br>
-                    </div>
-                </div>
-                <!-- End of Expanded Section -->
-            </div>
-        </div>
-    </div>
-</div>
+				</a>
+			</h4>
+		</div>
+		<div id="collapse{{r.rideId}}" class="panel-collapse collapse">
+			<div class="panel-body" data-toggle="collapse"
+				data-target="#collapse{{r.rideId}}">
+				<!-- More Info Expanded Section -->
+				<div class="row">
+					<div class="pull-left">
+						<table>
+							<tr>
+								<td>Ride Id:</td>
+								<td>{{r.rideId}}</td>
+							</tr>
+							<tr>
+								<td>Requester:</td>
+								<td>{{r.request.user.fullName}}</td>
+							</tr>
+							<tr>
+								<td>Driver:</td>
+								<td>{{r.availRide.car.user.fullName}}</td>
+							</tr>
+							<tr>
+								<td>Pickup:</td>
+								<td>{{r.request.pickupLocation.poiName}}</td>
+							</tr>
+							<tr>
+								<td>Dropoff:</td>
+								<td>{{r.request.dropOffLocation.poiName}}</td>
+							</tr>
+						</table>
+					</div>
+					<!-- End of Expanded Section -->
+				</div>
+			</div>
+		</div>
+	</div>
 
-<h3>Ride History</h3>
-<div class="panel-group" id="rhAccordion">
-    <div class="panel panel-default" ng-repeat="r in rideHistory" style="border:none">
-        <div class="panel-heading" data-toggle="collapse" data-target"#collapse{{r.rideId}}">
-            <h4 class="panel-title">
-                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#rhAccordion" href="#collapse{{r.rideId}}" target="_self" style="text-decoration:none">
-                    {{r.request.user.fullName}} <em>@</em> {{r.request.time | date: 'h:mm a MMM dd'}}<br/>
-					{{r.request.pickupLocation.poiName}}
-					<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-					{{r.request.dropOffLocation.poiName}}
-                </a>
-            </h4>
-        </div>
-        <div id="collapse{{r.rideId}}" class="panel-collapse collapse">
-            <div class="panel-body" data-toggle="collapse" data-target="#collapse{{r.rideId}}"> 
-                <!-- More Info Expanded Section -->
-                <div class="row">
-                    <div class="pull-left">
-                        Ride Id: <br>
-                        Requester: <br>
-                        Driver: <br>
-                        Pickup: <br>
-                        Dropoff: <br>
-                        Complaints: <br>
-                        Successful? <br>
-                    </div>
-                    <div class="col-xs-1"></div>
-                    <div class="pull-left">
-                        {{r.rideId}}<br>
-                        {{r.request.user.fullName}}<br>
-                        {{r.availRide.car.user.fullName}}<br>
-                        {{r.request.pickupLocation.poiName}}<br>
-                        {{r.request.dropOffLocation.poiName}}<br>
-                        {{r.complaint}}<br>
-                        {{r.wasSuccessful}}
-                    </div>
-                </div>
-                <!-- End of Expanded Section -->
-            </div>
-        </div>
-    </div>
-</div>
-
+	<h3>Ride History</h3>
+	<div class="panel-group" id="rhAccordion">
+		<div class="panel panel-default" ng-repeat="r in rideHistory"
+			style="border: none">
+			<div class="panel-heading" data-toggle="collapse"data-target"#collapse{{r.rideId}}">
+				<h4 class="panel-title">
+					<a class="accordion-toggle collapsed" data-toggle="collapse"
+						data-parent="#rhAccordion" href="#collapse{{r.rideId}}"
+						target="_self" style="text-decoration: none">
+						{{r.request.user.fullName}} <em>@</em> {{r.request.time | date:
+						'h:mm a MMM dd'}}<br /> {{r.request.pickupLocation.poiName}} <span
+						class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+						{{r.request.dropOffLocation.poiName}}
+					</a>
+				</h4>
+			</div>
+			<div id="collapse{{r.rideId}}" class="panel-collapse collapse">
+				<div class="panel-body" data-toggle="collapse"
+					data-target="#collapse{{r.rideId}}">
+					<!-- More Info Expanded Section -->
+					<div class="row">
+						<table>
+							<tr>
+								<td>Ride Id:</td>
+								<td>{{r.rideId}}</td>
+							</tr>
+							<tr>
+								<td>Requester:</td>
+								<td>{{r.request.user.fullName}}</td>
+							</tr>
+							<tr>
+								<td>Driver:</td>
+								<td>{{r.availRide.car.user.fullName}}</td>
+							</tr>
+							<tr>
+								<td>Pickup Location:</td>
+								<td>{{r.request.pickupLocation.poiName}}</td>
+							</tr>
+							<tr>
+								<td>Dropoff Location:</td>
+								<td>{{r.request.dropOffLocation.poiName}}</td>
+							</tr>
+							<tr>
+								<td>Complaint:</td>
+								<td>{{r.complaint}}</td>
+							</tr>
+							<tr>
+								<td>Successful?</td>
+								<td>{{r.wasSuccessful}}</td>
+							</tr>
+						</table>
+					</div>
+					<!-- End of Expanded Section -->
+				</div>
+			</div>
+		</div>
+	</div>
