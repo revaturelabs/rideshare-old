@@ -83,7 +83,7 @@
 			<div class="panel-group" id="accordionActive">
 			<div class="panel panel-default" ng-repeat="offer in activeOffers" style = "border: none">
 				<div class="panel-heading" data-toggle="collapse" data-target = "#collapseA{{offer.availRideId}}" style = "background-color: #fafafa;">
-				<h4 class="panel-title">
+					<h4 class="panel-title">
 						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionActive" href="#collapseA{{offer.availRideId}}" target="_self" style="text-decoration:none">
 						
 							<em>@</em> {{offer.time | date: 'h:mm a MMM dd'}}
@@ -96,7 +96,7 @@
 					</h4>
 				</div>
 				<div id="collapseA{{offer.availRideId}}" class="panel-collapse collapse">
-					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
+					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{offer.availRideId}}" >
 						<p>This offer has not yet been assigned to a request.</p>
 						Note: {{offer.notes}}
 						{{offer.seatsAvailable}}
