@@ -7,7 +7,8 @@
 			<div class="input-group">
 				<span class="input-group-addon">Starting Point</span> <select
 					id="fromPOI" class="form-control">
-					<option ng-repeat="x in allMainPOI" ng-selected="start{{ x.poiId }}">{{
+					<option ng-repeat="x in allMainPOI"
+						ng-selected="start{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
 						x.poiName + " - " + x.addressLine1 }}</option>
 				</select>
 			</div>
@@ -15,8 +16,9 @@
 			<div class="input-group">
 				<span class="input-group-addon">Destination</span> <select
 					id="toPOI" class="form-control">
-					<option ng-repeat="x in allMainPOI" ng-selected="destination{{ x.poiId }}">{{ 
-					x.poiName + " - " + x.addressLine1 }}</option>
+					<option ng-repeat="x in allMainPOI"
+						ng-selected="destination{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+						x.poiName + " - " + x.addressLine1 }}</option>
 				</select>
 			</div>
 
@@ -31,7 +33,9 @@
 		Requests</button>
 	<button ng-click="getRequestHistory()" class="btn btn-primary">Request
 		History</button>
-	<button ng-click="clearMapMarkers()" class="btn btn-primary">Clear Map</button>
+	<button ng-click="clearMapMarkers()" class="btn btn-primary">Clear
+		Map</button>
+	<button ng-click="showDirections()" class="btn btn-primary">Directions</button>
 </div>
 
 <script src="../js/googleMapAPI/markerclusterer.js"></script>
