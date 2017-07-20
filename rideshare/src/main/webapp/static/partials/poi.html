@@ -137,78 +137,109 @@
 			</h4>
 		</div>
 		<div id="collapse{{poi.poiId}}" class="panel-collapse collapse">
-			<div class="panel-body" data-toggle="collapse" data-target="#collapse{{poi.poiId}}">
+			<div class="panel-body container-fluid" data-toggle="collapse" data-target="#collapse{{poi.poiId}}" style="padding: 2em">
 
 				<!-- Beginning of expanded portion -->
 				<div class="row">
-					<div class="pull-left">
-						Address Line 1:<br>
-						<!-- Use an ng-if here -->
-						Address Line 2:
-						<br> City:
-						<br> State:
-						<br> Zip:
-						<br> Type:
+					<table  style="padding: 1em">
+						<tr>
+							<td>
+								Address Line 1:
+							</td>
+							<td>
+								{{poi.addressLine1}}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Address Line 2:
+							</td>
+							<td>
+								{{poi.addressLine2}}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								City:
+							</td>
+							<td>
+								{{poi.city}}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								State:
+							</td>
+							<td>
+								{{poi.state}}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Zip:
+							</td>
+							<td>
+								{{poi.zipCode}}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Type:
+							</td>
+							<td>
+								{{poi.type.typeName}}
+							</td>
+						</tr>
+					</table>
+					<div class="row btn-container">
+						<button class="btn btn-primary" ng-click="openModal($index)" data-toggle="modal" data-target="#editPoiModal">Edit POI</button>
+						<button class="btn btn-primary" ng-click="removePoi($index)">Remove POI</button>
 					</div>
-					<div class="col-xs-1"></div>
-					<div class="pull-left">
-						{{poi.addressLine1}} <br>
-						<!-- Use an ng-if here -->
-						{{poi.addressLine2}} <br> {{poi.city}}
-						<br> {{poi.state}}
-						<br> {{poi.zipCode}}
-						<br> {{poi.type.typeName}}
-					</div>
+					<!-- End of expanded portion -->
+
 				</div>
-				<div class="row">
-					<button class="btn btn-primary" ng-click="openModal($index)" data-toggle="modal" data-target="#editPoiModal">Edit POI</button>
-					<button class="btn btn-primary" ng-click="removePoi($index)">Remove POI</button>
-				</div>
-				<!-- End of expanded portion -->
 
 			</div>
-
 		</div>
 	</div>
-</div>
 
-<!-- store current poi somewhere to save info, then allow edit of data and reset table  -->
-<!--Edit Poi Modal -->
-<div class="modal" id="editPoiModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	<!-- store current poi somewhere to save info, then allow edit of data and reset table  -->
+	<!--Edit Poi Modal -->
+	<div class="modal" id="editPoiModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title">Edit POI</h4>
-			</div>
-			<div class="modal-body">
-				<form id="updatePoi-form">
-					<table class="table">
-						<tr>
-							<td>
-								<input class="form-control" type="text" id="poiName" ng-model="poi.poiName" placeholder="Point of Interest Name" required>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input class="form-control" type="text" id="poiAddress1" ng-model="poi.addressLine1" placeholder="Address Line" required>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input class="form-control" type="text" id="poiAddress2" ng-model="poi.addressLine2" value="" placeholder="Address Line 2">
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="form-control" id="poiCity" ng-model="poi.city" placeholder="City" required>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="form-control" id="poiState" ng-model="poi.state" required size="1">
+					<h4 class="modal-title">Edit POI</h4>
+				</div>
+				<div class="modal-body">
+					<form id="updatePoi-form">
+						<table class="table">
+							<tr>
+								<td>
+									<input class="form-control" type="text" id="poiName" ng-model="poi.poiName" placeholder="Point of Interest Name" required>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input class="form-control" type="text" id="poiAddress1" ng-model="poi.addressLine1" placeholder="Address Line" required>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input class="form-control" type="text" id="poiAddress2" ng-model="poi.addressLine2" value="" placeholder="Address Line 2">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="text" class="form-control" id="poiCity" ng-model="poi.city" placeholder="City" required>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<select class="form-control" id="poiState" ng-model="poi.state" required size="1">
 									<option value="" style="display: none" selected>State</option>
 									<option value="AK">AK</option>
 									<option value="AL">AL</option>
@@ -262,35 +293,35 @@
 									<option value="WV">WV</option>
 									<option value="WY">WY</option>
 								</select>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<!--not currently doing anything to check state abbreviations atm-->
-								<input type="number" class="form-control" id="poiZipcode" ng-model="poi.zipCode" placeholder="Zip Code" required>
-							</td>
-						</tr>
-						<tr style="display: none">
-							<td>
-								<!--latitude/longitude taken when form address submitted-->
-								<input type="number" id="poiLat" ng-model="poi.latitude" style="display: none">
-								<input type="number" id="poiLng" ng-model="poi.longitude" style="display: none">
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select id="poiType" class="form-control" ng-model="poi.type" ng-options="type.typeName for type in types" required>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<!--not currently doing anything to check state abbreviations atm-->
+									<input type="number" class="form-control" id="poiZipcode" ng-model="poi.zipCode" placeholder="Zip Code" required>
+								</td>
+							</tr>
+							<tr style="display: none">
+								<td>
+									<!--latitude/longitude taken when form address submitted-->
+									<input type="number" id="poiLat" ng-model="poi.latitude" style="display: none">
+									<input type="number" id="poiLng" ng-model="poi.longitude" style="display: none">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<select id="poiType" class="form-control" ng-model="poi.type" ng-options="type.typeName for type in types" required>
 									<option value="" style="display: none" selected>Type of Point of Interest</option>
 								</select>
-							</td>
-						</tr>
-					</table>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<input class="btn btn-primary" type="button" value="Close" data-dismiss="modal" />
-				<input class="btn btn-primary" type="submit" value="Save Changes" ng-click="updatePoi()" data-dismiss="modal" />
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<input class="btn btn-primary" type="button" value="Close" data-dismiss="modal" />
+					<input class="btn btn-primary" type="submit" value="Save Changes" ng-click="updatePoi()" data-dismiss="modal" />
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
