@@ -49,7 +49,7 @@ export let driverController = function($scope, $http, $state){
 
 		});
 
-		$state.reload();
+		setTimeout(function(){$state.reload();}, 250);
 	}
 
 	$http.get("/ride/offer/open/"+$scope.poiId.id)
@@ -89,18 +89,23 @@ export let driverController = function($scope, $http, $state){
 		$scope.offer.car = $scope.car;
 		$scope.offer.pickupPOI = pickup;
 		$scope.offer.dropoffPOI = dropoff;
+		console.log(notes);
+		if(notes == undefined || notes == "") {
+			notes = "N/A";
+		}
 		$scope.offer.notes = notes;
 		$scope.offer.time = new Date(time);
 		$scope.offer.seatsAvailable = seats;
 
 		$http.post('/ride/offer/add', $scope.offer).then(
-				(formResponse) => {
-					$state.go('main.driver');
-				},
-				(failedResponse) => {
-					alert('Failure');
-				}
+			(formResponse) => {
+				$state.go('main.driver');
+			},
+			(failedResponse) => {
+				alert('Failure');
+			}
 		)
+		setTimeout(function(){$state.reload();}, 250);
 	};
 
 	$scope.offerCancel = function(activeRideId) {
@@ -114,6 +119,7 @@ export let driverController = function($scope, $http, $state){
 					}
 				}
 		);
+		setTimeout(function(){$state.reload();}, 250);
 	};
 
 	// get all info needed to make a new offer

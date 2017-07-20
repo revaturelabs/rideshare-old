@@ -308,6 +308,9 @@ public class RideServiceImpl implements RideService {
 				openOffers.add(a);
 			}
 		}
+		
+		Collections.sort(openOffers);  // Sorting by date
+		
 		return openOffers;
 	}
 
