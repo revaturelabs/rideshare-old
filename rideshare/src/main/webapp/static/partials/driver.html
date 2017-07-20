@@ -216,7 +216,22 @@
 						</tr>
 						<tr>
 							<td>
-								<input class="form-control" type="datetime-local" ng-model="time" placeholder="Time" />
+								<div class="dropdown">
+									<a class="dropdown-toggle" id="dropdown" role="button"
+										data-toggle="dropdown" data-target=".dropdown" href="#dtPicker" target="_self">
+										<div class="input-group">
+											<input type="text" id="date" name="date" class="form-control"
+												data-ng-model="time"> <span
+												class="input-group-addon"><i
+												class="glyphicon glyphicon-calendar"></i></span>
+										</div>
+									</a>
+									<ul class="dropdown-menu" id= "dtPicker" role="menu" aria-labelledby="dLabel">
+										<datetimepicker data-ng-model="time" data-before-render="startDateBeforeRender($dates)"
+											data-datetimepicker-config="{ dropdownSelector: '#dropdown' }"></datetimepicker>
+									</ul>
+								</div>
+
 							</td>
 						</tr>
 
