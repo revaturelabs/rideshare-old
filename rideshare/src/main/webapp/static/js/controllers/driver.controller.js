@@ -65,9 +65,14 @@ export let driverController = function($scope, $http, $state){
 		return 0;
 	}
 
+	console.log("OUT!!!!!!");
 	$http.get("/ride/offer/active")
-	.then(function(response){
-		organizeData(response, "active");
+	.then(function(res){
+		$http.get("/ride/offer/open")
+		.then(function(response){
+			$scope.activeOffers = response.data;
+			organizeData(res, "active");
+			});
 		});
 
 	$http.get("/ride/offer/history")
@@ -170,6 +175,16 @@ export let driverController = function($scope, $http, $state){
 		if(reqString == "active") {
 			$scope.activeRides = listReq;
 			
+			for(let i = 0; i < $scope.activeOffers.length; i++) {
+				for(let k = 0; k < $scope.activeRides.length; k++) {
+					if($scope.activeOffers[i].availRideId == $scope.activeRides[k].availRide.availRideId){
+						$scope.activeOffers.splice(i, 1);
+						i--;
+						break;
+					}
+				}
+			}
+			console.log($scope.activeOffers);
 		}
 		else if (reqString == "history") {
 			$scope.pastRides = listReq;
