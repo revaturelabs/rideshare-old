@@ -49,20 +49,20 @@ module.exports = (env = {}) => {
           { from: `${source}/partials`, to: `${output}/partials` },
           { from: `${source}/js/googleMapAPI`, to: `${output}/js/googleMapAPI` },
           { from: `${source}/js/lib`, to: `${output}/js/lib` },
-          { from: `${source}/js/moment.js`, to: `${output}/moment.js` },
+          { from: `${source}/js/moment.js`, to: `${output}/js/moment.js` },
           { from: `${source}/index.html`, to: `${output}/index.html` },
         ]
       ),
-      new webpack.optimize.UglifyJsPlugin({
-        mangle: {
-          'screw_ie8': true
-        },
-        compress: {
-          'screw_ie8': true,
-          'warnings': false
-        },
-        sourceMap: false
-      }),
+      // new webpack.optimize.UglifyJsPlugin({
+      //   mangle: {
+      //     'screw_ie8': true
+      //   },
+      //   compress: {
+      //     'screw_ie8': true,
+      //     'warnings': false
+      //   },
+      //   sourceMap: false
+      // }),
       new webpack.NoEmitOnErrorsPlugin()
     ]
   };
