@@ -67,6 +67,9 @@ export let passengerController = function($scope, $http, $state, $location){
 			
 			// used to initialize the google map
 			function initMap() {
+				let directionsDisplay = new google.maps.DirectionsRenderer();
+				let directionsService = new google.maps.DirectionsService();
+				
 				var map = new google.maps.Map(document.getElementById('map'), {
 					zoom: 15,
 					center: userMainPOI,
@@ -132,6 +135,8 @@ export let passengerController = function($scope, $http, $state, $location){
 				// remove push pins from map, by setting the markers to default
 				$scope.clearMapMarkers = function() {
 					poiLimit = 0;
+					directionsDisplay.setMap(null);
+					
 					for(let x = 0; x < markers.length; x++){
 						markers[x].setIcon();
 					}
@@ -139,8 +144,6 @@ export let passengerController = function($scope, $http, $state, $location){
 				
 				//show the current route from start to destination
 				$scope.showDirections = function() {
-					let directionsDisplay = new google.maps.DirectionsRenderer();
-					let directionsService = new google.maps.DirectionsService();
 					
 					//get the current drop down options id
 					let select1 = document.getElementById("fromPOI");
