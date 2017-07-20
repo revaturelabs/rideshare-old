@@ -76,3 +76,4 @@ Servers*
 !/rideshare/src/main/resources/com/oracle/ojdbc7/12.1.0/ojdbc7-12.1.0.jar
 rideshare/slackbot.js
 /rideshare/RideShare.log
+/rideshare/src/main/resources/static
