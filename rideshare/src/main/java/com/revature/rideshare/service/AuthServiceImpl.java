@@ -279,7 +279,6 @@ public class AuthServiceImpl implements AuthService {
 //					.withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
 					.withAudience("Revature RideShare AngularJS Client")
 					.withClaim("user", userJson)
-					.withClaim("admin", u.isAdmin())
 					.sign(alg);
 		} catch (IllegalArgumentException | UnsupportedEncodingException | JsonProcessingException ex) {
 			ex.printStackTrace();

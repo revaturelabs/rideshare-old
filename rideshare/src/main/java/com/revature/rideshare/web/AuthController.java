@@ -104,6 +104,7 @@ public class AuthController {
 		if (code != null) {
 			try {
 				User u = authService.getUserAccount(code);
+				String token = authService.createJsonWebToken(u);
 			} catch (SlackApiException ex) {
 				// do logging here
 			}
