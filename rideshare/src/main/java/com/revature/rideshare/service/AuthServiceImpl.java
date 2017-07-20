@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.dao.PointOfInterestRepository;
 import com.revature.rideshare.domain.User;
+import com.revature.rideshare.exception.SlackApiException;
 
 //@Component
 public class AuthServiceImpl implements AuthService {
@@ -78,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
 	 * use this when dealing with requesting the identity scopes to authenticate a user
 	 */
 	@Override
-	public String getSlackAccessToken(String code) {
+	public String getSlackAccessToken(String code) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
@@ -103,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
 	 * use this when requesting the incoming-webhook and commands scopes to integrate with slack
 	 */
 	@Override
-	public JsonNode getSlackAccessResponse(String code) {
+	public JsonNode getSlackAccessResponse(String code) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -122,7 +123,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public String getUserIdentity(String token) {
+	public String getUserIdentity(String token) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
@@ -142,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public JsonNode getUserProfile(String token, String slackId) {
+	public JsonNode getUserProfile(String token, String slackId) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -163,7 +164,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public JsonNode getUserInfo(String token, String slackId) {
+	public JsonNode getUserInfo(String token, String slackId) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -193,41 +194,46 @@ public class AuthServiceImpl implements AuthService {
 //	}
 	
 	@Override
-	public User authenticateUser(String code) {
-		User result = null;
-		String token = getSlackAccessToken(code);
-		if (token != null) {
-			String slackId = getUserIdentity(token);
-			if (slackId != null) {
-				JsonNode userInfo = getUserInfo(token, slackId);
-				User u = userService.getUserBySlackId(slackId);
-				if (u == null) {
-					u = new User();
-					u.setSlackId(slackId);
-					u.setAdmin(false);
-					u.setEmail(userInfo.path("profile").path("email").asText());
-					u.setFirstName(userInfo.path("profile").path("first_name").asText());
-					u.setLastName(userInfo.path("profile").path("last_name").asText());
-					u.setFullName(userInfo.path("real_name").asText());
-					u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
-					u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
-					u.setBanned(false);
-					userService.addUser(u);
-				} else {
-					u.setEmail(userInfo.path("profile").path("email").asText());
-					u.setFirstName(userInfo.path("profile").path("first_name").asText());
-					u.setLastName(userInfo.path("profile").path("last_name").asText());
-					u.setFullName(userInfo.path("real_name").asText());
-					userService.updateUser(u);
-				}
-				result = u;
-			}
-		}
-		return result;
+	public User authenticateUser(String code) throws SlackApiException {
+		return null;
 	}
 	
+//	@Override
+//	public User getAuthenticatedUser(String code) throws SlackApiException {
+//		User result = null;
+//		String token = getSlackAccessToken(code);
+//		if (token != null) {
+//			String slackId = getUserIdentity(token);
+//			if (slackId != null) {
+//				JsonNode userInfo = getUserInfo(token, slackId);
+//				User u = userService.getUserBySlackId(slackId);
+//				if (u == null) {
+//					u = new User();
+//					u.setSlackId(slackId);
+//					u.setAdmin(false);
+//					u.setEmail(userInfo.path("profile").path("email").asText());
+//					u.setFirstName(userInfo.path("profile").path("first_name").asText());
+//					u.setLastName(userInfo.path("profile").path("last_name").asText());
+//					u.setFullName(userInfo.path("real_name").asText());
+//					u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
+//					u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
+//					u.setBanned(false);
+//					userService.addUser(u);
+//				} else {
+//					u.setEmail(userInfo.path("profile").path("email").asText());
+//					u.setFirstName(userInfo.path("profile").path("first_name").asText());
+//					u.setLastName(userInfo.path("profile").path("last_name").asText());
+//					u.setFullName(userInfo.path("real_name").asText());
+//					userService.updateUser(u);
+//				}
+//				result = u;
+//			}
+//		}
+//		return result;
+//	}
+	
 	@Override
-	public User getIntegratedUser(String code) {
+	public User integrateUser(String code) throws SlackApiException {
 		User result = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();

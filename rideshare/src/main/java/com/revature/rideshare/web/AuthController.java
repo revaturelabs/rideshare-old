@@ -36,6 +36,8 @@ public class AuthController {
 	private String slackAppVerificationToken;
 	@Value("${slack.teamId}")
 	private String slackAppTeamId;
+	@Value("${deploy.url}")
+	private String rideshareUrl;	
 
 	@Autowired
 	UserService userService;
@@ -65,10 +67,22 @@ public class AuthController {
 		
 	}
 	
-//	@RequestMapping("/slack/authorize")
-//	public ResponseEntity<String> redirectToSlack(HttpServletResponse response) {
-//		
-//	}
+	@RequestMapping("/slack/authorize")
+	public ResponseEntity<String> redirectToSlack(@RequestParam(name="integrate") Boolean integrate, HttpServletResponse response) {
+		if (integrate) {
+			String url = "https://slack.com/oauth/authorize?"
+					+ "client_id=" + slackAppId
+					+ "&team=" + slackAppTeamId
+					+ "&scope=incoming-webhook,commands"
+					+ "&redirect_uri=" + rideshareUrl + "/auth/slack/integrate";
+		} else {
+			String url = "https://slack.com/oauth/authorize?"
+					+ "client_id=" + slackAppId
+					+ "&team=" + slackAppTeamId
+					+ "&scope=identity.basic,identity.email,identity.team"
+					+ "&redirect_uri=" + rideshareUrl + "/auth/slack/login";
+		}
+	}
 	
 	@RequestMapping("/slack/login")
 	public ResponseEntity<> loginWithSlack(@RequestParam(name="code", required=false) String code,
@@ -117,17 +131,15 @@ public class AuthController {
 		return u;
 	}
 
-	@GetMapping("/token")
-	public User getJsonWebToken(OAuth2Authentication authentication, HttpServletResponse response) {
-		String[] nameTokens = authentication.getName().split(", ");
-//		String fullName = nameTokens[0].substring(6);
-		String slackId = nameTokens[1].substring(3);
-//		String email = nameTokens[2].substring(6, nameTokens[2].length() - 1);
-		String token = authService.createJsonWebToken(slackId);
-		System.out.println(token);
-		response.addHeader("token", token);
-		return u;
-	}
+//	@GetMapping("/token")
+//	public User getJsonWebToken(OAuth2Authentication authentication, HttpServletResponse response) {
+//		String[] nameTokens = authentication.getName().split(", ");
+//		String slackId = nameTokens[1].substring(3);
+//		String token = authService.createJsonWebToken(slackId);
+//		System.out.println(token);
+//		response.addHeader("token", token);
+//		return u;
+//	}
 
 	@RequestMapping("/getCode")
 	public void loginUser(@RequestParam("code") String code, HttpServletResponse response) {

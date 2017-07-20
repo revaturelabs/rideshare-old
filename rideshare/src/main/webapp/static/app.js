@@ -16,7 +16,7 @@ import { authProvider } from './js/auth.provider.js'
 
 const app = angular.module('app', ['ui.router', 'angular-jwt']);
 
-app.run(function(authManager) {
+app.run(function(authManager, $http) {
 	authManager.checkAuthOnRefresh();
 	authManager.redirectWhenUnauthenticated();
 });

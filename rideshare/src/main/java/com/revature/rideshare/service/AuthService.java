@@ -3,6 +3,7 @@ package com.revature.rideshare.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.revature.rideshare.dao.PointOfInterestRepository;
 import com.revature.rideshare.domain.User;
+import com.revature.rideshare.exception.SlackApiException;
 
 public interface AuthService {
 
@@ -13,22 +14,22 @@ public interface AuthService {
 	/*
 	 * use this when dealing with requesting the identity scopes to authenticate a user
 	 */
-	String getSlackAccessToken(String code);
+	String getSlackAccessToken(String code) throws SlackApiException;
 
 	/*
 	 * use this when requesting the incoming-webhook and commands scopes to integrate with slack
 	 */
-	JsonNode getSlackAccessResponse(String code);
+	JsonNode getSlackAccessResponse(String code) throws SlackApiException;
 
-	String getUserIdentity(String token);
+	String getUserIdentity(String token) throws SlackApiException;
 
-	JsonNode getUserProfile(String token, String slackId);
+	JsonNode getUserProfile(String token, String slackId) throws SlackApiException;
 
-	JsonNode getUserInfo(String token, String slackId);
+	JsonNode getUserInfo(String token, String slackId) throws SlackApiException;
 
-	User authenticateUser(String code);
+	User authenticateUser(String code) throws SlackApiException;
 
-	User getIntegratedUser(String code);
+	User integrateUser(String code) throws SlackApiException;
 
 	String createJsonWebToken(User u);
 
