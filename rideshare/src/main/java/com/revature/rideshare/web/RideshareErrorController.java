@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.AbstractErrorController;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,6 @@ public class RideshareErrorController extends AbstractErrorController {
 
 	@RequestMapping("/error")
 	public void handleError(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("handling error");
 		HttpStatus status = getStatus(request);
 		String destination = getErrorPath() + "?status=" + status.value();
 		try {

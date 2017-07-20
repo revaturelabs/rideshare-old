@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -23,8 +26,10 @@ import com.revature.rideshare.dao.PointOfInterestRepository;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.exception.SlackApiException;
 
-//@Component
+@Component
 public class AuthServiceImpl implements AuthService {
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 //	TODO: start using environment variables when this application is deployed
 //	@Value("#{systemEnvironment['RIDESHARE_JWT_SECRET']}")
@@ -95,7 +100,7 @@ public class AuthServiceImpl implements AuthService {
 				result = body.path("access_token").asText();
 			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("", ex);
 		}
 		return result;
 	}
@@ -117,7 +122,7 @@ public class AuthServiceImpl implements AuthService {
 		try {
 			result = mapper.readTree(response.getBody());
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("", ex);
 		}
 		return result;
 	}
@@ -137,7 +142,7 @@ public class AuthServiceImpl implements AuthService {
 				result = body.path("user").path("id").asText();
 			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("", ex);
 		}
 		return result;
 	}
@@ -158,7 +163,7 @@ public class AuthServiceImpl implements AuthService {
 				result = body.path("profile");
 			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("", ex);
 		}
 		return result;
 	}
@@ -179,55 +184,40 @@ public class AuthServiceImpl implements AuthService {
 				result = body.path("user");
 			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("", ex);
 		}
 		return result;
 	}
 	
 	@Override
-	public User getUserAccount(String code) throws SlackApiException {
-		User result = null;
-		String token = getSlackAccessToken(code);
-		if (token != null) {
-			String slackId = getUserIdentity(token);
-			if (slackId != null) {
-				JsonNode userInfo = getUserInfo(token, slackId);
-				User u = userService.getUserBySlackId(slackId);
-				if (u == null) {
-					u = new User();
-					u.setSlackId(slackId);
-					u.setAdmin(false);
-					u.setEmail(userInfo.path("profile").path("email").asText());
-					u.setFirstName(userInfo.path("profile").path("first_name").asText());
-					u.setLastName(userInfo.path("profile").path("last_name").asText());
-					u.setFullName(userInfo.path("real_name").asText());
-					u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
-					u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
-					u.setBanned(false);
-					userService.addUser(u);
-				} else {
-					u.setEmail(userInfo.path("profile").path("email").asText());
-					u.setFirstName(userInfo.path("profile").path("first_name").asText());
-					u.setLastName(userInfo.path("profile").path("last_name").asText());
-					u.setFullName(userInfo.path("real_name").asText());
-					userService.updateUser(u);
-				}
-				result = u;
-			} else {
-				throw new SlackApiException("Failed to retrieve user's Slack id");
-			}
+	public User getUserAccount(String slackId, JsonNode userInfo) {
+		User u = userService.getUserBySlackId(slackId);
+		if (u == null) {
+			u = new User();
+			u.setSlackId(slackId);
+			u.setAdmin(false);
+			u.setEmail(userInfo.path("profile").path("email").asText());
+			u.setFirstName(userInfo.path("profile").path("first_name").asText());
+			u.setLastName(userInfo.path("profile").path("last_name").asText());
+			u.setFullName(userInfo.path("real_name").asText());
+			u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
+			u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
+			u.setBanned(false);
+			userService.addUser(u);
 		} else {
-			throw new SlackApiException("Failed to retrieve access token from Slack");
+			u.setEmail(userInfo.path("profile").path("email").asText());
+			u.setFirstName(userInfo.path("profile").path("first_name").asText());
+			u.setLastName(userInfo.path("profile").path("last_name").asText());
+			u.setFullName(userInfo.path("real_name").asText());
+			userService.updateUser(u);
 		}
-		return result;
+		return u;
 	}
 	
 	@Override
-	public User integrateUser(String code) throws SlackApiException {
+	public User integrateUser(JsonNode accessResponse) throws SlackApiException {
 		User result = null;
-		try {
 			ObjectMapper mapper = new ObjectMapper();
-			JsonNode accessResponse = getSlackAccessResponse(code);
 			if (accessResponse.path("ok").asBoolean()) {
 				String slackId = accessResponse.path("user_id").asText();
 				String token = accessResponse.path("access_token").asText();
@@ -281,7 +271,7 @@ public class AuthServiceImpl implements AuthService {
 					.withClaim("user", userJson)
 					.sign(alg);
 		} catch (IllegalArgumentException | UnsupportedEncodingException | JsonProcessingException ex) {
-			ex.printStackTrace();
+			logger.error("", ex);
 		}
 		return jwt;
 	}
@@ -300,10 +290,9 @@ public class AuthServiceImpl implements AuthService {
 			String userJson = jwt.getClaim("user").asString();
 			u = (User) mapper.readValue(userJson, User.class);
 		} catch (IllegalArgumentException | IOException ex) {
-			ex.printStackTrace();
+			logger.error("", ex);
 		} catch (JWTVerificationException ex) {
-			ex.printStackTrace();
-			System.out.println("Received an invalid token.");
+			logger.error("Got an invalid JSON web token", ex);
 		}
 		return u;
 	}
@@ -315,8 +304,7 @@ public class AuthServiceImpl implements AuthService {
 			String userJson = JWT.decode(token).getClaim("user").asString();
 			return (User) mapper.readValue(userJson, User.class);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.out.println(ex.getMessage());
+			logger.error("", ex);
 			return null;
 		}
 	}

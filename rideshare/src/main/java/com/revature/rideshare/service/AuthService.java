@@ -27,7 +27,7 @@ public interface AuthService {
 
 	JsonNode getUserInfo(String token, String slackId);
 
-	User getUserAccount(String code) throws SlackApiException;
+	User getUserAccount(String slackId, JsonNode userInfo);
 
 	User integrateUser(String code) throws SlackApiException;
 
