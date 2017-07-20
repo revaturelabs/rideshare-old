@@ -13,7 +13,7 @@ import { userProfileController } from './js/controllers/userProfile.controller.j
 //var = function scope
 //const and let = block scope 
 
-const app = angular.module('app', ['ui.router', permission, uiPermission, 'angular-jwt']);
+const app = angular.module('app', ['ui.router', permission, uiPermission, 'angular-jwt', 'ui.bootstrap.datetimepicker']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
 	

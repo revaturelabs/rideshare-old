@@ -11,15 +11,15 @@
 				<td>Email: </td>
 				<td>{{user.email}}
 			</tr>
-      <tr>
-			  <td></td>
-			  <td>
-          <a href="auth/slack/authorize?integrate">
-	          <img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png"
-	            srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
-          </a>
-        </td>
-		  </tr>
+			<tr>
+				<td></td>
+				<td>
+					<a href="auth/slack/authorize?integrate">
+						<img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png"
+							srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
+					</a>
+				</td>
+			</tr>
 		</table>
 	</div>
 </div>
@@ -40,7 +40,7 @@
 				</tr>
 			</table>
 			<br>
-			<input type="submit" value="Save Changes" ng-click="setPois()">
+			<input class="btn btn-primary" type="submit" value="Save Changes" ng-click="setPois()">
 		</form>
 	</div>
 </div>
@@ -84,7 +84,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-1"></div>
-		<button data-toggle="modal" data-target="#carModal">{{buttonText}}</button>
+		<button class="btn btn-primary" data-toggle="modal" data-target="#carModal">{{buttonText}}</button>
 	</div>
 </div>
 <!--Car Modal -->
@@ -127,10 +127,10 @@
 <!-- 					ng-model="car.smokeFree" ng-init="car.smokeFree=true"></label><br /> -->
 			</div>
 			<div class="modal-footer">
-				<input type="button" value="Close" data-dismiss="modal"/>
-				<input type="submit" value="Save Changes" ng-click="addCar()" ng-if="buttonText == 'Add Car'" data-dismiss="modal"/>
-				<input type="submit" value="Remove Car" ng-click="removeCar()" ng-if="buttonText == 'Edit Car'" data-dismiss="modal"/>
-				<input type="submit" value="Update Car" ng-click="updateCar()" ng-if="buttonText == 'Edit Car'" data-dismiss="modal"/>
+				<input class="btn btn-primary" type="button" value="Close" data-dismiss="modal"/>
+				<input class="btn btn-primary" type="submit" value="Save Changes" ng-click="addCar()" ng-if="buttonText == 'Add Car'" data-dismiss="modal"/>
+				<input class="btn btn-primary" type="submit" value="Remove Car" ng-click="removeCar()" ng-if="buttonText == 'Edit Car'" data-dismiss="modal"/>
+				<input class="btn btn-primary" type="submit" value="Update Car" ng-click="updateCar()" ng-if="buttonText == 'Edit Car'" data-dismiss="modal"/>
 			</div>
 		</div>
 	</div>

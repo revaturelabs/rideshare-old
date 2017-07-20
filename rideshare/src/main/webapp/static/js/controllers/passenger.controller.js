@@ -15,7 +15,7 @@ export let passengerController = function($scope, $http, $state, $location){
 	}
 
 
-	//global variables
+	// global variables
 	let user;
 	let poiLimit = 0;
 
@@ -23,14 +23,14 @@ export let passengerController = function($scope, $http, $state, $location){
 		// get current user
 		user = response.data;
 		
-		//gets user main POI then sets the starting point
-		//drop down to the users main POI
+		// gets user main POI then sets the starting point
+		// drop down to the users main POI
 		if(user.mainPOI == null){
-			//sets the default drop down option to 1
+			// sets the default drop down option to 1
 			let userPOI = 'start1';
 			$scope[userPOI] = true;
 		}else{
-			//sets the start drop down to the users main POI
+			// sets the start drop down to the users main POI
 			let userPOI = 'start'+user.mainPOI.poiId;
 			$scope[userPOI] = true;
 		}
@@ -39,15 +39,15 @@ export let passengerController = function($scope, $http, $state, $location){
 		$http.get('poiController').then(function(response){
 			let allPOI = response.data;
 			let userMainPOI;
-			
 			$scope.allMainPOI = allPOI;
 			
 			// check if the user main POI is null
 			if(user.mainPOI == null){
-				//if null set the default coordinates to 1st address in the database
+				// if null set the default coordinates to 1st address in the
+				// database
 				userMainPOI = {lat: allPOI[0].latitude, lng: allPOI[0].longitude};
 			}else{
-				// get the current user main POI 
+				// get the current user main POI
 				userMainPOI = {lat: user.mainPOI.latitude, lng: user.mainPOI.longitude};
 			}
 
@@ -58,7 +58,7 @@ export let passengerController = function($scope, $http, $state, $location){
 				locations.push(temp);
 			};
 			
-			//create the label numbering
+			// create the label numbering
 			let labels = [];
 			for(let x = 1; x < response.data.length+1; x++){
 				labels.push(x.toString());
@@ -77,9 +77,10 @@ export let passengerController = function($scope, $http, $state, $location){
 				});
 
 				// Add some markers to the map.
-				// Note: The code uses the JavaScript Array.prototype.map() method
-				// to create an array of markers based on a given "locations" array.
-				// The map() method here has nothing to do with the Google Maps API.
+				// Note: The code uses the JavaScript Array.prototype.map()
+				// method to create an array of markers based on a given
+				// "locations" array. The map() method here has nothing
+				// to do with the Google Maps API.
 				var markers = locations.map(function(location, i) {
 					return new google.maps.Marker({
 						position: location,
@@ -101,14 +102,10 @@ export let passengerController = function($scope, $http, $state, $location){
 							
 							$scope[temp1] = false;
 							$scope[temp2] = false;
-							
-							if(poiLimit === 2){
-								poiLimit = 1;
-							}
 						}
 						
 						if(poiLimit === 1){
-							markers[x].setIcon('http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png');
+							markers[x].setIcon('http://earth.google.com/images/kml-icons/track-directional/track-8.png');
 							
 							let temp2 = 'destination' + id;
 							$scope[temp2] = true;
@@ -117,7 +114,7 @@ export let passengerController = function($scope, $http, $state, $location){
 						}
 						
 						if(poiLimit === 0){
-							markers[x].setIcon('http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png');
+							markers[x].setIcon('http://earth.google.com/images/kml-icons/track-directional/track-8.png');
 							
 							let temp1 = 'start' + id;
 							$scope[temp1] = true;
@@ -129,12 +126,39 @@ export let passengerController = function($scope, $http, $state, $location){
 
 				}
 				
-				//remove push pins from map, by setting the markers to default
+				// remove push pins from map, by setting the markers to default
 				$scope.clearMapMarkers = function() {
 					poiLimit = 0;
 					for(let x = 0; x < markers.length; x++){
 						markers[x].setIcon();
 					}
+				};
+				
+				//show the current route from start to destination
+				$scope.showDirections = function() {
+					let directionsDisplay = new google.maps.DirectionsRenderer();
+					let directionsService = new google.maps.DirectionsService();
+					
+					//get the current drop down options id
+					let select1 = document.getElementById("fromPOI");
+					let start = select1.options[select1.selectedIndex].id;
+					
+					let select2 = document.getElementById("toPOI");
+					let destination = select2.options[select2.selectedIndex].id;
+					
+					directionsDisplay.setMap(map);
+					
+					let request = {
+							//get the longitude and latitude to match the selected poi
+							origin: {lat: allPOI[start].latitude, lng: allPOI[start].longitude},
+							destination: {lat: allPOI[destination].latitude, lng: allPOI[destination].longitude},
+							travelMode: 'DRIVING'
+					}
+					
+					//use google map api to show the current route
+					directionsService.route(request, function(result, status){
+						directionsDisplay.setDirections(result);
+					});
 				};
 
 				// Add a marker cluster to manage the markers.
@@ -146,6 +170,7 @@ export let passengerController = function($scope, $http, $state, $location){
 			// initialize the google map
 			initMap();
 		});
+		
 	});
 
 };

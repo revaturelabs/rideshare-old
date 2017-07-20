@@ -1,140 +1,106 @@
-<div>
-  <button ng-click="getActiveRides()" class="btn btn-primary">Active Rides</button>
-  <button ng-click="getRideHistory()" class="btn btn-primary">Ride History</button>
-    
-    <h3>Active Rides</h3>
-    <table>
-  	<thead>
-  		<tr>
-  			<th>Ride Id </th>
-  			<th>Requester Name </th>
-  			<th>Driver Name </th>
-  		</tr>
-  	</thead>
-  	<tbody>
-  		<tr ng-repeat="r in activeRides">
-  			<td>{{r.rideId}}</td>	
-  			<td>{{r.request.user.fullName}}</td>
-  			<td>{{r.availRide.car.user.fullName}}</td>
-            <td><button ng-click="openARModal($index)" data-toggle="modal" data-target="#activeRidesModal">More Info</button></td>
-  		</tr>
-  	</tbody>
-  </table>
-    
-    <h3>Ride History</h3>
-    <table>
-  	<thead>
-  		<tr>
-  			<th>Ride Id </th>
-  			<th>Requester Name </th>
-  			<th>Drive Name </th>
-  		</tr>
-  	</thead>
-  	<tbody>
-  		<tr ng-repeat="r in rideHistory">
-  			<td>{{r.rideId}}</td>	
-  			<td>{{r.request.user.fullName}}</td>
-  			<td>{{r.availRide.car.user.fullName}}</td>
-            <td><button ng-click="openRHModal($index)" data-toggle="modal" data-target="#rideHistoryModal">More Info</button></td>
-  		</tr>
-  	</tbody>
-  </table>
-</div>
-
-<!--More Info active Rides Modal -->
-<div class="modal" id="activeRidesModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title">Active Ride</h4>
-			</div>
-			<div class="modal-body">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>Ride Id</td>
-                            <td>{{ride.rideId}}</td>
-                        </tr>
-                        <tr>
-                            <td>Requester Name</td>
-                            <td>{{ride.request.user.fullName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Driver Name</td>
-                            <td>{{ride.availRide.car.user.fullName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Pickup Location</td>
-                            <td>{{ride.request.pickupLocation.poiName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Drop Off Location</td>
-                            <td>{{ride.request.dropOffLocation.poiName}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-			<div class="modal-footer">
-				<input type="button" value="Close" data-dismiss="modal"/>
+<h3>Active Rides</h3>
+<div class="panel-group" id="arAccordion">
+	<div class="panel panel-default" ng-repeat="r in activeRides"
+		style="border: none">
+		<div class="panel-heading" data-toggle="collapse"data-target"#collapse{{r.rideId}}">
+			<h4 class="panel-title">
+				<a class="accordion-toggle collapsed" data-toggle="collapse"
+					data-parent="#arAccordion" href="#collapse{{r.rideId}}"
+					target="_self" style="text-decoration: none">
+					{{r.request.user.fullName}} <em>@</em> {{r.request.time | date:
+					'h:mm a MMM dd'}}<br /> {{r.request.pickupLocation.poiName}} <span
+					class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+					{{r.request.dropOffLocation.poiName}}
+				</a>
+			</h4>
+		</div>
+		<div id="collapse{{r.rideId}}" class="panel-collapse collapse">
+			<div class="panel-body" data-toggle="collapse"
+				data-target="#collapse{{r.rideId}}">
+				<!-- More Info Expanded Section -->
+				<div class="row" style="padding: 2em">
+						<table>
+							<tr>
+								<td>Ride Id:</td>
+								<td>{{r.rideId}}</td>
+							</tr>
+							<tr>
+								<td>Requester:</td>
+								<td>{{r.request.user.fullName}}</td>
+							</tr>
+							<tr>
+								<td>Driver:</td>
+								<td>{{r.availRide.car.user.fullName}}</td>
+							</tr>
+							<tr>
+								<td>Pickup:</td>
+								<td>{{r.request.pickupLocation.poiName}}</td>
+							</tr>
+							<tr>
+								<td>Dropoff:</td>
+								<td>{{r.request.dropOffLocation.poiName}}</td>
+							</tr>
+						</table>
+					<!-- End of Expanded Section -->
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<!--End of More Info Modal-->
 
-<!--More Info Ride History Modal -->
-<div class="modal" id="rideHistoryModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title">Active Ride</h4>
+	<h3>Ride History</h3>
+	<div class="panel-group" id="rhAccordion">
+		<div class="panel panel-default" ng-repeat="r in rideHistory"
+			style="border: none">
+			<div class="panel-heading" data-toggle="collapse"data-target"#collapse{{r.rideId}}">
+				<h4 class="panel-title">
+					<a class="accordion-toggle collapsed" data-toggle="collapse"
+						data-parent="#rhAccordion" href="#collapse{{r.rideId}}"
+						target="_self" style="text-decoration: none">
+						{{r.request.user.fullName}} <em>@</em> {{r.request.time | date:
+						'h:mm a MMM dd'}}<br /> {{r.request.pickupLocation.poiName}} <span
+						class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+						{{r.request.dropOffLocation.poiName}}
+					</a>
+				</h4>
 			</div>
-			<div class="modal-body">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>Ride Id</td>
-                            <td>{{ride.rideId}}</td>
-                        </tr>
-                        <tr>
-                            <td>Requester Name</td>
-                            <td>{{ride.request.user.fullName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Driver Name</td>
-                            <td>{{ride.availRide.car.user.fullName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Pickup Location</td>
-                            <td>{{ride.request.pickupLocation.poiName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Drop Off Location</td>
-                            <td>{{ride.request.dropOffLocation.poiName}}</td>
-                        </tr>
-                        <tr>
-                            <td>Complaints</td>
-                            <td>{{ride.complaint}}</td>
-                        </tr>
-                        <tr>
-                            <td>Success</td>
-                            <td>{{ride.wasSuccessful}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-			<div class="modal-footer">
-				<input type="button" value="Close" data-dismiss="modal"/>
+			<div id="collapse{{r.rideId}}" class="panel-collapse collapse">
+				<div class="panel-body" data-toggle="collapse"
+					data-target="#collapse{{r.rideId}}">
+					<!-- More Info Expanded Section -->
+					<div class="row" style="padding: 2em">
+						<table>
+							<tr>
+								<td>Ride Id:</td>
+								<td>{{r.rideId}}</td>
+							</tr>
+							<tr>
+								<td>Requester:</td>
+								<td>{{r.request.user.fullName}}</td>
+							</tr>
+							<tr>
+								<td>Driver:</td>
+								<td>{{r.availRide.car.user.fullName}}</td>
+							</tr>
+							<tr>
+								<td>Pickup Location:</td>
+								<td>{{r.request.pickupLocation.poiName}}</td>
+							</tr>
+							<tr>
+								<td>Dropoff Location:</td>
+								<td>{{r.request.dropOffLocation.poiName}}</td>
+							</tr>
+							<tr>
+								<td>Complaint:</td>
+								<td>{{r.complaint}}</td>
+							</tr>
+							<tr>
+								<td>Successful?</td>
+								<td>{{r.wasSuccessful}}</td>
+							</tr>
+						</table>
+					</div>
+					<!-- End of Expanded Section -->
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<!--End of Ride History Modal-->

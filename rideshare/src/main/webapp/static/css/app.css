@@ -343,3 +343,7 @@ textarea {
 .panel-body {
 	background-color: #f8f8f8;
 }
+
+.panel-body table tr td:first-child{
+	padding-right: 2em;
+}
