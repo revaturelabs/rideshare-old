@@ -1,5 +1,18 @@
-<div id="map" style="height: 400px; width: 100%;"></div>
+<style>
+   #wrapper { position: relative; }
+   #over_map { position: absolute; top: 10px; left: 10px; z-index: 99; }
+</style>
 
+<div id="wrapper">
+   <div id="map" style="height: 400px; width: 100%;"></div>
+
+   <div id="over_map">
+		<button ng-click="clearMapMarkers()" class="btn btn-primary" >Clear
+		Map</button>
+		<button ng-click="showDirections()" class="btn btn-primary">Directions</button>
+		<h3 id="mapText" style="color: #202020;text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;"></h3>
+   </div>
+</div>
 <div class="container">
 	<div class="row">
 		<div class="col">
@@ -28,14 +41,5 @@
 
 <p id="display"></p>
 
-<div class="container">
-	<button ng-click="getActiveRequests()" class="btn btn-primary">Active
-		Requests</button>
-	<button ng-click="getRequestHistory()" class="btn btn-primary">Request
-		History</button>
-	<button ng-click="clearMapMarkers()" class="btn btn-primary">Clear
-		Map</button>
-	<button ng-click="showDirections()" class="btn btn-primary">Directions</button>
-</div>
-
 <script src="../js/googleMapAPI/markerclusterer.js"></script>
+
