@@ -71,23 +71,15 @@ public class AuthController {
 //	}
 	
 	@RequestMapping("/slack/login")
-	public ResponseEntity<> loginWithSlack(@RequestParam(name="code", required=false) String code,
+	public ResponseEntity<String> loginWithSlack(@RequestParam(name="code", required=false) String code,
 			@RequestParam(name="error", required=false) String error) {
-		if (error == null) {
-			
-		} else {
-			
-		}
+		return null;
 	}
 	
 	@RequestMapping("/slack/integrate")
-	public ResponseEntity<> integrateWithSlack(@RequestParam(name="code", required=false) String code,
+	public ResponseEntity<String> integrateWithSlack(@RequestParam(name="code", required=false) String code,
 			@RequestParam(name="error", required=false) String error) {
-		if (error == null) {
-			
-		} else {
-			
-		}
+		return null;
 	}
 
 	/*
