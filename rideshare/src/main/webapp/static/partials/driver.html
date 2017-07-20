@@ -77,7 +77,7 @@
 
 			<!-- html and angular function used to display open rides -->
 			<ul class="tabbed-list">
-				<li ng-if="activeRides.length == 0">No active rides</li>
+				<li ng-if="activeRides.length == 0 && activeOffer.length == 0">No active rides</li>
 			</ul>
 						
 			<div class="panel-group" id="accordionActive">
@@ -101,6 +101,11 @@
 						Note: {{offer.notes}}
 						<br/>
 						Available Seats: {{offer.seatsAvailable}}
+					</div>
+					<div class="btn-container">
+							<button type="submit" class="btn btn-primary"
+								ng-click="offerCancel(offer.availRideId)">Cancel Offer</button>
+								
 					</div>
 				</div>
 			</div>
