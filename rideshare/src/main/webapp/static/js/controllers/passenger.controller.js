@@ -98,6 +98,7 @@ export let passengerController = function($scope, $http, $state, $location){
 				
 				for(let x = 0; x < markers.length; x++){
 					let id = x+1;
+					document.getElementById("mapText").innerHTML = 'Choose Start Point';
 					
 					// add event listener to each marker on the map
 					markers[x].addListener('click',function(){
@@ -112,6 +113,7 @@ export let passengerController = function($scope, $http, $state, $location){
 						
 						if(poiLimit === 1){
 							markers[x].setIcon('http://earth.google.com/images/kml-icons/track-directional/track-8.png');
+							document.getElementById("mapText").innerHTML = '';
 							
 							let temp2 = 'destination' + id;
 							$scope[temp2] = true;
@@ -121,6 +123,7 @@ export let passengerController = function($scope, $http, $state, $location){
 						
 						if(poiLimit === 0){
 							markers[x].setIcon('http://earth.google.com/images/kml-icons/track-directional/track-8.png');
+							document.getElementById("mapText").innerHTML = 'Choose Destination';
 							
 							let temp1 = 'start' + id;
 							$scope[temp1] = true;
@@ -136,7 +139,8 @@ export let passengerController = function($scope, $http, $state, $location){
 				$scope.clearMapMarkers = function() {
 					poiLimit = 0;
 					directionsDisplay.setMap(null);
-					
+					document.getElementById("mapText").innerHTML = 'Choose Start Point';
+				
 					for(let x = 0; x < markers.length; x++){
 						markers[x].setIcon();
 					}
