@@ -1,15 +1,11 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-<<<<<<< HEAD
-const webpack = require('webpack');
-=======
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
 let source = path.join(__dirname, 'src', 'main', 'webapp', 'static');
 let output = path.join(__dirname, 'src', 'main', 'resources', 'static');
->>>>>>> bdd9514ded8f6453466350cdb63191bfe96a9ca0
 
 module.exports = (env = {}) => {
   let config = {
@@ -18,11 +14,7 @@ module.exports = (env = {}) => {
     // devtool: 'source-map',
     devServer: {
       publicPath: '/',
-<<<<<<< HEAD
-      contentBase: [ path.join(__dirname, 'src', 'main', 'webapp', 'static') ]
-=======
       contentBase: [ path.join(__dirname, 'src', 'main', 'resources', 'static') ]
->>>>>>> bdd9514ded8f6453466350cdb63191bfe96a9ca0
     },
     resolve: {
       extensions: [ '.js' ],
