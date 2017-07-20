@@ -1,16 +1,21 @@
 package com.revature.rideshare.web;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -122,8 +127,9 @@ public class SlackController {
 	
 	@PostMapping("/newride")
 	public void sendRideMessage(){
+		System.out.println("IN NEW RIDE");
 		RestTemplate restTemplate = new RestTemplate();
-        String messageurl="https://hooks.slack.com/services/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";
+        String messageurl="https://hooks.slack.com/services/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";
 		ObjectMapper mapper = new ObjectMapper();
 		// Creating the JSON string
 		ArrayList<Action> actions = new ArrayList<Action>();
@@ -234,9 +240,43 @@ public class SlackController {
 	public void getCheck(){
 		System.out.println("in slack controller");
 	}
+	
 	@PostMapping("/postcheck")
-	public void postCheck(){
+//	@RequestMapping(value = "/postcheck", method = RequestMethod.POST,
+//	        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, 
+//	        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public void postCheck(@RequestBody String request) throws UnsupportedEncodingException{
+		request = URLDecoder.decode(request, "UTF-8");
 		System.out.println("in post slack controller");
+		System.out.println(request);
+		request = request.substring(8);
+		System.out.println(request);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			JsonNode payload = mapper.readTree(request);
+			//String selectedValue = payload.path("selected_options").path("value").asText();
+			String selectedValue = payload.path("actions").path(0).path("selected_options").path(0).path("value").asText();
+			System.out.println("Select Value: " + selectedValue);
+			JsonNode originalMessage = payload.path("original_message");
+			//ObjectNode originalMessage = (ObjectNode) om;
+			//originalMessage.path("attachments").path(0).path("actions").path(0).path("text").
+			System.out.println(originalMessage);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		try {
+//			//Convert object to JSON string
+//			String jsonInString = mapper.writeValueAsString(request);
+//			System.out.println(jsonInString);
+//		} catch (JsonGenerationException e) {
+//			e.printStackTrace();
+//		} catch (JsonMappingException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@RequestMapping(value = "/testslack", method = RequestMethod.GET)
