@@ -261,7 +261,11 @@ public class SlackController {
 			JsonNode originalMessage = payload.path("original_message");
 			//ObjectNode originalMessage = (ObjectNode) om;
 			//originalMessage.path("attachments").path(0).path("actions").path(0).path("text").
+			
+			
 			System.out.println(originalMessage);
+			ObjectNode check = (ObjectNode)originalMessage.get(selectedValue);
+			check.put(selectedValue, v);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
