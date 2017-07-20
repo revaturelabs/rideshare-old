@@ -52,10 +52,6 @@ export let driverController = function($scope, $http, $state){
 		setTimeout(function(){$state.reload();}, 250);
 	}
 
-	$http.get("/ride/offer/open/"+$scope.poiId.id)
-	.then(function(response) {
-		$scope.openRides = response.data;
-	});
 
 	function compare(a,b) {
 		if (a.availRide.availRideId < b.availRide.availRideId)

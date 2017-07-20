@@ -343,3 +343,9 @@ textarea {
 .panel-body {
 	background-color: #f8f8f8;
 }
+
+/**********************
+	Maps
+**********************/
+#wrapper { position: relative; }
+#over_map { position: absolute; top: 10px; left: 10px; z-index: 99; }
