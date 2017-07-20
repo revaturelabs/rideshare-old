@@ -1,14 +1,13 @@
 package com.revature.rideshare.web;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,36 +16,39 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.User;
+import com.revature.rideshare.service.AuthService;
 import com.revature.rideshare.service.UserService;
 
-@RestController
-@RequestMapping("auth")
+//@RestController
+//@RequestMapping("auth")
 public class AuthController {
 
-	// TODO: start using an environment variable when this application is
-	// deployed
-	// @Value("#{systemEnvironment['RIDESHARE_JWT_SECRET']}")
-	private String jwtSecret = "Richie is obsessed with chickens!";
-
-	private String slackAppId = "184219023015.209820937091";
-	private String slackAppSecret = "f69b998afcc9b1043adfa2ffdab49308";
-	private String slackAppToken = "xER6r1Zrr0nxUBdSz7Fyq5UU";
-	private String slackAppTeamId = "T5E6F0P0F"; // for 1705may15java
+	@Value("${slack.identity.client.clientId}")
+	private String slackAppId;
+	@Value("${slack.identity.client.clientSecret}")
+	private String slackAppSecret;
+	@Value("${slack.verificationToken}")
+	private String slackAppVerificationToken;
+	@Value("${slack.teamId}")
+	private String slackAppTeamId;
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	AuthService authService;
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+	
+	public void setAuthService(AuthService authService) {
+		this.authService = authService;
 	}
 
 	@RequestMapping("/check")
@@ -54,9 +56,43 @@ public class AuthController {
 		return principal != null;
 	}
 
+	@RequestMapping("/test")
+	public void testAuthentication(OAuth2Authentication authentication, HttpServletRequest request) {
+//		for (Enumeration<String> headers = request.getHeaderNames(); headers.hasMoreElements();) {
+//			String name = headers.nextElement();
+//			System.out.println(name + ": " + request.getHeader(name));
+//		}
+		
+	}
+	
+//	@RequestMapping("/slack/authorize")
+//	public ResponseEntity<String> redirectToSlack(HttpServletResponse response) {
+//		
+//	}
+	
+	@RequestMapping("/slack/login")
+	public ResponseEntity<> loginWithSlack(@RequestParam(name="code", required=false) String code,
+			@RequestParam(name="error", required=false) String error) {
+		if (error == null) {
+			
+		} else {
+			
+		}
+	}
+	
+	@RequestMapping("/slack/integrate")
+	public ResponseEntity<> integrateWithSlack(@RequestParam(name="code", required=false) String code,
+			@RequestParam(name="error", required=false) String error) {
+		if (error == null) {
+			
+		} else {
+			
+		}
+	}
+
 	/*
-	 * TODO: this method is currently a hackish quick fix, find a better
-	 * solution NOTE: slack user IDs are only unique within a specific team, but
+	 * TODO: this method is currently a hackish quick fix, find a better solution
+	 * NOTE: slack user IDs are only unique within a specific team, but
 	 * team IDs are unique across all of slack
 	 */
 	@RequestMapping("/current")
@@ -83,34 +119,14 @@ public class AuthController {
 
 	@GetMapping("/token")
 	public User getJsonWebToken(OAuth2Authentication authentication, HttpServletResponse response) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			Algorithm alg = Algorithm.HMAC256(jwtSecret);
-			String[] nameTokens = authentication.getName().split(", ");
-			String fullName = nameTokens[0].substring(6);
-			String slackId = nameTokens[1].substring(3);
-			String email = nameTokens[2].substring(6, nameTokens[2].length() - 1);
-			User u = userService.getUserBySlackId(slackId);
-			if (u == null) {
-				u = new User();
-				u.setSlackId(slackId);
-				u.setFullName(fullName);
-				u.setEmail(email);
-				u.setAdmin(false);
-				userService.addUser(u);
-			}
-			String userJson;
-			userJson = mapper.writeValueAsString(u);
-			String token = JWT.create().withIssuer("Revature RideShare").withIssuedAt(new Date())
-					.withAudience("Revature RideShare AngularJS Client").withClaim("user", userJson).sign(alg);
-			System.out.println(token);
-			response.addHeader("token", token);
-			return u;
-		} catch (IllegalArgumentException | UnsupportedEncodingException | JsonProcessingException ex) {
-			ex.printStackTrace();
-			response.addHeader("token", null);
-			return null;
-		}
+		String[] nameTokens = authentication.getName().split(", ");
+//		String fullName = nameTokens[0].substring(6);
+		String slackId = nameTokens[1].substring(3);
+//		String email = nameTokens[2].substring(6, nameTokens[2].length() - 1);
+		String token = authService.createJsonWebToken(slackId);
+		System.out.println(token);
+		response.addHeader("token", token);
+		return u;
 	}
 
 	@RequestMapping("/getCode")
@@ -140,12 +156,8 @@ public class AuthController {
 				u.setSlackId(userId);
 				userService.addUser(u);
 			}
-			Authentication authentication = new PreAuthenticatedAuthenticationToken(u, "blahblahblah"); // can
-			// include
-			// authorities
-			// as
-			// third
-			// parameter
+			Authentication authentication = new PreAuthenticatedAuthenticationToken(u, "blahblahblah");
+			// can include authorities as third parameter
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			destination = "/";
 			response.sendRedirect(destination);
@@ -157,10 +169,6 @@ public class AuthController {
 				e1.printStackTrace();
 			}
 		}
-	}
-
-	private User removeSensitiveInformation(User u) {
-		return null;
 	}
 
 }
