@@ -140,19 +140,21 @@ public class SlackController {
 		// Creating the options and adding them to the list;
 		ArrayList<PointOfInterest> pois = (ArrayList) poiService.getAll();
 		for (PointOfInterest poi : pois) {
-			Option o = new Option(poi.getPoiName(), poi.getPoiName().toLowerCase());
+			Option o = new Option(poi.getPoiName(), poi.getPoiName());
 			options.add(o);
 		}
-//		Option o1 = new Option("Revature", "revature");
-//		Option o2 = new Option("Camden", "camden");
-//		Option o3 = new Option("ICON", "icon");
-//		options.add(o1);
-//		options.add(o2);
-//		options.add(o3);
 		
 		// Creating the first set of actions
 		Action action = new Action("POI", "Pick a destination", "select", options);
 		actions.add(action);
+		
+		// Modifying options of the Action for String delimitation
+		for (int i = 0; i < actions.size(); i++) {
+			ArrayList<Option> actionOptions = actions.get(i).getOptions();
+			for (Option option : actionOptions) {
+				option.setValue("" + i + "-" + option.getValue());
+			}
+		}
 		
 		// Creating the second set of actions
 		Action a1 = new Action("OKAY", "OK", "button", "okay");
@@ -255,17 +257,24 @@ public class SlackController {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			JsonNode payload = mapper.readTree(request);
+			int attachId = payload.path("attachment_id").asInt() - 1;
 			//String selectedValue = payload.path("selected_options").path("value").asText();
 			String selectedValue = payload.path("actions").path(0).path("selected_options").path(0).path("value").asText();
-			System.out.println("Select Value: " + selectedValue);
+			//System.out.println("Select Value: " + selectedValue);
+			String[] positionValue = selectedValue.split("-");
+			int position = Integer.parseInt(positionValue[0]);
+			String value = positionValue[1];
+			
 			JsonNode originalMessage = payload.path("original_message");
+			((ObjectNode)originalMessage.path("attachments").path(attachId).path("actions").path(position)).put("text", value);
 			//ObjectNode originalMessage = (ObjectNode) om;
-			//originalMessage.path("attachments").path(0).path("actions").path(0).path("text").
+			//System.out.println("Text: " + originalMessage.path("attachments").path(0).path("actions").path(0).path("text").asText());
+			//System.out.println(originalMessage);
 			
-			
-			System.out.println(originalMessage);
-			ObjectNode check = (ObjectNode)originalMessage.get(selectedValue);
-			check.put(selectedValue, v);
+			RestTemplate restTemplate = new RestTemplate();
+	        String messageurl = payload.path("response_url").asText();
+	        System.out.println(messageurl);
+	        restTemplate.postForLocation(messageurl, originalMessage.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
