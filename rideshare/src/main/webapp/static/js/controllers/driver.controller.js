@@ -65,7 +65,6 @@ export let driverController = function($scope, $http, $state){
 		return 0;
 	}
 
-	console.log("OUT!!!!!!");
 	$http.get("/ride/offer/active")
 	.then(function(res){
 		$http.get("/ride/offer/open")
