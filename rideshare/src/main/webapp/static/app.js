@@ -14,7 +14,7 @@ import { authService } from './js/auth.service.js'
 //var = function scope
 //const and let = block scope 
 
-const app = angular.module('app', ['ui.router', 'angular-jwt']);
+const app = angular.module('app', ['ui.router', 'angular-jwt', 'ui.bootstrap.datetimepicker']);
 
 app.service('authService', authService);
 
