@@ -1,4 +1,4 @@
-export let passengerController = function($scope, $http, $state, $location){
+export let passengerController = function($scope, $http, $state, $location, $log){
 
 	$scope.getActiveRequests = function() {
 		$http.get('/ride/request/active')
@@ -152,20 +152,26 @@ export let passengerController = function($scope, $http, $state, $location){
 	$scope.isArray = angular.isArray;
 	$scope.rides = {};
 	
+	
+	
+	
 	$http.get("/ride")
 	.then(function(response) {
 		$scope.rides = response.data;
-		
-		$http.get("/user/me")
-		.then(function(response) {
-			if(response.data.mainPOI != null) {
-				$scope.selectedItem = $scope.allPoi[response.data.mainPOI.poiId-1];
-			}
-			else {
-				$scope.selectedItem = $scope.allPoi[0];
-			}
-		});
+		return $http.get("/poiController");
+	})
+	.then(function(response) {
+		$scope.allPoi = response.data;
+		return $http.get("/user/me");
+	})
+	.then(function(response){
+		if(response.data.mainPOI != null) {
+			$scope.selectedItem = $scope.allPoi[response.data.mainPOI.poiId-1];
+		} else {
+			$scope.selectedItem = $scope.allPoi[0];
+		}
 	});
+		
 
 	// Setting mPOI in case a user does not have a mPOI.
 	$scope.poiId = {id : 1};
@@ -189,9 +195,18 @@ export let passengerController = function($scope, $http, $state, $location){
 		$scope.openOffer = response.data;
 	});
 
+	$http.get("/ride/request/active")
+	.then(function(response){
+		$scope.activeRides = response.data;
+	});
+
+	$http.get("/ride/request/history")
+	.then(function(response){
+		$scope.pastRides = response.data;
+	});
+
 	// accept open offers
 	$scope.acceptOffer = function(id){
-
 
 		$http.get("/ride/offer/accept/"+id)
 		.then(function(response) {
@@ -201,6 +216,20 @@ export let passengerController = function($scope, $http, $state, $location){
 		$state.reload();
 	}
 
+	$scope.cancelRequest = function(rideId) {
+		$http.get('/ride/request/cancel/' + rideId).then((response) => {
+			for(let i = 0; i < $scope.activeRides.length; i++){
+				if($scope.activeRides[i].rideId == rideId) {
+					$scope.activeRides.splice(i, 1);
+					$scope.$apply;
+				}
+			}
+
+			$state.reload();
+		});
+	};
+	
+	
 	function compare(a,b) {
 		if (a.request.requestId < b.request.requestId)
 			return -1;
@@ -208,29 +237,6 @@ export let passengerController = function($scope, $http, $state, $location){
 			return 1;
 		return 0;
 	}
-
-	$http.get("/ride/request/active")
-	.then(function(response){
-		organizeData(response, "active");
-		});
-
-	$http.get("/ride/request/history")
-	.then(function(response){
-		organizeData(response, "history");
-		});
-
-	$scope.Cancel = function(activeRideId) {
-		$http.get('/ride/request/cancel/' + activeRideId).then(
-				(response) => {
-					for(let i = 0; i < $scope.activeRides.length; i++){
-						if($scope.activeRides[i].request.requestId == activeRideId) {
-							$scope.activeRides.splice(i, 1);
-							$scope.$apply;
-						}
-					}
-				}
-		);
-	};
 	
 	/*
 	 * Organizes Ride list data by combining RideRequests with matching AvailableRide objects.
