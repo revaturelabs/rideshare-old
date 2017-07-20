@@ -2,27 +2,27 @@ package com.revature.rideshare.security;
 
 import java.util.Collection;
 
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
-public class RideshareAuthenticationToken extends AbstractAuthenticationToken {
+import com.revature.rideshare.domain.User;
+
+public class RideshareAuthenticationToken extends PreAuthenticatedAuthenticationToken {
 	
 	private static final long serialVersionUID = 3885076944142687221L;
 	
 	private String principal;
-	private UserDetails details;
+	private String credentials;
 	
-	public RideshareAuthenticationToken(String principal, UserDetails user, Collection<? extends GrantedAuthority> authorities) {
-		super(authorities);
-		this.details = user;
-		this.principal = principal;
+	public RideshareAuthenticationToken(String slackId, String credentials, UserDetails user, Collection<? extends GrantedAuthority> authorities) {
+		super(slackId, credentials, authorities);
+		super.setDetails(user);
 	}
 
 	@Override
 	public Object getCredentials() {
-		// TODO Auto-generated method stub
-		return null;
+		return credentials;
 	}
 
 	@Override
@@ -32,22 +32,16 @@ public class RideshareAuthenticationToken extends AbstractAuthenticationToken {
 
 	@Override
 	public void eraseCredentials() {
-		// TODO Auto-generated method stub
 		super.eraseCredentials();
+		this.credentials = null;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return super.getName();
 	}
-
-	@Override
-	public void setDetails(Object details) {
-		// TODO Auto-generated method stub
-		super.setDetails(details);
+	
+	public User getUser() {
+		return (User) super.getDetails();
 	}
-	
-	
-
 }

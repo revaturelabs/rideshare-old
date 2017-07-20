@@ -57,8 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.clearAuthentication(true)
 				.invalidateHttpSession(true)
 				.permitAll()
-			.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-			.and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+			.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+//			.and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 	}
 	
 	@Override
@@ -67,35 +67,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/partials/error.html");
 	}
 
-	private Filter ssoFilter() {
-		OAuth2ClientAuthenticationProcessingFilter slackFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/slack");
-		OAuth2RestTemplate slackTemplate = new OAuth2RestTemplate(slack(), oauth2ClientContext);
-		slackFilter.setRestTemplate(slackTemplate);
-		UserInfoTokenServices tokenServices = new UserInfoTokenServices(slackIdentityResource().getUserInfoUri(), slack().getClientId());
-		tokenServices.setRestTemplate(slackTemplate);
-		slackFilter.setTokenServices(tokenServices);
-		return slackFilter;
-	}
-	@Bean
-	@ConfigurationProperties("slack.client")
-	public AuthorizationCodeResourceDetails slack() {
-		return new AuthorizationCodeResourceDetails();
-	}
-	@Bean
-	@ConfigurationProperties("slack.resource.identity")
-	public ResourceServerProperties slackIdentityResource() {
-		return new ResourceServerProperties();
-	}
-	@Bean
-	@ConfigurationProperties("slack.resource.profile")
-	public ResourceServerProperties slackProfileResource() {
-		return new ResourceServerProperties();
-	}
-	@Bean
-	public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
-		FilterRegistrationBean registration = new FilterRegistrationBean();
-		registration.setFilter(filter);
-		registration.setOrder(-100);
-		return registration;
-	}
+//	private Filter ssoFilter() {
+//		OAuth2ClientAuthenticationProcessingFilter slackFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/slack");
+//		OAuth2RestTemplate slackTemplate = new OAuth2RestTemplate(slack(), oauth2ClientContext);
+//		slackFilter.setRestTemplate(slackTemplate);
+//		UserInfoTokenServices tokenServices = new UserInfoTokenServices(slackIdentityResource().getUserInfoUri(), slack().getClientId());
+//		tokenServices.setRestTemplate(slackTemplate);
+//		slackFilter.setTokenServices(tokenServices);
+//		return slackFilter;
+//	}
+//	@Bean
+//	@ConfigurationProperties("slack.client")
+//	public AuthorizationCodeResourceDetails slack() {
+//		return new AuthorizationCodeResourceDetails();
+//	}
+//	@Bean
+//	@ConfigurationProperties("slack.resource.identity")
+//	public ResourceServerProperties slackIdentityResource() {
+//		return new ResourceServerProperties();
+//	}
+//	@Bean
+//	@ConfigurationProperties("slack.resource.profile")
+//	public ResourceServerProperties slackProfileResource() {
+//		return new ResourceServerProperties();
+//	}
+//	@Bean
+//	public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
+//		FilterRegistrationBean registration = new FilterRegistrationBean();
+//		registration.setFilter(filter);
+//		registration.setOrder(-100);
+//		return registration;
+//	}
 }

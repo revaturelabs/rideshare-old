@@ -6,6 +6,8 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -23,12 +25,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.exception.SlackApiException;
+import com.revature.rideshare.security.RideshareAuthenticationToken;
 import com.revature.rideshare.service.AuthService;
 import com.revature.rideshare.service.UserService;
 
 //@RestController
 //@RequestMapping("auth")
 public class AuthController {
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Value("${slack.identity.client.clientId}")
 	private String slackAppId;
@@ -105,6 +110,15 @@ public class AuthController {
 			try {
 				User u = authService.getUserAccount(code);
 				String token = authService.createJsonWebToken(u);
+				String slackId = u.getSlackId();
+				RideshareAuthenticationToken auth = new RideshareAuthenticationToken(slackId, token, u, u.getAuthorities());
+				auth.setAuthenticated(true);
+				SecurityContextHolder.getContext().setAuthentication(auth);
+				HttpHeaders successHeaders = new HttpHeaders();
+				String url = rideshareUrl + "/";
+				successHeaders.add("Location", url);
+				successHeaders.add("rideshare-token", token);
+				response = new ResponseEntity<String>(successHeaders, HttpStatus.SEE_OTHER);
 			} catch (SlackApiException ex) {
 				// do logging here
 			}
