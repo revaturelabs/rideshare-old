@@ -184,7 +184,6 @@ export let driverController = function($scope, $http, $state){
 					}
 				}
 			}
-			console.log($scope.activeOffers);
 		}
 		else if (reqString == "history") {
 			$scope.pastRides = listReq;
