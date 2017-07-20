@@ -8,12 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.User;
+import com.revature.rideshare.exception.SlackApiException;
 import com.revature.rideshare.service.AuthService;
 import com.revature.rideshare.service.UserService;
 
@@ -68,40 +70,58 @@ public class AuthController {
 	}
 	
 	@RequestMapping("/slack/authorize")
-	public ResponseEntity<String> redirectToSlack(@RequestParam(name="integrate") Boolean integrate, HttpServletResponse response) {
+	public ResponseEntity<String> redirectToSlack(@RequestParam(name="integrate") Boolean integrate) {
+		ResponseEntity<String> response = null;
 		if (integrate) {
 			String url = "https://slack.com/oauth/authorize?"
 					+ "client_id=" + slackAppId
 					+ "&team=" + slackAppTeamId
 					+ "&scope=incoming-webhook,commands"
 					+ "&redirect_uri=" + rideshareUrl + "/auth/slack/integrate";
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Location", url);
+			response = new ResponseEntity<String>(headers, HttpStatus.SEE_OTHER);
 		} else {
 			String url = "https://slack.com/oauth/authorize?"
 					+ "client_id=" + slackAppId
 					+ "&team=" + slackAppTeamId
 					+ "&scope=identity.basic,identity.email,identity.team"
 					+ "&redirect_uri=" + rideshareUrl + "/auth/slack/login";
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Location", url);
+			response = new ResponseEntity<String>(headers, HttpStatus.SEE_OTHER);
 		}
+		return response;
 	}
 	
 	@RequestMapping("/slack/login")
-	public ResponseEntity<> loginWithSlack(@RequestParam(name="code", required=false) String code,
+	public ResponseEntity<String> loginWithSlack(@RequestParam(name="code", required=false) String code,
 			@RequestParam(name="error", required=false) String error) {
-		if (error == null) {
-			
-		} else {
-			
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("WWW-Authenticate", "Bearer realm='Revature RideShare application'");
+		String body = "{slack_error: " + error + "}";
+		ResponseEntity<String> response = new ResponseEntity<String>(body, headers, HttpStatus.UNAUTHORIZED);
+		if (code != null) {
+			try {
+				User u = authService.getUserAccount(code);
+			} catch (SlackApiException ex) {
+				// do logging here
+			}
 		}
+		return response;
 	}
 	
 	@RequestMapping("/slack/integrate")
-	public ResponseEntity<> integrateWithSlack(@RequestParam(name="code", required=false) String code,
+	public ResponseEntity<String> integrateWithSlack(@RequestParam(name="code", required=false) String code,
 			@RequestParam(name="error", required=false) String error) {
-		if (error == null) {
-			
-		} else {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("WWW-Authenticate", "Bearer realm='Revature RideShare application'");
+		String body = "{slack_error: " + error + "}";
+		ResponseEntity<String> response = new ResponseEntity<String>(body, headers, HttpStatus.UNAUTHORIZED);
+		if (code != null) {
 			
 		}
+		return response;
 	}
 
 	/*

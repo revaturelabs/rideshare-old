@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
 	 * use this when dealing with requesting the identity scopes to authenticate a user
 	 */
 	@Override
-	public String getSlackAccessToken(String code) throws SlackApiException {
+	public String getSlackAccessToken(String code) {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
@@ -104,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
 	 * use this when requesting the incoming-webhook and commands scopes to integrate with slack
 	 */
 	@Override
-	public JsonNode getSlackAccessResponse(String code) throws SlackApiException {
+	public JsonNode getSlackAccessResponse(String code) {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -123,7 +123,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public String getUserIdentity(String token) throws SlackApiException {
+	public String getUserIdentity(String token) {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
@@ -143,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public JsonNode getUserProfile(String token, String slackId) throws SlackApiException {
+	public JsonNode getUserProfile(String token, String slackId) {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -164,7 +164,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public JsonNode getUserInfo(String token, String slackId) throws SlackApiException {
+	public JsonNode getUserInfo(String token, String slackId) {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -184,53 +184,43 @@ public class AuthServiceImpl implements AuthService {
 		return result;
 	}
 	
-//	/*
-//	 * Implementation of the method from the UserDetailsService interface.
-//	 * The username in this implementation is actually a user's slackId
-//	 */
-//	@Override
-//	public UserDetails loadUserByUsername(String slackId) throws UsernameNotFoundException {
-//		return null;
-//	}
-	
 	@Override
-	public User authenticateUser(String code) throws SlackApiException {
-		return null;
+	public User getUserAccount(String code) throws SlackApiException {
+		User result = null;
+		String token = getSlackAccessToken(code);
+		if (token != null) {
+			String slackId = getUserIdentity(token);
+			if (slackId != null) {
+				JsonNode userInfo = getUserInfo(token, slackId);
+				User u = userService.getUserBySlackId(slackId);
+				if (u == null) {
+					u = new User();
+					u.setSlackId(slackId);
+					u.setAdmin(false);
+					u.setEmail(userInfo.path("profile").path("email").asText());
+					u.setFirstName(userInfo.path("profile").path("first_name").asText());
+					u.setLastName(userInfo.path("profile").path("last_name").asText());
+					u.setFullName(userInfo.path("real_name").asText());
+					u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
+					u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
+					u.setBanned(false);
+					userService.addUser(u);
+				} else {
+					u.setEmail(userInfo.path("profile").path("email").asText());
+					u.setFirstName(userInfo.path("profile").path("first_name").asText());
+					u.setLastName(userInfo.path("profile").path("last_name").asText());
+					u.setFullName(userInfo.path("real_name").asText());
+					userService.updateUser(u);
+				}
+				result = u;
+			} else {
+				throw new SlackApiException("Failed to retrieve user's Slack id");
+			}
+		} else {
+			throw new SlackApiException("Failed to retrieve access token from Slack");
+		}
+		return result;
 	}
-	
-//	@Override
-//	public User getAuthenticatedUser(String code) throws SlackApiException {
-//		User result = null;
-//		String token = getSlackAccessToken(code);
-//		if (token != null) {
-//			String slackId = getUserIdentity(token);
-//			if (slackId != null) {
-//				JsonNode userInfo = getUserInfo(token, slackId);
-//				User u = userService.getUserBySlackId(slackId);
-//				if (u == null) {
-//					u = new User();
-//					u.setSlackId(slackId);
-//					u.setAdmin(false);
-//					u.setEmail(userInfo.path("profile").path("email").asText());
-//					u.setFirstName(userInfo.path("profile").path("first_name").asText());
-//					u.setLastName(userInfo.path("profile").path("last_name").asText());
-//					u.setFullName(userInfo.path("real_name").asText());
-//					u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
-//					u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
-//					u.setBanned(false);
-//					userService.addUser(u);
-//				} else {
-//					u.setEmail(userInfo.path("profile").path("email").asText());
-//					u.setFirstName(userInfo.path("profile").path("first_name").asText());
-//					u.setLastName(userInfo.path("profile").path("last_name").asText());
-//					u.setFullName(userInfo.path("real_name").asText());
-//					userService.updateUser(u);
-//				}
-//				result = u;
-//			}
-//		}
-//		return result;
-//	}
 	
 	@Override
 	public User integrateUser(String code) throws SlackApiException {
@@ -267,9 +257,11 @@ public class AuthServiceImpl implements AuthService {
 					userService.updateUser(u);
 				}
 				result = u;
+			} else {
+				throw new SlackApiException("Did not recieve an ok from Slack");
 			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			throw new SlackApiException(ex.getMessage());
 		}
 		return result;
 	}

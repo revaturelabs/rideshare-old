@@ -44,13 +44,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.portMapper().http(Integer.parseInt(httpPort)).mapsTo(Integer.parseInt(httpsPort));
-//		http.portMapper().http(8080).mapsTo(8443);
 
 //		http.requiresChannel().antMatchers("/**").requiresSecure();
 		
 		http.authorizeRequests()
 				.antMatchers("/admin**").hasRole("ADMIN")
-				.antMatchers("/login**", "/app.bundle.js", "/css", "/images", "/partials/slackLogin.html", "/auth/check").permitAll()
+				.antMatchers("/login**", "/auth/check").permitAll()
 				.anyRequest().authenticated()
 			.and().logout()
 				.logoutUrl("/logout")
@@ -64,7 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/css", "/images", "/slack");
+		web.ignoring().antMatchers("/css", "/images", "/slack", "/app.bundle.js", "/partials/slackLogin.html",
+				"/partials/error.html");
 	}
 
 	private Filter ssoFilter() {
