@@ -31,7 +31,8 @@
     "@uirouter/angularjs": "^1.0.5",
     "@uirouter/core": "^5.0.5",
     "angular": "^1.6.5",
-    "angular-jwt": "^0.1.9"
+    "angular-jwt": "^0.1.9",
+    "angular-bootstrap-datetimepicker": "^1.1.4"
   },
   "devDependencies": {
     "@uirouter/visualizer": "^4.0.0",
