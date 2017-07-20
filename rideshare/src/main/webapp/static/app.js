@@ -9,19 +9,21 @@ import { adminRidesController } from './js/controllers/adminRides.controller.js'
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
 import { userProfileController } from './js/controllers/userProfile.controller.js';
-import { authProvider } from './js/auth.provider.js'
+import { authService } from './js/auth.service.js'
 
 //var = function scope
 //const and let = block scope 
 
 const app = angular.module('app', ['ui.router', 'angular-jwt']);
 
-app.run(function(authManager, $http) {
+app.service('authService', authService);
+
+app.run(function(authManager, authService) {
 	authManager.checkAuthOnRefresh();
 	authManager.redirectWhenUnauthenticated();
 });
 
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider, authService){
 	
 	jwtOptionsProvider.config({
 		loginPath: '/#/login',
