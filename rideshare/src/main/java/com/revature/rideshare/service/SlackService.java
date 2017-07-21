@@ -58,40 +58,19 @@ public class SlackService{
 		ArrayList<Action> actions2 = new ArrayList<Action>();
 		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
 		ArrayList<Option> options = new ArrayList<Option>();
-		
-		// Creating the options and adding them to the list;
-		ArrayList<PointOfInterest> pois = (ArrayList) poiService.getAll();
-		for (PointOfInterest poi : pois) {
-			Option o = new Option(poi.getPoiName(), poi.getPoiName());
-			options.add(o);
-		}
-		
-		// Creating the first set of actions
-		Action action = new Action("POI", "Pick a destination", "select", options);
-		actions.add(action);
-		
-		// Modifying options of the Action for String delimitation
-		for (int i = 0; i < actions.size(); i++) {
-			ArrayList<Option> actionOptions = actions.get(i).getOptions();
-			for (Option option : actionOptions) {
-				option.setValue("" + i + "-" + option.getValue());
-			}
-		}
-		
-		// Creating the second set of actions
-		Action a1 = new Action("OKAY", "OK", "button", "okay");
-		Action a2 = new Action("cancel", "CANCEL", "button", "cancel");
-		actions2.add(action);
-		actions2.add(a1);
-		actions2.add(a2);
+		String callbackId = "newRideMessage";
 		
 		// Creating the attachments
-		Attachment attachment = new Attachment("From Destination", "Unable to decide", "newRideMessage", "#3AA3E3", "default", actions); 
-		Attachment attachment2 = new Attachment("To Destination", "Unable to decide", "newRideMessage", "#3AA3E3", "default", actions2); 
-		attachments.add(attachment);
-		attachments.add(attachment2);
+		Attachment fromPOIAttachment = createPOIAttachment("From Destination", callbackId);
+		Attachment toPOIAttachment = createPOIAttachment("To Destination", callbackId);
+		
+		attachments.add(createTimeAttachment(callbackId));
+		attachments.add(fromPOIAttachment);
+		attachments.add(toPOIAttachment);
+		attachments.add(createConfirmationButtonsAttachment(callbackId));
 		
 		SlackJSONBuilder rr = new SlackJSONBuilder(userId, "Ride request for " + date, "in_channel", attachments);
+		rr.addDelimiters();
 		
 		String rideMessage = "";
 		try {
@@ -100,6 +79,74 @@ public class SlackService{
 			e.printStackTrace();
 		}
 		return rideMessage;
+	}
+	
+	public Attachment createTimeAttachment(String callbackId) {
+		ArrayList<Option> hourOptions = new ArrayList<Option>();
+		ArrayList<Option> minuteOptions = new ArrayList<Option>();
+		ArrayList<Option> meridians = new ArrayList<Option>();
+		ArrayList<Action> actions = new ArrayList<Action>();
+		
+		for (int i = 1; i <= 12; i++) {
+			Option o = new Option(Integer.toString(i), Integer.toString(i));
+			hourOptions.add(o);
+		}
+		
+		for (int i = 0; i <= 45; i = i + 15) {
+			Option o;
+			if (i == 0) 
+				o = new Option(Integer.toString(i) + "0", Integer.toString(i) + "0");
+			else
+				o = new Option(Integer.toString(i), Integer.toString(i));
+			minuteOptions.add(o);
+		}
+		
+		Option am = new Option("AM", "AM");
+		Option pm = new Option("PM", "PM");
+		meridians.add(am);
+		meridians.add(pm);
+		
+		Action hourAction = new Action("Hour", "hour", "select", hourOptions);
+		Action minuteAction = new Action("Minute", "minute", "select", minuteOptions);
+		Action meridianAction = new Action("Meridian", "AM/PM", "select", meridians);
+		actions.add(hourAction);
+		actions.add(minuteAction);
+		actions.add(meridianAction);
+		
+		Attachment timeAttachment = new Attachment("Select a Time", "Unable to decide", callbackId, "#3AA3E3", "default", actions);
+		
+		return timeAttachment;
+	}
+	
+	public Attachment createPOIAttachment(String text, String callbackId) {
+		ArrayList<Action> actions = new ArrayList<Action>();
+		ArrayList<Option> poiOptions = new ArrayList<Option>();
+		
+		ArrayList<PointOfInterest> pois = (ArrayList) poiService.getAll();
+		for (PointOfInterest poi : pois) {
+			Option o = new Option(poi.getPoiName(), poi.getPoiName());
+			poiOptions.add(o);
+		}
+		
+		Action action = new Action("POI", "Pick a destination", "select",poiOptions);
+		actions.add(action);
+		
+		Attachment attachment = new Attachment(text, "Unable to decide", "newRideMessage", "#3AA3E3", "default", actions);
+		
+		return attachment;
+	}
+	
+	public Attachment createConfirmationButtonsAttachment(String callbackId) {
+		ArrayList<Action> actions = new ArrayList<Action>();
+		
+		Action okayButton = new Action("OKAY", "OK", "button", "okay");
+		Action cancelButton = new Action("cancel", "CANCEL", "button", "cancel");
+		actions.add(okayButton);
+		actions.add(cancelButton);
+		
+		Attachment buttonAttachment = new Attachment("Unable to display confirmation buttons", callbackId, "#3AA3E3", "default", actions);
+		
+		return buttonAttachment;
 	}
 	
 	public boolean isMessageActionable(JsonNode payload) {

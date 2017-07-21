@@ -67,6 +67,14 @@ public class Attachment {
 		this.attachment_type = attachment_type;
 		this.actions = actions;
 	}
+	
+	public Attachment(String fallback, String callback_id, String color, String attachment_type, ArrayList actions) {
+		this.fallback = fallback;
+		this.callback_id = callback_id;
+		this.color = color;
+		this.attachment_type = attachment_type;
+		this.actions = actions;
+	}
 
 	/**
 	 * Get the text of the attachment

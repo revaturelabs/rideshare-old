@@ -158,6 +158,24 @@ public class SlackJSONBuilder {
 		this.ts = ts;
 	}
 
+	public void addDelimiters() {
+		for (Attachment attachment : this.attachments) {
+			ArrayList<Action> actions = attachment.getActions();
+			System.out.println("PRE-PRINT");
+			System.out.println(actions.toString());
+			for (int i = 0; i < actions.size(); i++) {
+				if (actions.get(i).getType().equals("select")) {
+					ArrayList<Option> actionOptions = actions.get(i).getOptions();
+					for (Option option : actionOptions) {
+						option.setValue("" + i + "-" + option.getValue());
+					}
+				}
+			}
+			System.out.println("POST-PRINT");
+			System.out.println(actions.toString());
+		}
+	}
+	
 	/**
 	 * String representation of the Request message.
 	 */
