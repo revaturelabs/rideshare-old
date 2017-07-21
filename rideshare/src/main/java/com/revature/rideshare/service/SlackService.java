@@ -21,6 +21,8 @@ import com.revature.rideshare.domain.AvailableRide;
 import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.PointOfInterest;
 import com.revature.rideshare.domain.Ride;
+import com.revature.rideshare.domain.RideRequest;
+import com.revature.rideshare.domain.RideRequest.RequestStatus;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.json.Action;
 import com.revature.rideshare.json.Attachment;
@@ -151,7 +153,7 @@ public class SlackService{
 	public Attachment createSeatsAttachment(String callbackId){
 		ArrayList<Option> seatOptions = new ArrayList<Option>();
 		ArrayList<Action> actions = new ArrayList<Action>();
-		for(int i=0;i<5;i++){
+		for(int i=1;i<5;i++){
 			Option o = new Option(Integer.toString(i),Integer.toString(i));
 			seatOptions.add(o);
 		}
@@ -162,7 +164,7 @@ public class SlackService{
 	}
 
 	@SuppressWarnings("deprecation")
-	public AvailableRide createRideByMessage(JsonNode payload){
+	public String createRideByMessage(JsonNode payload){
 		String message = payload.path("original_message").toString();
 		String userId = payload.path("user").path("id").asText();
 		User user = userService.getUserBySlackId(userId);
@@ -190,13 +192,14 @@ public class SlackService{
 				availableRide.setPickupPOI(pickupPOI);
 				availableRide.setDropoffPOI(dropoffPOI);
 				availableRide.setSeatsAvailable(seatsAvailable);
-				availableRide.setOpen(false);
+				availableRide.setOpen(true);
 				availableRide.setTime(time);
 				availableRide.setNotes("");
 				System.out.println(availableRide);
 				availableRideRepo.saveAndFlush(availableRide);
-//				System.out.println(worked);
-				return availableRide;
+				String confirmationMessage = "Your ride for " + time.toString()
+					+ " from " + pickupName + " to " + dropoffName +" with "+seatsAvailable+" seats  has been created";
+				return confirmationMessage;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -207,25 +210,6 @@ public class SlackService{
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
-	public Date createRideDate(String dateString,String hour,String minute,String meridian){
-		int currentYear=new Date().getYear();
-		int month = Integer.parseInt(dateString.split("/")[0])-1;
-		int day = Integer.parseInt(dateString.split("/")[1]);
-		int startHour = Integer.parseInt(hour);
-		int startMinute = Integer.parseInt(minute);
-		if(meridian.equals("AM")){
-			if(startHour==12){
-				startHour=0;
-			}
-		}else if(meridian.equals("PM")){
-			if(startHour<12){
-				startHour=startHour+12;
-			}
-		}
-		Date time = new Date(currentYear,month,day,startHour,startMinute);
-		return time;
-	}
 
 	/**
 	 * Creates a request confirmation message that contains the values that the user selected
@@ -233,11 +217,11 @@ public class SlackService{
 	 * @param payload, the slack payload
 	 * @return the confirmation message
 	 */
-	public String createRequestConfirmation(JsonNode payload) {
+	public String createRequestByMessage(JsonNode payload) {
 		String userId = payload.path("user").path("id").asText();
 		String message = payload.path("original_message").toString();
 		ObjectMapper mapper = new ObjectMapper();
-
+		User user = userService.getUserBySlackId(userId);
 
 		System.out.println("User ID: " + userId);
 		System.out.println("Message: " + message);
@@ -254,6 +238,13 @@ public class SlackService{
 			Date time = createRideDate(date, hour, minutes, meridian);
 			String fromPOI = values.get(4);
 			String toPOI = values.get(5);
+			RideRequest rideRequest = new RideRequest();
+			rideRequest.setUser(user);
+			rideRequest.setStatus(RequestStatus.OPEN);
+			rideRequest.setPickupLocation(poiService.getPoi(fromPOI));
+			rideRequest.setDropOffLocation(poiService.getPoi(toPOI));
+			rideRequest.setTime(time);
+			rideService.addRequest(rideRequest);
 			String confirmationMessage = "Your ride request for " + time.toString()
 										+ " from " + fromPOI + " to " + toPOI + " has been created";
 			return confirmationMessage;
@@ -261,7 +252,6 @@ public class SlackService{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 
@@ -369,6 +359,19 @@ public class SlackService{
 		return buttonAttachment;
 	}
 
+	public String handleMessage(JsonNode payload){
+		String callbackId=payload.path("callback_id").asText();
+		switch(callbackId){
+		case("newRideMessage"):
+			return createRideByMessage(payload);
+		
+		case("newRequestMessage"):
+			return createRequestByMessage(payload);		
+		default:
+			return "Message does not match any known callbackid";
+		}
+	}
+	
 	public boolean isMessageActionable(JsonNode payload) {
 		String callbackId = payload.path("callback_id").asText();
 		String currentMessage = payload.path("original_message").toString();
