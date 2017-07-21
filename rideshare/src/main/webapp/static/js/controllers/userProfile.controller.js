@@ -1,11 +1,16 @@
-export let userProfileController = function ($scope, $http, $state){
-	$scope.allpois = {}; 
-	$scope.user = {}; 
+export let userProfileController = function ($scope, $http, $state) {
+	$scope.allpois = {};
+	$scope.user = {};
 	$scope.car = {};
 	$scope.buttonText = '';
 	$scope.mainPoiOption = {};
 	$scope.workPoiOption = {};
-	
+
+	// enable bootstrap popovers on click 
+	$(document).ready(function () {
+		$('[data-toggle="popover"]').popover();
+	});
+
 	// Retrieve user's information
 	$http.get("user/me", $scope.user)
 		.then((response) => {
@@ -13,38 +18,38 @@ export let userProfileController = function ($scope, $http, $state){
 			// floating around on the client side. Should some information
 			// be withheld in Java User controller?
 			$scope.user = response.data;
-			
+
 			return $scope.getPois($scope, $http);
 		}),
 		(failedResponse) => {
 			alert('Failed to get user\'s information');
 		}
-	
+
 	//retrieve all pois
-	$scope.getPois = function($scope, $http) {
+	$scope.getPois = function ($scope, $http) {
 		$http.get("/poiController")
-		.then(function (response){
-			$scope.allpois = response.data;
-		})
-		// Set 
-		.then(function() {
-			for(var i = 0; i < $scope.allpois.length; i++) {
-				if($scope.user.mainPOI.poiId == $scope.allpois[i].poiId) {
-					$scope.mainPoiOption = $scope.allpois[i];
+			.then(function (response) {
+				$scope.allpois = response.data;
+			})
+			// Set 
+			.then(function () {
+				for (var i = 0; i < $scope.allpois.length; i++) {
+					if ($scope.user.mainPOI.poiId == $scope.allpois[i].poiId) {
+						$scope.mainPoiOption = $scope.allpois[i];
+					}
+					if ($scope.user.workPOI.poiId == $scope.allpois[i].poiId) {
+						$scope.workPoiOption = $scope.allpois[i];
+					}
 				}
-				if($scope.user.workPOI.poiId == $scope.allpois[i].poiId) {
-					$scope.workPoiOption = $scope.allpois[i];
-				}
-			}
-		});
+			});
 	}
-	
+
 	// retrieve the user's current car
 	$http.get("/car/myCar", $scope.car)
 		.then((response) => {
 			$scope.car = response.data;
 
-			if($scope.car === '') {
+			if ($scope.car === '') {
 				$scope.buttonText = 'Add Car';
 			}
 			else {
@@ -52,52 +57,52 @@ export let userProfileController = function ($scope, $http, $state){
 			}
 		},
 		(failedResponse) => {
-			alert('failure'); 
+			alert('failure');
 		})
-	
+
 	// how get poi from selected option 
 	// set the pois to the user 
-	$scope.setPois = function(){  
+	$scope.setPois = function () {
 		$scope.user.mainPOI = $scope.mainPoiOption;
 		$scope.user.workPOI = $scope.workPoiOption;
-		
+
 		$http.post("/user/updateCurrentUser", $scope.user)
-		.then((formResponse) => {
-			$state.go('main.userProfile');
-		},
-		(failedResponse) => {
-			alert('failure in setPois');
-		})
+			.then((formResponse) => {
+				$state.go('main.userProfile');
+			},
+			(failedResponse) => {
+				alert('failure in setPois');
+			})
 	}
-	
-	$scope.addCar = function() {
+
+	$scope.addCar = function () {
 		$http.post('/car', $scope.car).then(
 			(formResponse) => {
 				$scope.buttonText = 'Edit Car';
-				
+
 				// Reloading the view stops the user from adding a new car
 				// after deleting a car.
-			    $state.reload('main.userProfile');
+				$state.reload('main.userProfile');
 			},
 			(failedResponse) => {
-			    alert('Failure in addCar');
+				alert('Failure in addCar');
 			}
 		)
 	}
-	
-	$scope.updateCar = function() {
-		
+
+	$scope.updateCar = function () {
+
 		$http.post('/car/updateCar', $scope.car).then(
-				(formResponse) => {
-				    $state.go('main.userProfile');
-				},
-				(failedResponse) => {
-				    alert('Failure in updateCar');
-				}
-			)
+			(formResponse) => {
+				$state.go('main.userProfile');
+			},
+			(failedResponse) => {
+				alert('Failure in updateCar');
+			}
+		)
 	}
-	
-	$scope.removeCar = function(){
+
+	$scope.removeCar = function () {
 		$http.post("/car/removeCar", $scope.car)
 			.then((response) => {
 				$scope.buttonText = 'Add Car';
