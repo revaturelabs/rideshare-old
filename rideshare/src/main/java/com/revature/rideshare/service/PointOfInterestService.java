@@ -54,4 +54,8 @@ public class PointOfInterestService {
 	public PointOfInterest getPoi(int id) {
 		return poiRepo.findBypoiId(id);
 	}
+	
+	public PointOfInterest getPoi(String name){
+		return poiRepo.findBypoiName(name);
+	}
 }

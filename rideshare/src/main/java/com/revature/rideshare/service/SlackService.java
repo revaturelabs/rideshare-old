@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -16,8 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.revature.rideshare.dao.AvailableRideRepository;
 import com.revature.rideshare.dao.RideRepository;
 import com.revature.rideshare.dao.RideRequestRepository;
+import com.revature.rideshare.domain.AvailableRide;
+import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.PointOfInterest;
 import com.revature.rideshare.domain.Ride;
+import com.revature.rideshare.domain.User;
 import com.revature.rideshare.json.Action;
 import com.revature.rideshare.json.Attachment;
 import com.revature.rideshare.json.Option;
@@ -31,7 +35,16 @@ public class SlackService{
 	
 	@Autowired
 	private RideRepository rideRepo;
+	
+	@Autowired
+	private RideService rideService;
 
+	@Autowired
+	private CarService carService;
+	
+	@Autowired
+	private UserService userService;
+	
 	@Autowired
 	private RideRequestRepository rideReqRepo;
 
@@ -40,6 +53,18 @@ public class SlackService{
 
 	@Autowired
 	private PointOfInterestService poiService;
+	
+	public void setCarService(CarService carService) {
+		this.carService = carService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	public void setRideService(RideService rideService) {
+		this.rideService = rideService;
+	}
 
 	public void setRideRepo(RideRepository rideRepo) {
 		this.rideRepo = rideRepo;
@@ -136,23 +161,69 @@ public class SlackService{
 		return seatsAttachment;
 	}
 	
-	public Ride createRideByMessage(String message){
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			ArrayList<String> strings=new ArrayList<String>();
-			SlackJSONBuilder slackMessage = mapper.readValue(message, SlackJSONBuilder.class);
-			strings=getTextFields(slackMessage);
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	@SuppressWarnings("deprecation")
+	public Ride createRideByMessage(JsonNode payload){
+		String message = payload.path("original_message").toString();
+		String userId = payload.path("user_id").asText();
+		User user = userService.getUserBySlackId(userId);
+		Car userCar = carService.getCarForUser(user);
+		if(!userCar.equals(null)){
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				ArrayList<String> strings=new ArrayList<String>();
+				SlackJSONBuilder slackMessage = mapper.readValue(message, SlackJSONBuilder.class);
+				strings=getTextFields(slackMessage);
+				String dateString=strings.get(0);
+				String hour = strings.get(1);
+				String minute = strings.get(2);
+				String meridian = strings.get(3);
+				String pickupName = strings.get(4);
+				String dropoffName = strings.get(5);
+				Date time = createRideDate(dateString,hour,minute,meridian);
+				short seatsAvailable = Short.parseShort(strings.get(5));
+				PointOfInterest pickupPOI = poiService.getPoi(pickupName);
+				PointOfInterest dropoffPOI = poiService.getPoi(dropoffName);
+				AvailableRide availableRide = new AvailableRide();
+				availableRide.setCar(userCar);
+				availableRide.setPickupPOI(pickupPOI);
+				availableRide.setDropoffPOI(dropoffPOI);
+				availableRide.setSeatsAvailable(seatsAvailable);
+				availableRide.setOpen(true);
+				availableRide.setTime(time);
+				return null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
 	
+	@SuppressWarnings("deprecation")
+	public Date createRideDate(String dateString,String hour,String minute,String meridian){
+		int currentYear=new Date().getYear();
+		int month = Integer.parseInt(dateString.split("/")[0])-1;
+		int day = Integer.parseInt(dateString.split("/")[1]);
+		int startHour = Integer.parseInt(hour);
+		int startMinute = Integer.parseInt(minute);
+		if(meridian.equals("AM")){
+			if(startHour==12){
+				startHour=0;
+			}
+		}else if(meridian.equals("PM")){
+			if(startHour<12){
+				startHour=startHour+12;
+			}
+		}
+		Date time = new Date(currentYear,month,day,startHour,startMinute);
+		return time;
+	}
+	
 	public ArrayList<String> getTextFields(SlackJSONBuilder slackMessage){
 		ArrayList<Attachment> attachments = slackMessage.getAttachments();
-		ArrayList<String> strings=new ArrayList<String>();
+		ArrayList<String> strings = new ArrayList<String>();
+		String[] dateSplit = slackMessage.getText().split(" ");
+		strings.add(dateSplit[dateSplit.length-1]);
 		for(Attachment attachment:attachments){
 			ArrayList<Action> actions = attachment.getActions();
 			for(Action action:actions){
