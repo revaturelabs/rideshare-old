@@ -192,7 +192,7 @@ public class SlackService{
 				availableRide.setPickupPOI(pickupPOI);
 				availableRide.setDropoffPOI(dropoffPOI);
 				availableRide.setSeatsAvailable(seatsAvailable);
-				availableRide.setOpen(false);
+				availableRide.setOpen(true);
 				availableRide.setTime(time);
 				availableRide.setNotes("");
 				System.out.println(availableRide);
