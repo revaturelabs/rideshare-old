@@ -14,22 +14,22 @@ public interface AuthService {
 	/*
 	 * use this when dealing with requesting the identity scopes to authenticate a user
 	 */
-	String getSlackAccessToken(String code);
+	String getSlackAccessToken(String code) throws SlackApiException;
 
 	/*
 	 * use this when requesting the incoming-webhook and commands scopes to integrate with slack
 	 */
-	JsonNode getSlackAccessResponse(String code);
+	JsonNode getSlackAccessResponse(String code) throws SlackApiException;
 
-	String getUserIdentity(String token);
+	String getUserIdentity(String token) throws SlackApiException;
 
-	JsonNode getUserProfile(String token, String slackId);
+	JsonNode getUserProfile(String token, String slackId) throws SlackApiException;
 
-	JsonNode getUserInfo(String token, String slackId);
+	JsonNode getUserInfo(String token, String slackId) throws SlackApiException;
 
 	User getUserAccount(String slackId, JsonNode userInfo);
 
-	User integrateUser(String code) throws SlackApiException;
+	User integrateUser(JsonNode accessResponse);
 
 	String createJsonWebToken(User u);
 

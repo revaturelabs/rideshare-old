@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
 	 * use this when dealing with requesting the identity scopes to authenticate a user
 	 */
 	@Override
-	public String getSlackAccessToken(String code) {
+	public String getSlackAccessToken(String code) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
@@ -109,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
 	 * use this when requesting the incoming-webhook and commands scopes to integrate with slack
 	 */
 	@Override
-	public JsonNode getSlackAccessResponse(String code) {
+	public JsonNode getSlackAccessResponse(String code) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -128,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public String getUserIdentity(String token) {
+	public String getUserIdentity(String token) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
@@ -148,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public JsonNode getUserProfile(String token, String slackId) {
+	public JsonNode getUserProfile(String token, String slackId) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -169,7 +169,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public JsonNode getUserInfo(String token, String slackId) {
+	public JsonNode getUserInfo(String token, String slackId) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -215,8 +215,9 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public User integrateUser(JsonNode accessResponse) throws SlackApiException {
+	public User integrateUser(JsonNode accessResponse) {
 		User result = null;
+		try {
 			ObjectMapper mapper = new ObjectMapper();
 			if (accessResponse.path("ok").asBoolean()) {
 				String slackId = accessResponse.path("user_id").asText();
