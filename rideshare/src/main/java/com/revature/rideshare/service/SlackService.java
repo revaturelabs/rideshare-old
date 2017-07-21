@@ -139,12 +139,29 @@ public class SlackService{
 	public Ride createRideByMessage(String message){
 		ObjectMapper mapper = new ObjectMapper();
 		try {
+			ArrayList<String> strings=new ArrayList<String>();
 			SlackJSONBuilder slackMessage = mapper.readValue(message, SlackJSONBuilder.class);
+			strings=getTextFields(slackMessage);
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public ArrayList<String> getTextFields(SlackJSONBuilder slackMessage){
+		ArrayList<Attachment> attachments = slackMessage.getAttachments();
+		ArrayList<String> strings=new ArrayList<String>();
+		for(Attachment attachment:attachments){
+			ArrayList<Action> actions = attachment.getActions();
+			for(Action action:actions){
+				if(action.getType().equals("select")){
+					strings.add(action.getText());
+				}
+			}
+		}
+		return strings;
 	}
 	
 	public Attachment createTimeAttachment(String callbackId) {
