@@ -52,7 +52,7 @@ public class SlackMessageTest {
 		attachments.add(attachment);
 		attachments.add(attachment2);
 		
-		RideRequestJSON rr = new RideRequestJSON("@gianbarreto1", "Ride request", "in_channel", attachments);
+		SlackJSONBuilder rr = new SlackJSONBuilder("@gianbarreto1", "Ride request", "in_channel", attachments);
 		
 		String json = "";
 		try {

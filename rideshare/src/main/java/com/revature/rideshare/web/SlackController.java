@@ -30,10 +30,11 @@ import com.revature.rideshare.domain.User;
 import com.revature.rideshare.json.Action;
 import com.revature.rideshare.json.Attachment;
 import com.revature.rideshare.json.Option;
-import com.revature.rideshare.json.RideRequestJSON;
+import com.revature.rideshare.json.SlackJSONBuilder;
 import com.revature.rideshare.service.CarService;
 import com.revature.rideshare.service.PointOfInterestService;
 import com.revature.rideshare.service.RideService;
+import com.revature.rideshare.service.SlackService;
 import com.revature.rideshare.service.UserService;
 
 @RestController
@@ -50,6 +51,13 @@ public class SlackController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private CarService carService;
+	
+	@Autowired
+	private SlackService slackService;
+
+	public void setSlackService(SlackService slackService) {
+		this.slackService = slackService;
+	}
 
 	public void setRideService(RideService rideService) {
 		this.rideService = rideService;
@@ -126,116 +134,27 @@ public class SlackController {
 	}
 	
 	@PostMapping("/newride")
-	public void sendRideMessage(){
-		System.out.println("IN NEW RIDE");
+	public void sendRideMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
+		request = URLDecoder.decode(request, "UTF-8");
+		
+		// TODO: error check for date prior to current date
+		String[] params = text.split(" ");
+		String date = params[0];
+		
+//		String[] date = text.split(" ")[0].split("/");
+//		int month = Integer.parseInt(date[0]);
+//		int day = Integer.parseInt(date[1]);
+		
 		RestTemplate restTemplate = new RestTemplate();
-        String messageurl="https://hooks.slack.com/services/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";
-		ObjectMapper mapper = new ObjectMapper();
-		// Creating the JSON string
-		ArrayList<Action> actions = new ArrayList<Action>();
-		ArrayList<Action> actions2 = new ArrayList<Action>();
-		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
-		ArrayList<Option> options = new ArrayList<Option>();
-		
-		// Creating the options and adding them to the list;
-		ArrayList<PointOfInterest> pois = (ArrayList) poiService.getAll();
-		for (PointOfInterest poi : pois) {
-			Option o = new Option(poi.getPoiName(), poi.getPoiName());
-			options.add(o);
-		}
-		
-		// Creating the first set of actions
-		Action action = new Action("POI", "Pick a destination", "select", options);
-		actions.add(action);
-		
-		// Modifying options of the Action for String delimitation
-		for (int i = 0; i < actions.size(); i++) {
-			ArrayList<Option> actionOptions = actions.get(i).getOptions();
-			for (Option option : actionOptions) {
-				option.setValue("" + i + "-" + option.getValue());
-			}
-		}
-		
-		// Creating the second set of actions
-		Action a1 = new Action("OKAY", "OK", "button", "okay");
-		Action a2 = new Action("cancel", "CANCEL", "button", "cancel");
-		actions2.add(action);
-		actions2.add(a1);
-		actions2.add(a2);
-		
-		// Creating the attachments
-		Attachment attachment = new Attachment("From Destination", "Unable to decide", "message", "#3AA3E3", "default", actions); 
-		Attachment attachment2 = new Attachment("To Destination", "Unable to decide", "message", "#3AA3E3", "default", actions2); 
-		attachments.add(attachment);
-		attachments.add(attachment2);
-		
-		RideRequestJSON rr = new RideRequestJSON("@gianbarreto1", "Ride request", "in_channel", attachments);
-		
-		String json = "";
-		try {
-			json = mapper.writeValueAsString(rr);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		
-        restTemplate.postForLocation(messageurl, json);
+		String rideMessage = slackService.newRideMessage(userId, date);		
+        restTemplate.postForLocation(responseUrl, rideMessage);
 	}
 	
 	@PostMapping("/newrequest")
-	public void sendRequestMessage(){
+	public void sendRequestMessage(@RequestParam String user_id, @RequestParam String response_url){
 		RestTemplate restTemplate = new RestTemplate();
-        String messageurl="https://hooks.slack.com/services/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";
-		ObjectMapper mapper = new ObjectMapper();
-		
-		
-		// Creating the JSON string
-		ArrayList<Action> actions = new ArrayList<Action>();
-		ArrayList<Action> actions2 = new ArrayList<Action>();
-		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
-		ArrayList<Option> options = new ArrayList<Option>();
-		
-		// Creating the options and adding them to the list;
-		ArrayList<PointOfInterest> pois = (ArrayList) poiService.getAll();
-		for (PointOfInterest poi : pois) {
-			Option o = new Option(poi.getPoiName(), poi.getPoiName().toLowerCase());
-			options.add(o);
-		}
-//		Option o1 = new Option("Revature", "revature");
-//		Option o2 = new Option("Camden", "camden");
-//		Option o3 = new Option("ICON", "icon");
-//		options.add(o1);
-//		options.add(o2);
-//		options.add(o3);
-		
-		// Creating the first set of actions
-		Action action = new Action("POI", "Pick a destination", "select", options);
-		actions.add(action);
-		
-		// Creating the second set of actions
-		Action a1 = new Action("OKAY", "OK", "button", "okay");
-		Action a2 = new Action("cancel", "CANCEL", "button", "cancel");
-		actions2.add(action);
-		actions2.add(a1);
-		actions2.add(a2);
-		
-		// Creating the attachments
-		Attachment attachment = new Attachment("From Destination", "Unable to decide", "message", "#3AA3E3", "default", actions); 
-		Attachment attachment2 = new Attachment("To Destination", "Unable to decide", "message", "#3AA3E3", "default", actions2); 
-		attachments.add(attachment);
-		attachments.add(attachment2);
-		
-		RideRequestJSON rr = new RideRequestJSON("@gianbarreto1", "Ride request", "in_channel", attachments);
-		
-		String json = "";
-		try {
-			json = mapper.writeValueAsString(rr);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		
-        restTemplate.postForLocation(messageurl, json);
+		//String rideMessage = slackService.newRideMessage(user_id);		
+        //restTemplate.postForLocation(response_url, rideMessage);
 	}
 	
 	@GetMapping("/check")
@@ -247,49 +166,56 @@ public class SlackController {
 //	@RequestMapping(value = "/postcheck", method = RequestMethod.POST,
 //	        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, 
 //	        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public void postCheck(@RequestBody String request) throws UnsupportedEncodingException{
+	public void postCheck(@RequestBody String request) throws UnsupportedEncodingException {
+		// Decodes the request
 		request = URLDecoder.decode(request, "UTF-8");
-		System.out.println("in post slack controller");
-		System.out.println(request);
 		request = request.substring(8);
 		System.out.println(request);
 		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
+			RestTemplate restTemplate = new RestTemplate();
+			// Converts the string into a JSON object
 			JsonNode payload = mapper.readTree(request);
 			int attachId = payload.path("attachment_id").asInt() - 1;
-			//String selectedValue = payload.path("selected_options").path("value").asText();
-			String selectedValue = payload.path("actions").path(0).path("selected_options").path(0).path("value").asText();
-			//System.out.println("Select Value: " + selectedValue);
-			String[] positionValue = selectedValue.split("-");
-			int position = Integer.parseInt(positionValue[0]);
-			String value = positionValue[1];
+			String type = payload.path("actions").path(0).path("type").asText();
 			
-			JsonNode originalMessage = payload.path("original_message");
-			((ObjectNode)originalMessage.path("attachments").path(attachId).path("actions").path(position)).put("text", value);
-			//ObjectNode originalMessage = (ObjectNode) om;
-			//System.out.println("Text: " + originalMessage.path("attachments").path(0).path("actions").path(0).path("text").asText());
-			//System.out.println(originalMessage);
-			
-			RestTemplate restTemplate = new RestTemplate();
-	        String messageurl = payload.path("response_url").asText();
-	        System.out.println(messageurl);
-	        restTemplate.postForLocation(messageurl, originalMessage.toString());
+			if (type.equals("select")) {
+				String selectedValue = payload.path("actions").path(0).path("selected_options").path(0).path("value").asText();
+				String[] positionValue = selectedValue.split("-");
+				int position = Integer.parseInt(positionValue[0]);
+				String value = positionValue[1];
+				
+				JsonNode originalMessage = payload.path("original_message");
+				((ObjectNode)originalMessage.path("attachments").path(attachId).path("actions").path(position)).put("text", value);
+				
+				
+		        String messageurl = payload.path("response_url").asText();
+		        restTemplate.postForLocation(messageurl, originalMessage.toString());
+			}
+			else if (type.equals("button")){
+				String value = payload.path("actions").path(0).path("value").asText();
+				System.out.println("Values: " + value);
+				String messageurl = payload.path("response_url").asText();
+				if (value.equals("okay")) {
+//					String originalMessage = payload.path("original_message").toString();
+//					System.out.println("Original Message: " + originalMessage);
+					boolean acceptRequest = slackService.isMessageActionable(payload);
+					
+					if (acceptRequest)
+						System.out.println("Accept Request");
+					else 
+						System.out.println("Reject Request");
+				}
+				else if (value.equals("cancel")) {
+					System.out.println("Cancel Button clicked");
+					restTemplate.postForLocation(messageurl, "{\"replace_original\":\"true\",\"text\":\"Ride request cancelled\"}");
+				}
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		try {
-//			//Convert object to JSON string
-//			String jsonInString = mapper.writeValueAsString(request);
-//			System.out.println(jsonInString);
-//		} catch (JsonGenerationException e) {
-//			e.printStackTrace();
-//		} catch (JsonMappingException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	@RequestMapping(value = "/testslack", method = RequestMethod.GET)
@@ -336,7 +262,7 @@ public class SlackController {
 		attachments.add(attachment);
 		attachments.add(attachment2);
 
-		RideRequestJSON rr = new RideRequestJSON("@genesis", "Ride request", "in_channel", attachments);
+		SlackJSONBuilder rr = new SlackJSONBuilder("@genesis", "Ride request", "in_channel", attachments);
 
 		String json = "";
 		try {
