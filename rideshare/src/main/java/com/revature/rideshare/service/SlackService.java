@@ -162,7 +162,7 @@ public class SlackService{
 	}
 
 	@SuppressWarnings("deprecation")
-	public AvailableRide createRideByMessage(JsonNode payload){
+	public String createRideByMessage(JsonNode payload){
 		String message = payload.path("original_message").toString();
 		String userId = payload.path("user").path("id").asText();
 		User user = userService.getUserBySlackId(userId);
@@ -195,8 +195,9 @@ public class SlackService{
 				availableRide.setNotes("");
 				System.out.println(availableRide);
 				availableRideRepo.saveAndFlush(availableRide);
-//				System.out.println(worked);
-				return availableRide;
+				String confirmationMessage = "Your ride for " + time.toString()
+					+ " from " + pickupName + " to " + dropoffName +" with "+seatsAvailable+" seats  has been created";
+				return confirmationMessage;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -242,7 +243,6 @@ public class SlackService{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 
@@ -350,18 +350,16 @@ public class SlackService{
 		return buttonAttachment;
 	}
 
-	public void handleMessage(JsonNode payload){
+	public String handleMessage(JsonNode payload){
 		String callbackId=payload.path("callback_id").asText();
 		switch(callbackId){
 		case("newRideMessage"):
-			createRideByMessage(payload);
-			break;
+			return createRideByMessage(payload);
 		
 		case("newRequestMessage"):
-			createRequestByMessage(payload);
-			break;
-		
+			return createRequestByMessage(payload);		
 		default:
+			return "Message does not match any known callbackid";
 		}
 	}
 	

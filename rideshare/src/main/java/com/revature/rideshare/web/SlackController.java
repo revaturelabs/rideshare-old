@@ -215,8 +215,8 @@ public class SlackController {
 					boolean acceptRequest = slackService.isMessageActionable(payload);
 
 					if (acceptRequest){
-
-						slackService.handleMessage(payload);
+						String confirmationMessage=slackService.handleMessage(payload);
+						restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\""+confirmationMessage+"\"}");
 						System.out.println("Accept Request");
 					}
 					else {
