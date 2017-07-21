@@ -58,12 +58,40 @@ public class RideController {
 		User u = User.getUserFromToken(token);
 		return rideService.cancelRequest(id, u);
 	}
+	
+	/**
+	 * Takes in a RideRequest ID and deleted the RideRequest objects.
+	 */
+	@GetMapping("/request/cancelActive/{id}")
+	public boolean cancelActiveRequest(@PathVariable(value = "id") long id,
+			@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
+		return rideService.cancelActiveRequest(id, u);
+	}
+	
+	/**
+	 * Takes in a Ride ID and marks the Ride and RideRequest objects
+	 * associated as complete.
+	 */
+	@PostMapping("/request/complete/{id}")
+	public boolean completeRequest(@PathVariable(value = "id") long id) {
+		return rideService.completeRequest(id);
+	}
 
 	@PostMapping("/request/add")
 	public void addRequest(@RequestBody RideRequest req) {
 		rideService.addRequest(req);
 	}
 
+	/**
+	 * Takes in a User and retrieves all active RideRequests for said User.
+	 */
+	@GetMapping("/request/open")
+	public List<RideRequest> getOpenRequest(@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
+		return rideService.getOpenRequestsForUser(u);
+	}
+	
 	@GetMapping("/request/open/{id}")
 	public List<RideRequest> getOpenRequests(@PathVariable(value = "id") int id) {
 		return rideService.getOpenRequests(id);

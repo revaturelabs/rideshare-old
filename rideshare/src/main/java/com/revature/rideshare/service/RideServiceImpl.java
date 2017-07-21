@@ -136,6 +136,41 @@ public class RideServiceImpl implements RideService {
 			return false;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#cancelActiveRequest(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean cancelActiveRequest(long id, User u) {
+		try {
+			RideRequest req = rideReqRepo.findOne(id);
+			System.out.println("REQ TO DELETE \n\n\n\n\n\n\n" + req.toString() + "\n\n\n");
+			rideReqRepo.delete(req);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#completeRequest(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean completeRequest(long id) {
+		Ride ride = rideRepo.findOne(id);
+		RideRequest req = ride.getRequest();
+		
+		req.setStatus(RequestStatus.SATISFIED);
+		ride.setWasSuccessful(true);
+		
+		RideRequest temp = rideReqRepo.saveAndFlush(req);
+		Ride tempRide = rideRepo.saveAndFlush(ride);
+		if(temp == null || tempRide == null) {
+			return false;
+		}
+		return true;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getOpenRequests(int)
@@ -161,6 +196,29 @@ public class RideServiceImpl implements RideService {
 		return rideReqRepo.findByUser(u);
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#getActiveRequestsForUser(com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public List<RideRequest> getOpenRequestsForUser(User u) {
+		List<RideRequest> allReqs = rideReqRepo.findByUser(u);
+		List<RideRequest> temp = new ArrayList<RideRequest>();
+
+		for (RideRequest r : allReqs) {
+			System.out.println(r.toString());
+			if (r.getStatus() == RequestStatus.OPEN) {
+				temp.add(r);
+				System.out.println("ADDED\n\n");
+			}
+			else{
+				System.out.println("NOT ADDED\n\n");
+			}
+		}
+
+		return temp;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getActiveRequestsForUser(com.revature.rideshare.domain.User)
 	 */
