@@ -1,10 +1,14 @@
 package com.revature.rideshare.service;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,8 @@ import com.revature.rideshare.json.SlackJSONBuilder;
 @Component("slackService")
 @Transactional
 public class SlackService{
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private RideRepository rideRepo;
@@ -156,12 +162,22 @@ public class SlackService{
 		String text = payload.path("original_message").path("text").asText();
 		String date = text.split(" ")[text.split(" ").length - 1];
 		
-		switch(callbackId) {
-			case "newRideMessage":
-				String template = newRideMessage(userId, date);
-				return compareMessages(currentMessage, template);
-			default:
+		Method method;
+		try{
+			method = this.getClass().getMethod(callbackId, userId.getClass(),date.getClass());
+			String template = (String) method.invoke(this, userId,date);
+			return compareMessages(currentMessage, template);
+		}catch(SecurityException|IllegalArgumentException|NoSuchMethodException|IllegalAccessException|InvocationTargetException ex){
+			logger.error("Reflection call error",ex);
 		}
+		
+//		switch(callbackId) {
+//			case "newRideMessage":
+//				//TODO:Replace this with reflection calls of the appropriate method matching the string 
+//				String template = newRideMessage(userId, date);
+//				return compareMessages(currentMessage, template);
+//			default:
+//		}
 		return false;
 	}
 	
