@@ -347,5 +347,22 @@ textarea {
 /**********************
 	Maps
 **********************/
-#wrapper { position: relative; }
-#over_map { position: absolute; top: 10px; left: 10px; z-index: 99; }
+#wrapper {
+	position: relative;
+	margin-bottom: 2.3em;
+}
+
+#over_map {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 99;
+}
+
+#mapText {
+	margin-top: 1em;
+	margin-left: 1em;
+	font-size: 1.5em;
+	color: #202020;
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}

@@ -1,42 +1,28 @@
 <div id="wrapper">
-   <div id="map" style="height: 200px; width: 100%;"></div>
+   <div id="map" style="height: 250px; width: 100%;"></div>
 
    <div id="over_map">
-		<button ng-click="clearMapMarkers()" class="btn btn-primary" >Clear
-		Map</button>
-		<button ng-click="showDirections()" class="btn btn-primary">Directions</button>
-		<h3 id="mapText" style="color: #202020;text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;"></h3>
+		<button ng-click="clearMapMarkers()" class="btn btn-primary" >Clear Map</button>
+		<!-- <button ng-click="showDirections()" class="btn btn-primary">Directions</button> -->
+		<span id="mapText"></span>
    </div>
-</div>
-<div class="container">
-	<div class="row">
-		<div class="col">
 
-			<div class="input-group">
-				<span class="input-group-addon">Starting Point</span> <select
-					id="fromPOI" class="form-control">
-					<option ng-repeat="x in allMainPOI"
-						ng-selected="start{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
-						x.poiName + " - " + x.addressLine1 }}</option>
-				</select>
-			</div>
-
-			<div class="input-group">
-				<span class="input-group-addon">Destination</span> <select
-					id="toPOI" class="form-control">
-					<option ng-repeat="x in allMainPOI"
-						ng-selected="destination{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
-						x.poiName + " - " + x.addressLine1 }}</option>
-				</select>
-			</div>
-
-		</div>
+	<!-- Button trigger modal -->
+	<div class="btn-container" style="position:absolute;width:100%;left:0;bottom:-1.5em;z-index:100;">
+		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+			data-target="#myModal">New Request</button>
 	</div>
 </div>
 
 <p id="display"></p>
 
 <script src="../js/googleMapAPI/markerclusterer.js"></script>
+
+
+
+
+
+
 
 
 
@@ -190,6 +176,88 @@
 				</div>
 			</div>
 
+		</div>
+	</div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Make a Request</h4>
+			</div>
+			<div class="modal-body">
+
+				<form>
+					<table class="table">
+						<tr>
+							<td>
+								<select id="fromPOI" class="form-control" ng-model="pickup">
+									<option ng-repeat="x in allMainPOI"
+										ng-selected="start{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+										x.poiName + " - " + x.addressLine1 }}</option>
+								</select>
+							</td>
+						</tr>
+
+
+
+						<tr>
+							<td>
+								<select id="toPOI" class="form-control" ng-model="dropoff">
+									<option ng-repeat="x in allMainPOI"
+										ng-selected="destination{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+										x.poiName + " - " + x.addressLine1 }}</option>
+								</select>
+
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								<input class="form-control" type="text" ng-model="notes" placeholder="Notes" />
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								<div class="dropdown">
+									<a class="dropdown-toggle" id="dropdown" role="button"
+										data-toggle="dropdown" data-target=".dropdown" href="#dtPicker" target="_self">
+										<div class="input-group">
+											<input type="text" id="date" name="date" class="form-control"
+												data-ng-model="time"> <span
+												class="input-group-addon"><i
+												class="glyphicon glyphicon-calendar"></i></span>
+										</div>
+									</a>
+									<ul class="dropdown-menu" id= "dtPicker" role="menu" aria-labelledby="dLabel">
+										<datetimepicker data-ng-model="time" data-before-render="startDateBeforeRender($dates)"
+											data-datetimepicker-config="{ dropdownSelector: '#dropdown' }"></datetimepicker>
+									</ul>
+								</div>
+
+							</td>
+						</tr>
+
+					</table>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary"
+					ng-click="addRequest(pickup,dropoff,notes,time)"
+					data-dismiss="modal">Submit</button>
+			</div>
 		</div>
 	</div>
 </div>

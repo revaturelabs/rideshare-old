@@ -101,6 +101,8 @@ export let passengerController = function($scope, $http, $state, $location){
 							$scope[temp2] = true;
 							$scope.$apply();
 							poiLimit = 2;
+
+							$scope.showDirections();
 						}
 						
 						if(poiLimit === 0){
@@ -232,7 +234,7 @@ export let passengerController = function($scope, $http, $state, $location){
 
 		});
 
-		$state.reload();
+		setTimeout(function(){$state.reload();}, 500);
 	}
 
 	$scope.cancelRequest = function(rideId) {
@@ -244,8 +246,42 @@ export let passengerController = function($scope, $http, $state, $location){
 				}
 			}
 
-			$state.reload();
+			setTimeout(function(){$state.reload();}, 500);
 		});
+	};
+
+	$scope.addRequest = function(pickup,dropoff,notes,time) {
+
+		$scope.newRequest = {};
+
+		let select1 = document.getElementById("fromPOI");
+		let start = $scope.allMainPOI[select1.options[select1.selectedIndex].id];
+
+		let select2 = document.getElementById("toPOI");
+		let destination = $scope.allMainPOI[select2.options[select2.selectedIndex].id];
+
+		$scope.newRequest.pickupLocation = start;
+		$scope.newRequest.dropOffLocation = destination;
+
+		if(notes == undefined || notes == "") {
+			notes = "N/A";
+		}
+
+		$scope.newRequest.notes = notes;
+		$scope.newRequest.time = new Date(time);
+		$scope.newRequest.status = 'OPEN';
+		$scope.newRequest.user = user;
+		
+		console.log($scope.newRequest);
+
+		$http.post('/ride/request/add', $scope.newRequest).then(
+			(formResponse) => {
+				setTimeout(function(){$state.reload();}, 500);
+			},
+			(failedResponse) => {
+				alert('Failure');
+			}
+		)
 	};
 	
 	
