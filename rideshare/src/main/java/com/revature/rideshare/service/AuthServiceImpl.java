@@ -98,6 +98,8 @@ public class AuthServiceImpl implements AuthService {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
 				result = body.path("access_token").asText();
+			} else {
+				throw new SlackApiException("Failed to retrieve Slack access token - " + body.path("error").asText());
 			}
 		} catch (IOException ex) {
 			logger.error("", ex);
@@ -120,7 +122,12 @@ public class AuthServiceImpl implements AuthService {
 		requestBody.add("code", code);
 		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
 		try {
-			result = mapper.readTree(response.getBody());
+			JsonNode body = mapper.readTree(response.getBody());
+			if (body.path("ok").asBoolean()) {
+				result = body;
+			} else {
+				throw new SlackApiException("Failed to get access response from Slack - " + body.path("error").asText());
+			}
 		} catch (IOException ex) {
 			logger.error("", ex);
 		}
@@ -140,6 +147,8 @@ public class AuthServiceImpl implements AuthService {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
 				result = body.path("user").path("id").asText();
+			} else {
+				throw new SlackApiException("Failed to get user identity from Slack - " + body.path("error").asText());
 			}
 		} catch (IOException ex) {
 			logger.error("", ex);
@@ -161,6 +170,8 @@ public class AuthServiceImpl implements AuthService {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
 				result = body.path("profile");
+			} else {
+				throw new SlackApiException("Failed to get user profile from Slack - " + body.path("error").asText());
 			}
 		} catch (IOException ex) {
 			logger.error("", ex);
@@ -182,6 +193,8 @@ public class AuthServiceImpl implements AuthService {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
 				result = body.path("user");
+			} else {
+				throw new SlackApiException("Failed to get user info from Slack - " + body.path("error").asText());
 			}
 		} catch (IOException ex) {
 			logger.error("", ex);
@@ -214,45 +227,42 @@ public class AuthServiceImpl implements AuthService {
 		return u;
 	}
 	
+	// TODO: modify this method to be used after the user has logged in
 	@Override
 	public User integrateUser(JsonNode accessResponse) {
 		User result = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			if (accessResponse.path("ok").asBoolean()) {
-				String slackId = accessResponse.path("user_id").asText();
-				String token = accessResponse.path("access_token").asText();
-				JsonNode incomingWebhook = mapper.readTree(accessResponse.path("incoming_webhook").asText());
-				String webhookUrl = incomingWebhook.path("url").asText();
-				JsonNode userInfo = getUserInfo(token, slackId);
-				User u = userService.getUserBySlackId(slackId);
-				if (u == null) {
-					u = new User();
-					u.setSlackId(slackId);
-					u.setAdmin(false);
-					u.setEmail(userInfo.path("profile").path("email").asText());
-					u.setFirstName(userInfo.path("profile").path("first_name").asText());
-					u.setLastName(userInfo.path("profile").path("last_name").asText());
-					u.setFullName(userInfo.path("real_name").asText());
-					u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
-					u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
-					u.setBanned(false);
-					u.setSlackUrl(webhookUrl);
-					userService.addUser(u);
-				} else {
-					u.setEmail(userInfo.path("profile").path("email").asText());
-					u.setFirstName(userInfo.path("profile").path("first_name").asText());
-					u.setLastName(userInfo.path("profile").path("last_name").asText());
-					u.setFullName(userInfo.path("real_name").asText());
-					u.setSlackUrl(webhookUrl);
-					userService.updateUser(u);
-				}
-				result = u;
+			String slackId = accessResponse.path("user_id").asText();
+			String token = accessResponse.path("access_token").asText();
+			JsonNode incomingWebhook = mapper.readTree(accessResponse.path("incoming_webhook").asText());
+			String webhookUrl = incomingWebhook.path("url").asText();
+			JsonNode userInfo = getUserInfo(token, slackId);
+			User u = userService.getUserBySlackId(slackId);
+			if (u == null) {
+				u = new User();
+				u.setSlackId(slackId);
+				u.setAdmin(false);
+				u.setEmail(userInfo.path("profile").path("email").asText());
+				u.setFirstName(userInfo.path("profile").path("first_name").asText());
+				u.setLastName(userInfo.path("profile").path("last_name").asText());
+				u.setFullName(userInfo.path("real_name").asText());
+				u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
+				u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
+				u.setBanned(false);
+				u.setSlackUrl(webhookUrl);
+				userService.addUser(u);
 			} else {
-				throw new SlackApiException("Did not recieve an ok from Slack");
+				u.setEmail(userInfo.path("profile").path("email").asText());
+				u.setFirstName(userInfo.path("profile").path("first_name").asText());
+				u.setLastName(userInfo.path("profile").path("last_name").asText());
+				u.setFullName(userInfo.path("real_name").asText());
+				u.setSlackUrl(webhookUrl);
+				userService.updateUser(u);
 			}
+			result = u;
 		} catch (IOException ex) {
-			throw new SlackApiException(ex.getMessage());
+			logger.error("", ex);
 		}
 		return result;
 	}
@@ -305,7 +315,7 @@ public class AuthServiceImpl implements AuthService {
 			String userJson = JWT.decode(token).getClaim("user").asString();
 			return (User) mapper.readValue(userJson, User.class);
 		} catch (Exception ex) {
-			logger.error("", ex);
+			logger.error("Failed to get user from JSON web token", ex);
 			return null;
 		}
 	}

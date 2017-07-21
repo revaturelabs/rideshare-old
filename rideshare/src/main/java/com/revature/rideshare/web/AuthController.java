@@ -96,21 +96,30 @@ public class AuthController {
 	public ResponseEntity<String> loginWithSlack(@RequestParam(name="code", required=false) String code,
 			@RequestParam(name="error", required=false) String error) {
 		System.out.println("got login request");
+		String url = rideshareUrl + "/";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("WWW-Authenticate", "Bearer realm='Revature RideShare application'");
+		headers.add("Location", url);
 		String body = "{slack_error: " + error + "}";
 		ResponseEntity<String> response = new ResponseEntity<String>(body, headers, HttpStatus.UNAUTHORIZED);
 		if (code != null) {
 			System.out.println("got authorization code");
 			try {
-				User u = authService.getUserAccount(code);
+				String slackToken = authService.getSlackAccessToken(code);
+				System.out.println("got access token");
+				String slackId = authService.getUserIdentity(slackToken);
+				System.out.println("got user's slack id");
+				JsonNode userInfo = authService.getUserInfo(slackToken, slackId);
+				System.out.println("got user's information");
+				User u = authService.getUserAccount(slackId, userInfo);
+				System.out.println("got user account");
 				String token = authService.createJsonWebToken(u);
-				String slackId = u.getSlackId();
+				System.out.println("got json web token");
 				RideshareAuthenticationToken auth = new RideshareAuthenticationToken(slackId, token, u, u.getAuthorities());
+				System.out.println("got authentication");
 				auth.setAuthenticated(true);
 				SecurityContextHolder.getContext().setAuthentication(auth);
 				HttpHeaders successHeaders = new HttpHeaders();
-				String url = rideshareUrl + "/";
 				successHeaders.add("Location", url);
 				successHeaders.add("rideshare-token", token);
 				response = new ResponseEntity<String>(successHeaders, HttpStatus.SEE_OTHER);
@@ -122,14 +131,28 @@ public class AuthController {
 	}
 	
 	@RequestMapping("/integrate")
-	public ResponseEntity<String> integrateWithSlack(@RequestParam(name="code", required=false) String code,
+	public ResponseEntity<String> integrateWithSlack(Authentication authentication,
+			@RequestParam(name="code", required=false) String code,
 			@RequestParam(name="error", required=false) String error) {
+		String url = rideshareUrl + "/";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("WWW-Authenticate", "Bearer realm='Revature RideShare application'");
+		headers.add("Location", url);
 		String body = "{slack_error: " + error + "}";
 		ResponseEntity<String> response = new ResponseEntity<String>(body, headers, HttpStatus.UNAUTHORIZED);
 		if (code != null) {
-			
+			System.out.println("got authorization code");
+			try {
+				JsonNode accessResponse = authService.getSlackAccessResponse(code);
+				User u = authService.integrateUser(accessResponse);
+				String token = authService.createJsonWebToken(u);
+				HttpHeaders successHeaders = new HttpHeaders();
+				successHeaders.add("Location", url);
+				successHeaders.add("rideshare-token", token);
+				response = new ResponseEntity<String>(successHeaders, HttpStatus.SEE_OTHER);
+			} catch (SlackApiException ex) {
+				logger.error("Slack API returned an error", ex);
+			}
 		}
 		return response;
 	}
