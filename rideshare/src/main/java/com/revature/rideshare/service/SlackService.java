@@ -361,8 +361,22 @@ public class SlackService{
 
 	public String handleMessage(JsonNode payload){
 		String callbackId=payload.path("callback_id").asText();
+		ObjectMapper mapper = new ObjectMapper();
+		String currentMessage = payload.path("original_message").toString();
+		SlackJSONBuilder cMessage;
+		try {
+			cMessage = mapper.readValue(currentMessage, SlackJSONBuilder.class);
+			ArrayList<String> strings= getTextFields(cMessage);
+			if(strings.get(4).equals(strings.get(5))){
+				return ("Invalid Selection: Cannot use matching origin and destination.");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 		switch(callbackId){
 		case("newRideMessage"):
+			
 			return createRideByMessage(payload);
 		
 		case("newRequestMessage"):
