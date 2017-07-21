@@ -69,13 +69,16 @@ public class SlackService{
 		// Creating the attachments
 		Attachment fromPOIAttachment = createPOIAttachment("From Destination", callbackId);
 		Attachment toPOIAttachment = createPOIAttachment("To Destination", callbackId);
+		Attachment seatsAttachment = createSeatsAttachment(callbackId);
 		
 		attachments.add(createTimeAttachment(callbackId));
 		attachments.add(fromPOIAttachment);
 		attachments.add(toPOIAttachment);
+		attachments.add(seatsAttachment);
 		attachments.add(createConfirmationButtonsAttachment(callbackId));
 		
-		SlackJSONBuilder rr = new SlackJSONBuilder(userId, "Ride request for " + date, "in_channel", attachments);
+		
+		SlackJSONBuilder rr = new SlackJSONBuilder(userId, "New ride for " + date, "in_channel", attachments);
 		rr.addDelimiters();
 		
 		String rideMessage = "";
@@ -85,6 +88,51 @@ public class SlackService{
 			e.printStackTrace();
 		}
 		return rideMessage;
+	}
+	
+	
+	public String newRequestMessage(String userId, String date) {
+		ObjectMapper mapper = new ObjectMapper();
+		
+		// Creating the JSON string
+		ArrayList<Action> actions = new ArrayList<Action>();
+		ArrayList<Action> actions2 = new ArrayList<Action>();
+		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+		ArrayList<Option> options = new ArrayList<Option>();
+		String callbackId = "newRequestMessage";
+		
+		// Creating the attachments
+		Attachment fromPOIAttachment = createPOIAttachment("From Destination", callbackId);
+		Attachment toPOIAttachment = createPOIAttachment("To Destination", callbackId);
+		
+		attachments.add(createTimeAttachment(callbackId));
+		attachments.add(fromPOIAttachment);
+		attachments.add(toPOIAttachment);
+		attachments.add(createConfirmationButtonsAttachment(callbackId));
+		
+		SlackJSONBuilder rr = new SlackJSONBuilder(userId, "Ride request for " + date, "in_channel", attachments);
+		rr.addDelimiters();
+		
+		String requestMessage = "";
+		try {
+			requestMessage = mapper.writeValueAsString(rr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return requestMessage;
+	}
+	
+	public Attachment createSeatsAttachment(String callbackId){
+		ArrayList<Option> seatOptions = new ArrayList<Option>();
+		ArrayList<Action> actions = new ArrayList<Action>();
+		for(int i=0;i<5;i++){
+			Option o = new Option(Integer.toString(i),Integer.toString(i));
+			seatOptions.add(o);
+		}
+		Action seatsAction = new Action("Seats","# of seats","select",seatOptions);
+		actions.add(seatsAction);
+		Attachment seatsAttachment = new Attachment("Select # of Seats", "Unable to decide", callbackId, "#3AA3E3", "default", actions);
+		return seatsAttachment;
 	}
 	
 	public Attachment createTimeAttachment(String callbackId) {
@@ -138,7 +186,7 @@ public class SlackService{
 		actions.add(action);
 		
 		Attachment attachment = new Attachment(text, "Unable to decide", "newRideMessage", "#3AA3E3", "default", actions);
-		
+
 		return attachment;
 	}
 	

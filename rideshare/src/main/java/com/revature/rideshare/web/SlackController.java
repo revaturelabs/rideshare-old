@@ -151,10 +151,20 @@ public class SlackController {
 	}
 	
 	@PostMapping("/newrequest")
-	public void sendRequestMessage(@RequestParam String user_id, @RequestParam String response_url){
+	public void sendRequestMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
+		request = URLDecoder.decode(request, "UTF-8");
+		
+		// TODO: error check for date prior to current date
+		String[] params = text.split(" ");
+		String date = params[0];
+		
+//		String[] date = text.split(" ")[0].split("/");
+//		int month = Integer.parseInt(date[0]);
+//		int day = Integer.parseInt(date[1]);
+		
 		RestTemplate restTemplate = new RestTemplate();
-		//String rideMessage = slackService.newRideMessage(user_id);		
-        //restTemplate.postForLocation(response_url, rideMessage);
+		String requestMessage = slackService.newRequestMessage(userId, date);		
+        restTemplate.postForLocation(responseUrl, requestMessage);
 	}
 	
 	@GetMapping("/check")

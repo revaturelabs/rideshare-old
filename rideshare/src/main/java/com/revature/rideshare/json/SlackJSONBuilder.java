@@ -24,7 +24,6 @@ public class SlackJSONBuilder {
      *                    Messages sent in response to Slash commands are set to ephemeral by default.
 	 */
 	private String response_type;
-	
 	private String bot_id;
 	private String type;
 	private String subtype;
@@ -167,6 +166,7 @@ public class SlackJSONBuilder {
 				if (actions.get(i).getType().equals("select")) {
 					ArrayList<Option> actionOptions = actions.get(i).getOptions();
 					for (Option option : actionOptions) {
+						//TODO:use nonstandard delimiter character
 						option.setValue("" + i + "-" + option.getValue());
 					}
 				}
