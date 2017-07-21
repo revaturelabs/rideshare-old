@@ -17,6 +17,7 @@ import com.revature.rideshare.dao.AvailableRideRepository;
 import com.revature.rideshare.dao.RideRepository;
 import com.revature.rideshare.dao.RideRequestRepository;
 import com.revature.rideshare.domain.PointOfInterest;
+import com.revature.rideshare.domain.Ride;
 import com.revature.rideshare.json.Action;
 import com.revature.rideshare.json.Attachment;
 import com.revature.rideshare.json.Option;
@@ -133,6 +134,17 @@ public class SlackService{
 		actions.add(seatsAction);
 		Attachment seatsAttachment = new Attachment("Select # of Seats", "Unable to decide", callbackId, "#3AA3E3", "default", actions);
 		return seatsAttachment;
+	}
+	
+	public Ride createRideByMessage(String message){
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			SlackJSONBuilder slackMessage = mapper.readValue(message, SlackJSONBuilder.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public Attachment createTimeAttachment(String callbackId) {
