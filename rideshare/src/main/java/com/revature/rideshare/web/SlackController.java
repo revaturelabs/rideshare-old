@@ -2,6 +2,8 @@ package com.revature.rideshare.web;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -213,9 +215,9 @@ public class SlackController {
 					boolean acceptRequest = slackService.isMessageActionable(payload);
 
 					if (acceptRequest){
+
+						slackService.handleMessage(payload);
 						System.out.println("Accept Request");
-						AvailableRide ride = slackService.createRideByMessage(payload);
-						System.out.println(ride);
 					}
 					else {
 						System.out.println("Reject Request");

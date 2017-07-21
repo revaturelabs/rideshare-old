@@ -207,25 +207,6 @@ public class SlackService{
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
-	public Date createRideDate(String dateString,String hour,String minute,String meridian){
-		int currentYear=new Date().getYear();
-		int month = Integer.parseInt(dateString.split("/")[0])-1;
-		int day = Integer.parseInt(dateString.split("/")[1]);
-		int startHour = Integer.parseInt(hour);
-		int startMinute = Integer.parseInt(minute);
-		if(meridian.equals("AM")){
-			if(startHour==12){
-				startHour=0;
-			}
-		}else if(meridian.equals("PM")){
-			if(startHour<12){
-				startHour=startHour+12;
-			}
-		}
-		Date time = new Date(currentYear,month,day,startHour,startMinute);
-		return time;
-	}
 
 	/**
 	 * Creates a request confirmation message that contains the values that the user selected
@@ -233,7 +214,7 @@ public class SlackService{
 	 * @param payload, the slack payload
 	 * @return the confirmation message
 	 */
-	public String createRequestConfirmation(JsonNode payload) {
+	public String createRequestByMessage(JsonNode payload) {
 		String userId = payload.path("user").path("id").asText();
 		String message = payload.path("original_message").toString();
 		ObjectMapper mapper = new ObjectMapper();
@@ -369,6 +350,21 @@ public class SlackService{
 		return buttonAttachment;
 	}
 
+	public void handleMessage(JsonNode payload){
+		String callbackId=payload.path("callback_id").asText();
+		switch(callbackId){
+		case("newRideMessage"):
+			createRideByMessage(payload);
+			break;
+		
+		case("newRequestMessage"):
+			createRequestByMessage(payload);
+			break;
+		
+		default:
+		}
+	}
+	
 	public boolean isMessageActionable(JsonNode payload) {
 		String callbackId = payload.path("callback_id").asText();
 		String currentMessage = payload.path("original_message").toString();
