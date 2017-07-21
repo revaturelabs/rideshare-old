@@ -49,7 +49,7 @@ public class PointOfInterest implements Serializable {
 	@Column(name = "LONGITUDE", nullable = false, scale = 6)
 	private double longitude;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private PointOfInterestType type;
 
 	public PointOfInterest() {
@@ -156,5 +156,4 @@ public class PointOfInterest implements Serializable {
 				+ ", addressLine2=" + addressLine2 + ", city=" + city + ", state=" + state + ", zipCode=" + zipCode
 				+ ", latitude=" + latitude + ", longitude=" + longitude + ", type=" + type + "]";
 	}
-
 }

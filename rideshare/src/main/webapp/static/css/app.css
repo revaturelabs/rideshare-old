@@ -29,10 +29,6 @@ th {
 	font-family: 'Futura-Std-Bold';
 }
 
-li {
-	font-family: 'Futura-Std-Heavy';
-}
-
 /************************
 	Revature Colors
 ************************/
@@ -68,7 +64,7 @@ a {
 }
 
 .navbar, .navbar-brand, .navbar-collapse, .navbar-nav {
-	min-height: 70px !important;
+	min-height: 60px !important;
 	background-color: #474C55 !important;
 	background-image: none;
 	background-image: none;
@@ -78,26 +74,138 @@ a {
 	background-image: none;
 	background-repeat: no-repeat;
 	filter: none;
+	margin-bottom: 0;
 }
 
 .navbar-toggle {
-	min-height: 70px !important;
+	min-height: 60px !important;
 	padding: 0px 20px;
 	text-align: center;
 }
 
+#secondary-nav ul {
+	width: 100%;
+	text-align: center;
+	padding: 0px;
+	margin: 0px;
+	min-height: 0px !important;
+	height: auto !important;
+	background-color: #555a63 !important;
+}
+
+#secondary-nav ul li {
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+    display: inline-block;
+}
+
+#secondary-nav ul li a {
+	text-decoration: underline;
+}
+
+.navbar-active {
+	color: #ffffff !important;
+}
+
+.navbar-brand img {
+	max-height: 40px;
+}
+
+/**********************
+	Login
+**********************/
 #login-container {
 	text-align: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	marign: 0;
+	background-color: #fff;
+}
+
+#login-container main {
+	position: relative;
+	background: url(../images/office.jpg) no-repeat center center fixed;
+	background-size: cover;
+	min-width: 100%;
+	min-height: 100%;
+	overflow: hidden;
+	margin: 0;
+	z-index: -10;
+}
+
+#login-container main:after {
+	position: fixed;
+	content: "";
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.15);
+	z-index: -1;
+}
+
+#login-container #main-desc {
+	margin-top: 6em;
+	background: rgba(1,1,1,0.7);
+	padding: 2em 3em;
+	color: #fff;
+}
+
+#login-container #desc {
+	margin-top: 3em;
+	margin-bottom: 3em;
 }
 
 #login-container .logo {
 	display: block;
-	margin-top: 7em;
-	margin-bottom: 3em;
+}
+
+#login-container .logo img {
+	width: 80%;
+	max-width: 280px;
 }
 
 #login-container a:hover {
 	text-decoration: none;
+}
+
+
+/**********************
+	Tabs
+**********************/
+.tabbed-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.tabbed-list li {
+	padding: 1em;
+	border-bottom: 1px solid #B9B9BA;
+}
+
+.tabbed-list li em {
+	font-family: Futura-Std-Heavy;
+	font-style: normal;
+}
+
+.btn-container {
+	text-align: center;
+	margin-top: 1em;
+}
+
+.location-selector {
+	margin: 1em 2em;
+}
+
+.passenger-list li {
+	border-bottom: none;
+	padding: .1em 1em
 }
 
 /**********************
@@ -136,211 +244,27 @@ a {
 	}
 }
 
-.panel>.panel-heading {
-	background-image: none;
-	background-color: var(- -orange);
-	color: white;
-}
-
 /************************
-	Manage Batch
+	Inputs
 ************************/
 .modal-header {
 	background-color: #f1f2f4;
 	border-radius: 6px;
 }
 
-.scrollable-div {
-	width: 550px;
-	height: 200px;
-	overflow-y: scroll;
-}
-
-.glyphicon {
-	top: 0px;
-}
-
-.glyphicon-plus {
-	padding-left: .5em;
-}
-
-.glyphicon-user {
-	padding-left: .5em;
-}
-
-.glyphicon-question-sign, .fa-question-circle {
-	padding-left: .25em;
-	color: #F26925 !important;
-	border-color: white !important;
-	background-color: white !important;
-}
-
-.glyph-top-margin {
-	padding-top: 2em;
-}
-
-.btn-primary, .fa .fa-file-code-o {
+.btn-primary {
 	color: white !important;
 	border-color: white !important;
 	background-color: #F26925 !important;
 	background-image: none;
 }
 
-/************************
-	QC Assess
-************************/
-.fa-smile-o, .fa-meh-o, .fa-frown-o, .fa-star {
-	color: #B9B9BA;
-}
-
-.fa-smile-o:hover {
-	color: #81f575;
-}
-
-.fa-meh-o:hover {
-	color: #e8b00b;
-}
-
-.fa-frown-o:hover {
-	color: #ff7575;
-}
-
-.fa-star:hover {
-	color: #7972ff;
-}
-
-.fa-smile-o.pick {
-	color: #24d810 !important;
-}
-
-.fa-meh-o.pick {
-	color: #e8b00b !important;
-}
-
-.fa-frown-o.pick {
-	color: #ff0000 !important;
-}
-
-.fa-star.pick {
-	color: #7972ff !important;
-}
-
-.fa-file-pdf-o {
-	color: #d00a0a;
-}
-
-.fa-filter {
-	color: #F26925;
-}
-
-#qcTrainees {
-	border-bottom-style: solid;
-	border-bottom-width: 2px;
-	border-bottom-color: #474C55;
-}
-/************************
-	Margins
-************************/
-.top5 {
-	margin-top: .5em;
-}
-
-.top10 {
-	margin-top: 1em;
-}
-
-.top15 {
-	margin-top: 1.5em;
-}
-
-.top20 {
-	margin-top: 2em;
-}
-
-.top25 {
-	margin-top: 2.5em;
-}
-
-.top30 {
-	margin-top: 3em;
-}
-
-.top35 {
-	margin-top: 35em;
-}
-
-.top40 {
-	margin-top: 40em;
-}
-
-.top45 {
-	margin-top: 45em;
-}
-
-/* Accordion style tables*/
-.hiddenRow td {
-	padding: 0 !important;
-}
-
-/**********************
- 	Input styles
-**********************/
-.overall-feedback {
-	margin: 2em;
-}
-
 textarea {
 	resize: none;
 }
-/************************
-	Footer
-************************/
-.footer-margin {
-	margin-top: .85em;
-}
 
-.footer-img {
-	margin-top: 1.5em;
-}
-
-/* Footer, set footer height to actual height of footer*/
-html, body {
-	height: 100%;
-}
-
-.img-responsive {
-	padding-bottom: 1em;
-}
-
-.wrapper {
-	min-height: 100%;
-	margin-bottom: -103px;
-	padding-bottom: 103px;
-}
-
-footer {
-	min-height: 103px;
-	background-color: #474C55;
-	font-size: .75em;
-}
-
-.center {
-	text-align: center;
-}
-
-.contact-info {
-	color: #B9B9BA;
-}
-
-.fa-copyright {
-	padding-right: .5em;
-}
-
-footer a, footer a:hover {
-	color: #B9B9BA;
-}
 /**********************
-	Table styles
+	Tables
 **********************/
 .vcenter {
 	vertical-align: middle !important;
@@ -387,95 +311,35 @@ footer a, footer a:hover {
 .note-mw {
 	min-width: 300px;
 }
+
 /**********************
-	save button
+	Panels
 **********************/
-.save-button-wrapper {
-	width: 100%;
-	height: 76px;
+.panel-default>.panel-heading{
+	background-color: white;
+	background-image: none;
 }
 
-.save-button {
-	float: right;
-	margin-top: 10px;
-	border: solid 1px;
-	padding: 6px;
-	box-shadow: 1px 3px 4px #888888;
-	color: #F26925;
-	background: white;
-	border-radius: 5px;
-	transition: all ease 0.3s;
-	top: 0px;
-	margin-right: 6px;
+.panel-heading .accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content: "\e114";
+    float: right;
+    color: #bbb;
+    margin-top: -.5em;
+    margin-right: .5em;
 }
 
-.save-button:hover {
-	cursor: pointer;
-	text-decoration: none;
+.panel-heading .accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\e080";    /* adjust as needed, taken from bootstrap.css */
 }
 
-.save-button:active {
-	box-shadow: 0 3px 0px #888888;
-	margin-top: 13px;
+.panel-group em {
+	font-family: Futura-Std-Heavy;
+	font-style: normal;
 }
 
-a.save-button .fa-floppy-o {
-	margin-right: 6px;
-}
-
-.spinner {
-	float: right;
-	margin-top: 10px;
-	top: 0px;
-}
-
-#checkMark {
-	color: #72A4C2;
-}
-
-.fa-style {
-	margin-right: 11px;
-	margin-top: 15px;
-}
-
-.fade.ng-hide-remove {
-	-webkit-transition: 1s ease-in opacity;
-	-moz-transition: 1s ease-in opacity;
-	-ms-transition: 1s ease-out opacity;
-	-o-transition: 1s ease-out opacity;
-	transition: 1s ease-out opacity;
-	opacity: 1;
-}
-
-/* .fade-in.ng-hide-remove {
-  transition: all ease-out 3000ms;
-} */
-/************************
-***Trainer Assess ***
-************************/
-#trainer-assess-table input[type=number]::-webkit-inner-spin-button,
-	#trainer-assess-table input[type=number]::-webkit-outer-spin-button {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	margin: 0;
-}
-
-#trainer-assess-table input[type=number] {
-	min-width: 65px;
-	text-align: center;
-}
-
-/* .has-error input{
-	border:solid red;
-} */
-.has-error {
-	border: solid red 1px;
-}
-
-/************************
-***Assessment Modal****
-*************************/
-.editAssessModal {
-	font-family: 'Futura-Std-Book';
+.panel-body {
+	background-color: #f8f8f8;
 }

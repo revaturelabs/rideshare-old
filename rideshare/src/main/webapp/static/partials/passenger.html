@@ -1,32 +1,41 @@
-<div>
-	<button ng-click="getActiveRequests()" class="btn btn-primary">Active
-		Requests</button>
-	<button ng-click="getRequestHistory()" class="btn btn-primary">Request
-		History</button>
-	<button type="button" ng-click="getDisplay()">Get Info</button>
-	
-	<!-- Slack Message Test Button -->
-	<button type="button" ng-click="sendMessage()">Slack Test</button>
-</div>
-
-<div id="map" style="height: 400px; width: 600px;"></div>
+<div id="map" style="height: 400px; width: 100%;"></div>
 
 <div class="container">
 	<div class="row">
 		<div class="col">
-			<h5>Starting Point</h5>
-			<select id="fromPOI">
-				<option ng-repeat="x in allMainPOI" ng-selected="user{{ x.poiId }}">{{
-					x.poiName + " - " + x.addressLine1 }}</option>
-			</select>
-			<h5>Destination</h5>
-			<select id="toPOI">
-				<option ng-repeat="x in allMainPOI"
-					ng-selected="selected{{ x.poiId }}">{{ x.poiName + " - " +
-					x.addressLine1 }}</option>
-			</select>
+
+			<div class="input-group">
+				<span class="input-group-addon">Starting Point</span> <select
+					id="fromPOI" class="form-control">
+					<option ng-repeat="x in allMainPOI"
+						ng-selected="start{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+						x.poiName + " - " + x.addressLine1 }}</option>
+				</select>
+			</div>
+
+			<div class="input-group">
+				<span class="input-group-addon">Destination</span> <select
+					id="toPOI" class="form-control">
+					<option ng-repeat="x in allMainPOI"
+						ng-selected="destination{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+						x.poiName + " - " + x.addressLine1 }}</option>
+				</select>
+			</div>
+
 		</div>
 	</div>
 </div>
+
 <p id="display"></p>
+
+<div class="container">
+	<button ng-click="getActiveRequests()" class="btn btn-primary">Active
+		Requests</button>
+	<button ng-click="getRequestHistory()" class="btn btn-primary">Request
+		History</button>
+	<button ng-click="clearMapMarkers()" class="btn btn-primary">Clear
+		Map</button>
+	<button ng-click="showDirections()" class="btn btn-primary">Directions</button>
+</div>
+
 <script src="../js/googleMapAPI/markerclusterer.js"></script>

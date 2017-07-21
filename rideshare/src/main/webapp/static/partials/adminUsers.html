@@ -1,0 +1,42 @@
+<!--click button to see populated table of all Users-->
+<div class="panel-group" id="userAccordion">
+    <div class="panel panel-default" ng-repeat="u in users" style="border:none">
+        <div class="panel-heading" data-toggle="collapse" data-target="#collapse{{u.userId}}">
+            <h4 class="panel-title">
+                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#userAccordioin" href="#collapse{{u.userId}}" target="_self" style="text-decoration:none">
+                    {{u.fullName}}
+                </a>
+            </h4>
+        </div> 
+        <div id="collapse{{u.userId}}" class="panel-collapse collapse">
+            <div class="panel-body"> 
+                <!-- Expanded Information Section -->
+                <div class="row">
+                    <div class="pull-left">
+                        Full Name: <br> 
+                        First Name: <br>
+                        Last Name: <br>
+                        Email: <br>
+                        Main Point of Interest: <br>
+                        Work Point of Interest: <br> 
+                        Admin: <br> 
+                    </div>
+                    <div class="col-xs-1"></div>
+                    <div class="pull-left">
+                        {{u.fullName}}<br>
+                        {{u.firstName}}<br>
+                        {{u.lastName}}<br>
+                        {{u.email}}<br>
+                        {{u.mainPOI.poiName}}<br>
+                        {{u.workPOI.poiName}}<br>
+                        <input type="checkbox" ng-checked="u.admin"     id="isAdmin"> <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary" ng-click="changeAdmin($index)">Save Changes</button>
+                </div>
+                <!-- End of Expanded Section -->
+            </div>
+        </div>
+    </div>
+</div>
