@@ -170,14 +170,6 @@ public class SlackService{
 		}catch(SecurityException|IllegalArgumentException|NoSuchMethodException|IllegalAccessException|InvocationTargetException ex){
 			logger.error("Reflection call error",ex);
 		}
-		
-//		switch(callbackId) {
-//			case "newRideMessage":
-//				//TODO:Replace this with reflection calls of the appropriate method matching the string 
-//				String template = newRideMessage(userId, date);
-//				return compareMessages(currentMessage, template);
-//			default:
-//		}
 		return false;
 	}
 	
