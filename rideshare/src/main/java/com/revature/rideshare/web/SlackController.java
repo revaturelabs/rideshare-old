@@ -2,6 +2,8 @@ package com.revature.rideshare.web;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,11 +49,11 @@ public class SlackController {
 	private UserService userService;
 	@Autowired
 	private PointOfInterestService poiService;
-	
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private CarService carService;
-	
+
 	@Autowired
 	private SlackService slackService;
 
@@ -70,7 +72,7 @@ public class SlackController {
 	public void setCarService(CarService carService) {
 		this.carService = carService;
 	}
-	
+
 	public void setPoiService(PointOfInterestService poiService) {
 		this.poiService = poiService;
 	}
@@ -132,56 +134,56 @@ public class SlackController {
 		}
 
 	}
-	
+
 	@PostMapping("/newride")
 	public void sendRideMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
 		request = URLDecoder.decode(request, "UTF-8");
-		
+
 		// TODO: error check for date prior to current date
 		String[] params = text.split(" ");
 		String date = params[0];
-		
+
 //		String[] date = text.split(" ")[0].split("/");
 //		int month = Integer.parseInt(date[0]);
 //		int day = Integer.parseInt(date[1]);
-		
+
 		RestTemplate restTemplate = new RestTemplate();
-		String rideMessage = slackService.newRideMessage(userId, date);		
+		String rideMessage = slackService.newRideMessage(userId, date);
         restTemplate.postForLocation(responseUrl, rideMessage);
 	}
-	
+
 	@PostMapping("/newrequest")
 	public void sendRequestMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
 		request = URLDecoder.decode(request, "UTF-8");
-		
+
 		// TODO: error check for date prior to current date
 		String[] params = text.split(" ");
 		String date = params[0];
-		
+
 //		String[] date = text.split(" ")[0].split("/");
 //		int month = Integer.parseInt(date[0]);
 //		int day = Integer.parseInt(date[1]);
-		
+
 		RestTemplate restTemplate = new RestTemplate();
-		String requestMessage = slackService.newRequestMessage(userId, date);		
+		String requestMessage = slackService.newRequestMessage(userId, date);
         restTemplate.postForLocation(responseUrl, requestMessage);
 	}
-	
+
 	@GetMapping("/check")
 	public void getCheck(){
 		System.out.println("in slack controller");
 	}
-	
+
 	@PostMapping("/postcheck")
 //	@RequestMapping(value = "/postcheck", method = RequestMethod.POST,
-//	        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, 
+//	        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
 //	        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public void postCheck(@RequestBody String request) throws UnsupportedEncodingException {
 		// Decodes the request
 		request = URLDecoder.decode(request, "UTF-8");
 		request = request.substring(8);
 		System.out.println(request);
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			RestTemplate restTemplate = new RestTemplate();
@@ -189,17 +191,17 @@ public class SlackController {
 			JsonNode payload = mapper.readTree(request);
 			int attachId = payload.path("attachment_id").asInt() - 1;
 			String type = payload.path("actions").path(0).path("type").asText();
-			
+
 			if (type.equals("select")) {
 				String selectedValue = payload.path("actions").path(0).path("selected_options").path(0).path("value").asText();
 				String[] positionValue = selectedValue.split("-");
 				int position = Integer.parseInt(positionValue[0]);
 				String value = positionValue[1];
-				
+
 				JsonNode originalMessage = payload.path("original_message");
 				((ObjectNode)originalMessage.path("attachments").path(attachId).path("actions").path(position)).put("text", value);
-				
-				
+
+
 		        String messageurl = payload.path("response_url").asText();
 		        restTemplate.postForLocation(messageurl, originalMessage.toString());
 			}
@@ -211,15 +213,19 @@ public class SlackController {
 //					String originalMessage = payload.path("original_message").toString();
 //					System.out.println("Original Message: " + originalMessage);
 					boolean acceptRequest = slackService.isMessageActionable(payload);
-					
-					if (acceptRequest)
+
+					if (acceptRequest){
+						String confirmationMessage=slackService.handleMessage(payload);
+						restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\""+confirmationMessage+"\"}");
 						System.out.println("Accept Request");
-					else 
+					}
+					else {
 						System.out.println("Reject Request");
+					}
 				}
 				else if (value.equals("cancel")) {
 					System.out.println("Cancel Button clicked");
-					restTemplate.postForLocation(messageurl, "{\"replace_original\":\"true\",\"text\":\"Ride request cancelled\"}");
+					restTemplate.postForLocation(messageurl, "{\"replace_original\":\"true\",\"text\":\"Your ride request has been cancelled\"}");
 				}
 			}
 		} catch (IOException e) {
