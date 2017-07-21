@@ -21,43 +21,66 @@ public class PointOfInterestController {
 	@Autowired
 	private PointOfInterestService poiService;
 
+	/**
+	 * Retrieve all Points of Interest. 
+	 * 
+	 * @return List of all PointOfInterest Objects
+	 */
 	@GetMapping
 	public List<PointOfInterest> getAll() {
 		return poiService.getAll();
 	}
 
+	/**
+	 * Retrieve all possible types a Point of Interest can be categorized into. 
+	 * 
+	 * @return List of all PointOfInterestType Objects 
+	 */
 	@GetMapping("/type")
 	public List<PointOfInterestType> getAllTypes() {
 		return poiService.getAllTypes();
 	}
 
+	/**
+	 * Adds a new PointOfInterest based on the JSON representation sent in the request. 
+	 * 
+	 * @param jsonPoi - String representation of a PointOfInterest object in JSON format
+	 */
 	@PostMapping("/addPoi")
 	public void addPoi(@RequestBody String jsonPoi) {
-		System.out.println("in addPoi");
-		PointOfInterest poi = getPoi(jsonPoi);
-		System.out.println("\n\n\n" + poi.toString() + "\n\n\n");
-		poiService.addPoi(poi);
+		poiService.addPoi(getPoi(jsonPoi));
 	}
 
+	/**
+	 * Removes the PointOfInterest based on the JSON representation sent in the request. 
+	 * 
+	 * @param jsonPoi - String representation of a PointOfInterest object in JSON format
+	 */
 	@PostMapping("/removePoi")
 	public void removePoi(@RequestBody String jsonPoi) {
 		poiService.removePoi(getPoi(jsonPoi));
 	}
 
+	/**
+	 * Updates an existing Point of Interest's information. 
+	 * 
+	 * @param poi - the PointOfInterest object to be updated
+	 */
 	@PostMapping("/updatePoi")
 	public void updatePoi(@RequestBody PointOfInterest poi) {
 		poiService.updatePoi(poi);
 	}
 
+	/**
+	 * Unmarshalls the JSON string to a PointofInterest Object. 
+	 * 
+	 * @param jsonString - JSON representation of a PointOfInterest Object
+	 * @return the PointofInterest Object represented by the JSON string parameter
+	 */
 	public PointOfInterest getPoi(String jsonString) {
-		ObjectMapper mapper = new ObjectMapper();
-
-		System.out.println("in getPoi \n\n\n" + jsonString + "\n\n\n\n");
 		try {
-			return (PointOfInterest) mapper.readValue(jsonString, PointOfInterest.class);
+			return (PointOfInterest) new ObjectMapper().readValue(jsonString, PointOfInterest.class);
 		} catch (Exception e) {
-			System.out.println("\n\n\n exception returns null \n\n\n");
-			e.printStackTrace();
 			return null;
 		}
 	}
