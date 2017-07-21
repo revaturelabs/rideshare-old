@@ -8,3 +8,5 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | b
 . ~/.bashrc
 # Install Node.js and npm
 nvm install v6.11.1
+# Get the latest version of npm
+npm i -g npm
