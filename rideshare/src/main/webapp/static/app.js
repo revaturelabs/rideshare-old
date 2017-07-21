@@ -69,7 +69,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		
 		.state('main.adminPoi',{
 			url: '/adminPoi',
-			templateUrl : 'partials/poi.html',
+			templateUrl : 'partials/adminPOI.html',
 			controller : adminPoiController
 		})
     

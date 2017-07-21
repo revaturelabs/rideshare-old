@@ -14,16 +14,16 @@ INSERT INTO points_of_interest VALUES(5,'2320 Dulles Station Blvd','','Herndon',
 INSERT INTO points_of_interest VALUES(6,'603 Elden St','','Herndon',38.96863539,-77.38133429,'Walgreens','VA','20170',3);
 /
 -- Users
-INSERT INTO users VALUES(1,'jchickson@gmail.com','Jack','Jak Chickson',1, 0, 'Chickson','982jlsk3', 'slackUrl', 3,4);
-INSERT INTO users VALUES(2,'mholler@gmail.com','Michael','Michael Holler',0, 0, 'Holler','982jlsk3', 'slackUrl', 4,3);
-INSERT INTO users VALUES(3,'bhammer@gmail.com','Bob','Bob Hammer',0, 0, 'Hammer','982jlsk3', 'slackUrl', 2,3);
-INSERT INTO users VALUES(4,'mstu@gmail.com','Mary','Mary Stu',0, 0, 'Stu','982jlsk3', 'slackUrl', 2,3);
-INSERT INTO users VALUES(5,'dmaxwell@gmail.com','David','David Maxwell',0, 0,'Maxwell','982jlsk3', 'slackUrl', 4,3);
-INSERT INTO users VALUES(6,'dmark@gmail.com','Dwayne','Dwayne Mark',0, 0, 'Mark','982jlsk3', 'slackUrl', 5,3);
-INSERT INTO users VALUES(7,'fseraferaranowitz4829@gmail.com','Frank','Frankie Dee',0, 0,'Seraferaranowitz','982jlsk3', 'slackUrl', 3,4);
-INSERT INTO users VALUES(8,'spowers@gmail.com','Sarah','Sarah Powers',0, 0,'Powers','982jlsk3', 'slackUrl', 5,3);
-INSERT INTO users VALUES(9,'kholmes@gmail.com','Katie','Katie Holmes',0, 0,'Holmes','982jlsk3', 'slackUrl', 4,3);
-INSERT INTO users VALUES(10,'otwixel@gmail.com','Oliver','Oliver Twixel',0, 0,'Twixel','982jlsk3', 'slackUrl', 2,3);
+INSERT INTO users VALUES(1,'jchickson@gmail.com','Jack','Jak Chickson',1, 'Chickson','982jlsk3', 3,4);
+INSERT INTO users VALUES(2,'mholler@gmail.com','Michael','Michael Holler',0, 'Holler','982jlsk3', 4,3);
+INSERT INTO users VALUES(3,'bhammer@gmail.com','Bob','Bob Hammer',0, 'Hammer','982jlsk3', 2,3);
+INSERT INTO users VALUES(4,'mstu@gmail.com','Mary','Mary Stu',0, 'Stu','982jlsk3', 2,3);
+INSERT INTO users VALUES(5,'dmaxwell@gmail.com','David','David Maxwell',0,'Maxwell','982jlsk3', 4,3);
+INSERT INTO users VALUES(6,'dmark@gmail.com','Dwayne','Dwayne Mark',0, 'Mark','982jlsk3', 5,3);
+INSERT INTO users VALUES(7,'fseraferaranowitz4829@gmail.com','Frank','Frankie Dee',0, 'Seraferaranowitz','982jlsk3', 3,4);
+INSERT INTO users VALUES(8,'spowers@gmail.com','Sarah','Sarah Powers',0, 'Powers','982jlsk3', 5,3);
+INSERT INTO users VALUES(9,'kholmes@gmail.com','Katie','Katie Holmes',0, 'Holmes','982jlsk3', 4,3);
+INSERT INTO users VALUES(10,'otwixel@gmail.com','Oliver','Oliver Twixel',0, 'Twixel','982jlsk3', 2,3);
 /
 -- Cars
 -- For example, the U.S. state of Virginia allows up to 7.5 characters (a space or hyphen is counted as 0.5 character) 
