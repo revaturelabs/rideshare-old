@@ -21,6 +21,8 @@ import com.revature.rideshare.domain.AvailableRide;
 import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.PointOfInterest;
 import com.revature.rideshare.domain.Ride;
+import com.revature.rideshare.domain.RideRequest;
+import com.revature.rideshare.domain.RideRequest.RequestStatus;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.json.Action;
 import com.revature.rideshare.json.Attachment;
@@ -219,7 +221,7 @@ public class SlackService{
 		String userId = payload.path("user").path("id").asText();
 		String message = payload.path("original_message").toString();
 		ObjectMapper mapper = new ObjectMapper();
-
+		User user = userService.getUserBySlackId(userId);
 
 		System.out.println("User ID: " + userId);
 		System.out.println("Message: " + message);
@@ -236,6 +238,13 @@ public class SlackService{
 			Date time = createRideDate(date, hour, minutes, meridian);
 			String fromPOI = values.get(4);
 			String toPOI = values.get(5);
+			RideRequest rideRequest = new RideRequest();
+			rideRequest.setUser(user);
+			rideRequest.setStatus(RequestStatus.OPEN);
+			rideRequest.setPickupLocation(poiService.getPoi(fromPOI));
+			rideRequest.setDropOffLocation(poiService.getPoi(toPOI));
+			rideRequest.setTime(time);
+			rideService.addRequest(rideRequest);
 			String confirmationMessage = "Your ride request for " + time.toString()
 										+ " from " + fromPOI + " to " + toPOI + " has been created";
 			return confirmationMessage;
