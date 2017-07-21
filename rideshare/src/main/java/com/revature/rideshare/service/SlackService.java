@@ -49,7 +49,7 @@ public class SlackService{
 	private RideRequestRepository rideReqRepo;
 
 	@Autowired
-	private AvailableRideRepository availRideRepo;
+	private AvailableRideRepository availableRideRepo;
 
 	@Autowired
 	private PointOfInterestService poiService;
@@ -74,8 +74,8 @@ public class SlackService{
 		this.rideReqRepo = rideReqRepo;
 	}
 
-	public void setAvailRideRepo(AvailableRideRepository availRideRepo) {
-		this.availRideRepo = availRideRepo;
+	public void setAvailableRideRepo(AvailableRideRepository availableRideRepo) {
+		this.availableRideRepo = availableRideRepo;
 	}
 
 	public void setPoiService(PointOfInterestService poiService) {
@@ -162,12 +162,14 @@ public class SlackService{
 	}
 	
 	@SuppressWarnings("deprecation")
-	public Ride createRideByMessage(JsonNode payload){
+	public AvailableRide createRideByMessage(JsonNode payload){
 		String message = payload.path("original_message").toString();
-		String userId = payload.path("user_id").asText();
+		String userId = payload.path("user").path("id").asText();
 		User user = userService.getUserBySlackId(userId);
+		System.out.println(user);
 		Car userCar = carService.getCarForUser(user);
-		if(!userCar.equals(null)){
+		if(userCar!=null){
+			System.out.println("user has a car");
 			ObjectMapper mapper = new ObjectMapper();
 			try {
 				ArrayList<String> strings=new ArrayList<String>();
@@ -180,7 +182,7 @@ public class SlackService{
 				String pickupName = strings.get(4);
 				String dropoffName = strings.get(5);
 				Date time = createRideDate(dateString,hour,minute,meridian);
-				short seatsAvailable = Short.parseShort(strings.get(5));
+				short seatsAvailable = Short.parseShort(strings.get(6));
 				PointOfInterest pickupPOI = poiService.getPoi(pickupName);
 				PointOfInterest dropoffPOI = poiService.getPoi(dropoffName);
 				AvailableRide availableRide = new AvailableRide();
@@ -188,14 +190,20 @@ public class SlackService{
 				availableRide.setPickupPOI(pickupPOI);
 				availableRide.setDropoffPOI(dropoffPOI);
 				availableRide.setSeatsAvailable(seatsAvailable);
-				availableRide.setOpen(true);
+				availableRide.setOpen(false);
 				availableRide.setTime(time);
-				return null;
+				availableRide.setNotes("");
+				System.out.println(availableRide);
+				availableRideRepo.saveAndFlush(availableRide);
+//				System.out.println(worked);
+				return availableRide;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		System.out.println("user has no car,slackId is, "+userId+",we have ");
+		System.out.println(user.getSlackId());
 		return null;
 	}
 	

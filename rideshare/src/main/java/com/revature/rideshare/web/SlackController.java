@@ -212,10 +212,14 @@ public class SlackController {
 //					System.out.println("Original Message: " + originalMessage);
 					boolean acceptRequest = slackService.isMessageActionable(payload);
 					
-					if (acceptRequest)
+					if (acceptRequest){
 						System.out.println("Accept Request");
-					else 
+						AvailableRide ride = slackService.createRideByMessage(payload);
+						System.out.println(ride);
+					}
+					else {
 						System.out.println("Reject Request");
+					}
 				}
 				else if (value.equals("cancel")) {
 					System.out.println("Cancel Button clicked");
