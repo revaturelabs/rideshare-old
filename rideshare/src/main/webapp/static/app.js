@@ -1,5 +1,4 @@
 import { angularJwt } from 'angular-jwt';
-import { permission, uiPermission } from 'angular-permission';
 import { mainController } from './js/controllers/main.controller.js';
 import { passengerController } from './js/controllers/passenger.controller.js';
 import { driverController } from './js/controllers/driver.controller.js';
@@ -13,7 +12,7 @@ import { userProfileController } from './js/controllers/userProfile.controller.j
 //var = function scope
 //const and let = block scope 
 
-const app = angular.module('app', ['ui.router', permission, uiPermission, 'angular-jwt', 'ui.bootstrap.datetimepicker']);
+const app = angular.module('app', ['ui.router', 'angular-jwt', 'ui.bootstrap.datetimepicker']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
 	

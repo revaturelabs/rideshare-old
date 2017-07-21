@@ -8,6 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class Application {
 
 	public static void main(String[] args) throws Exception {
+		@SuppressWarnings("unused")
 		ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 	}
 
