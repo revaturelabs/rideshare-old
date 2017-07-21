@@ -14,7 +14,7 @@
 				</tr>
 				<tr>
 					<td>
-						<a href="javascript:void(0)" data-toggle="popover" data-content="Integrate the app with your Slack account.">
+						<a href="javascript:void(0)" data-toggle="popover" data-content="Integrate the app with your Slack account. This allows you to receive notifications on Slack when a ride is about to arrive.">
 							<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 						</a>
 					</td>
@@ -103,23 +103,23 @@
 					<form id="addOrUpdateCar">
 						<table class="table">
 							<tr>
-								<td><input class="form-control" type="text" ng-model="car.brand" placeholder="Car Make" required/> </td>
+								<td><input class="form-control" type="text" ng-model="carCopy.brand" placeholder="Car Make" required/> </td>
 							</tr>
 							<tr>
-								<td> <input class="form-control" type="text" ng-model="car.model" placeholder="Car Model" required/></td>
+								<td> <input class="form-control" type="text" ng-model="carCopy.model" placeholder="Car Model" required/></td>
 							</tr>
 							<tr>
-								<td><input class="form-control" type="text" ng-model="car.color" placeholder="Color" required/></td>
+								<td><input class="form-control" type="text" ng-model="carCopy.color" placeholder="Color" required/></td>
 							</tr>
 							<tr>
-								<td><input class="form-control" type="text" ng-model="car.licensePlate" placeholder="License Plate" required/></td>
+								<td><input class="form-control" type="text" ng-model="carCopy.licensePlate" placeholder="License Plate" required/></td>
 							</tr>
 							<tr>
-								<td><input class="form-control" type="text" ng-model="car.notes" placeholder="Notes" /></td>
+								<td><input class="form-control" type="text" ng-model="carCopy.notes" placeholder="Notes" /></td>
 							</tr>
 							<tr>
 								<td><label>No Smoking</label>
-									<input type="checkbox" ng-model="car.smokeFree"><br/></td>
+									<input type="checkbox" ng-model="carCopy.smokeFree"><br/></td>
 							</tr>
 						</table>
 					</form>
