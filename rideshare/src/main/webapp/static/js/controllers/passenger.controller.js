@@ -95,6 +95,8 @@ export let passengerController = function($scope, $http, $state, $location){
 						
 						if(poiLimit === 1){
 							markers[x].setIcon('http://earth.google.com/images/kml-icons/track-directional/track-8.png');
+							
+							// Remove blue markers and text once route shown
 							$scope.clearMapMarkers();
 							document.getElementById("mapText").innerHTML = '';
 							
