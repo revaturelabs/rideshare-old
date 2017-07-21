@@ -1,5 +1,6 @@
 import { angularJwt } from 'angular-jwt';
 import { permission, uiPermission } from 'angular-permission';
+import { mainController } from './js/controllers/main.controller.js';
 import { passengerController } from './js/controllers/passenger.controller.js';
 import { driverController } from './js/controllers/driver.controller.js';
 import { historyController } from './js/controllers/history.controller.js';
@@ -34,34 +35,40 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 	$urlRouterProvider.otherwise('/slackLogin');
 
 	$stateProvider
+	.state('main', {
+		url: '/main',
+		templateUrl: 'partials/main.html',
+		controller: mainController
+	})
+
 	.state('slackLogin', {
 		url: '/slackLogin',
 		templateUrl: 'partials/slackLogin.html',
 		controller: slackLoginController
 	})
 
-	.state('passenger',{
+	.state('main.passenger',{
 		url: '/passenger',
 		templateUrl : 'partials/passenger.html',
 		controller : passengerController,
 		data: { requiresLogin: true }
 	})
 
-	.state('driver',{
+	.state('main.driver',{
 		url: '/driver',
 		templateUrl : 'partials/driver.html',
 		controller : driverController,
 		data: { requiresLogin: true }
 	})
 
-	.state('history',{
+	.state('main.history',{
 		url: '/history',
 		templateUrl : 'partials/history.html',
 		controller : historyController,
 		data: { requiresLogin: true }
 	})
 
-	.state('addCar' ,{
+	.state('main.addCar' ,{
 		url: '/addCar',
 		templateUrl : 'partials/addCar.html',
 		controller : addCarController,
