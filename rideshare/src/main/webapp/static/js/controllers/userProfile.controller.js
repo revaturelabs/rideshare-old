@@ -1,7 +1,10 @@
 export let userProfileController = function ($scope, $http, $state) {
 	$scope.allpois = {};
 	$scope.user = {};
+	// Car object which is bound to the car information table
 	$scope.car = {};
+	// Copy of car that is bound to the modal
+	$scope.carCopy = {};
 	$scope.buttonText = '';
 	$scope.mainPoiOption = {};
 	$scope.workPoiOption = {};
@@ -48,7 +51,8 @@ export let userProfileController = function ($scope, $http, $state) {
 	$http.get("/car/myCar", $scope.car)
 		.then((response) => {
 			$scope.car = response.data;
-
+			$scope.carCopy = angular.copy($scope.car);
+			
 			if ($scope.car === '') {
 				$scope.buttonText = 'Add Car';
 			}
@@ -76,10 +80,11 @@ export let userProfileController = function ($scope, $http, $state) {
 	}
 
 	$scope.addCar = function () {
-		$http.post('/car', $scope.car).then(
+		$http.post('/car', $scope.carCopy).then(
 			(formResponse) => {
 				$scope.buttonText = 'Edit Car';
-
+				$scope.car = angular.copy($scope.carCopy);
+				
 				// Reloading the view stops the user from adding a new car
 				// after deleting a car.
 				$state.reload('main.userProfile');
@@ -92,8 +97,9 @@ export let userProfileController = function ($scope, $http, $state) {
 
 	$scope.updateCar = function () {
 
-		$http.post('/car/updateCar', $scope.car).then(
+		$http.post('/car/updateCar', $scope.carCopy).then(
 			(formResponse) => {
+				$scope.car = angular.copy($scope.carCopy);
 				$state.go('main.userProfile');
 			},
 			(failedResponse) => {
@@ -106,8 +112,10 @@ export let userProfileController = function ($scope, $http, $state) {
 		$http.post("/car/removeCar", $scope.car)
 			.then((response) => {
 				$scope.buttonText = 'Add Car';
-				console.log($scope.car);
+
 				$scope.car = {};
+				$scope.carCopy = {};
+				
 				$state.go("main.userProfile");
 			},
 			(failedResponse) => {
