@@ -40,9 +40,12 @@ public class CarController {
 	@PostMapping("/updateCar")
 	public boolean updateCar(@RequestHeader(name = "Authorization") String token, @RequestBody Car newCar) {
 		User u = User.getUserFromToken(token);
+		Car oldCar = carService.getCarForUser(u);
+		
 		newCar.setUser(u);
-		carService.removeCar(carService.getCarForUser(u));
-		carService.addCar(newCar);
+		newCar.setCarId(oldCar.getCarId());
+		carService.updateCar(newCar);
+		
 		return true;
 	}
 	
