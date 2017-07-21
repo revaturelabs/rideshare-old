@@ -3,15 +3,9 @@ export let driverController = function($scope, $http, $state){
 	$scope.isArray = angular.isArray;
 	$scope.rides = {};
 	
-
-
-	
 	$http.get("/ride")
 	.then(function(response) {
 		$scope.rides = response.data;
-		console.log("SCOPE");
-		console.log($scope);
-		console.log("SCOPE");
 		
 		$http.get("/user/me")
 		.then(function(response) {
@@ -24,11 +18,10 @@ export let driverController = function($scope, $http, $state){
 		});
 	});
 
-	// changes poi that is used in the openRequest
-	// TODO: get default scope from user
-
+	// Setting mPOI in case a user does not have a mPOI.
 	$scope.poiId = {id : 1};
 
+	// Setting to empty arrays for correct ng-repeat processing.
 	$scope.openRequest = [];
 	$scope.activeRides = [];
 	$scope.pastRides = [];
@@ -37,7 +30,6 @@ export let driverController = function($scope, $http, $state){
 		$http.get("/ride/request/open/"+item.poiId)
 		.then(function(response) {
 			$scope.openRequest = response.data;	
-			console.log(new Date ($scope.openRequest[0].time).getTime());
 		});
 
 	}
@@ -54,16 +46,11 @@ export let driverController = function($scope, $http, $state){
 
 		$http.get("/ride/request/accept/"+id)
 		.then(function(response) {
-
+			setTimeout(function(){$state.reload();}, 500);
 		});
 
-		$state.reload();
 	}
 
-	$http.get("/ride/offer/open/"+$scope.poiId.id)
-	.then(function(response) {
-		$scope.openRides = response.data;
-	});
 
 	function compare(a,b) {
 		if (a.availRide.availRideId < b.availRide.availRideId)
@@ -74,17 +61,18 @@ export let driverController = function($scope, $http, $state){
 	}
 
 	$http.get("/ride/offer/active")
-	.then(function(response){
-		organizeData(response, "active");
-		console.log($scope.activeRides);
+	.then(function(res){
+		$http.get("/ride/offer/open")
+		.then(function(response){
+			$scope.activeOffers = response.data;
+			organizeData(res, "active");
+			});
 		});
 
 	$http.get("/ride/offer/history")
 	.then(function(response){
 		organizeData(response, "history");
-		console.log($scope.pastRides);
 		});
-
 
 	// scope provides structure of object needed to crreate an offer
 	$scope.offer = {car : {}, pickupPOI : {}, dropoffPOI : {}, seatsAvailable:0, time:"", notes:"",open: true};
@@ -96,17 +84,22 @@ export let driverController = function($scope, $http, $state){
 		$scope.offer.car = $scope.car;
 		$scope.offer.pickupPOI = pickup;
 		$scope.offer.dropoffPOI = dropoff;
+
+		if(notes == undefined || notes == "") {
+			notes = "N/A";
+		}
+
 		$scope.offer.notes = notes;
 		$scope.offer.time = new Date(time);
 		$scope.offer.seatsAvailable = seats;
 
 		$http.post('/ride/offer/add', $scope.offer).then(
-				(formResponse) => {
-					$state.go('main.driver');
-				},
-				(failedResponse) => {
-					alert('Failure');
-				}
+			(formResponse) => {
+				setTimeout(function(){$state.reload();}, 500);
+			},
+			(failedResponse) => {
+				alert('Failure');
+			}
 		)
 	};
 
@@ -119,10 +112,11 @@ export let driverController = function($scope, $http, $state){
 							$scope.$apply;
 						}
 					}
+					
+					setTimeout(function(){$state.reload();}, 500);
 				}
 		);
 	};
-
 
 	// get all info needed to make a new offer
 	$scope.car = {};
@@ -132,16 +126,16 @@ export let driverController = function($scope, $http, $state){
 		$scope.car = response.data;
 	});
 
-
 	$scope.allPoi = {};
 
 	$http.get("/poiController")
 	.then(function(response){
-		console.log(response.data);
 		$scope.allPoi = response.data;
 	});
-
 	
+	/*
+	 * Organizes Ride list data by combining RideRequests with matching AvailableRide objects.
+	 */
 	function organizeData(response, reqString){
 		if(response.data.length == 0){
 			let temp = [];
@@ -182,10 +176,30 @@ export let driverController = function($scope, $http, $state){
 		if(reqString == "active") {
 			$scope.activeRides = listReq;
 			
+			for(let i = 0; i < $scope.activeOffers.length; i++) {
+				for(let k = 0; k < $scope.activeRides.length; k++) {
+					if($scope.activeOffers[i].availRideId == $scope.activeRides[k].availRide.availRideId){
+						$scope.activeOffers.splice(i, 1);
+						i--;
+						break;
+					}
+				}
+			}
 		}
 		else if (reqString == "history") {
 			$scope.pastRides = listReq;
 		}
 	}
+	
+	//stops past dates from being selected in date/time picker
+	$scope.startDateBeforeRender = function($dates) {
+		  const todaySinceMidnight = new Date();
+		    todaySinceMidnight.setUTCHours(0,0,0,0);
+		    $dates.filter(function (date) {
+		      return date.utcDateValue < todaySinceMidnight.getTime();
+		    }).forEach(function (date) {
+		      date.selectable = false;
+		    });
+		};
 	
 };

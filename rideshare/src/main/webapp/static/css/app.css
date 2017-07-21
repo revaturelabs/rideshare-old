@@ -108,23 +108,76 @@ a {
 	color: #ffffff !important;
 }
 
+.navbar-brand img {
+	max-height: 40px;
+}
+
 /**********************
 	Login
 **********************/
 #login-container {
 	text-align: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	marign: 0;
+	background-color: #fff;
+}
+
+#login-container main {
+	position: relative;
+	background: url(../images/office.jpg) no-repeat center center fixed;
+	background-size: cover;
+	min-width: 100%;
+	min-height: 100%;
+	overflow: hidden;
+	margin: 0;
+	z-index: -10;
+}
+
+#login-container main:after {
+	position: fixed;
+	content: "";
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.15);
+	z-index: -1;
+}
+
+#login-container #main-desc {
+	margin-top: 6em;
+	background: rgba(1,1,1,0.7);
+	padding: 2em 3em;
+	color: #fff;
+}
+
+#login-container #desc {
+	margin-top: 3em;
+	margin-bottom: 3em;
 }
 
 #login-container .logo {
 	display: block;
-	margin-top: 7em;
-	margin-bottom: 3em;
+}
+
+#login-container .logo img {
+	width: 80%;
+	max-width: 280px;
 }
 
 #login-container a:hover {
 	text-decoration: none;
 }
 
+
+/**********************
+	Tabs
+**********************/
 .tabbed-list {
 	list-style-type: none;
 	margin: 0;
@@ -189,12 +242,6 @@ a {
 	.chart-container {
 		min-height: 25.8em;
 	}
-}
-
-.panel>.panel-heading {
-	background-image: none;
-	background-color: var(- -orange);
-	color: white;
 }
 
 /************************
@@ -263,4 +310,63 @@ textarea {
 
 .note-mw {
 	min-width: 300px;
+}
+
+/**********************
+	Panels
+**********************/
+.panel-default>.panel-heading{
+	background-color: white;
+	background-image: none;
+}
+
+.panel-heading .accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content: "\e114";
+    float: right;
+    color: #bbb;
+    margin-top: -.5em;
+    margin-right: .5em;
+}
+
+.panel-heading .accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+}
+
+.panel-group em {
+	font-family: Futura-Std-Heavy;
+	font-style: normal;
+}
+
+.panel-body {
+	background-color: #f8f8f8;
+}
+
+.panel-body table tr td:first-child{
+	padding-right: 2em;
+}
+
+/**********************
+	Maps
+**********************/
+#wrapper {
+	position: relative;
+	margin-bottom: 2.3em;
+}
+
+#over_map {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 99;
+}
+
+#mapText {
+	margin-top: 1em;
+	margin-left: 1em;
+	font-size: 1.5em;
+	color: #202020;
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
