@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -78,7 +79,6 @@ public class AuthController {
 					+ "&redirect_uri=" + rideshareUrl + "/auth/integrate";
 			headers.add("Location", url);
 			res = new ResponseEntity<String>(headers, HttpStatus.SEE_OTHER);
-//				response.sendRedirect(url);
 		} else {
 			String url = "https://slack.com/oauth/authorize?"
 					+ "client_id=" + slackAppId
@@ -87,21 +87,21 @@ public class AuthController {
 					+ "&redirect_uri=" + rideshareUrl + "/auth/login";
 			headers.add("Location", url);
 			res = new ResponseEntity<String>(headers, HttpStatus.SEE_OTHER);
-//				response.sendRedirect(url);
 		}
 		return res;
 	}
 	
 	@RequestMapping("/login")
 	public ResponseEntity<String> loginWithSlack(@RequestParam(name="code", required=false) String code,
-			@RequestParam(name="error", required=false) String error) {
+			@RequestParam(name="error", required=false) String error, RequestEntity<String> req) {
 		System.out.println("got login request");
+		System.out.println(req);
 		String url = rideshareUrl + "/";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("WWW-Authenticate", "Bearer realm='Revature RideShare application'");
 		headers.add("Location", url);
 		String body = "{slack_error: " + error + "}";
-		ResponseEntity<String> response = new ResponseEntity<String>(body, headers, HttpStatus.UNAUTHORIZED);
+		ResponseEntity<String> response = new ResponseEntity<String>(body, headers, HttpStatus.SEE_OTHER);
 		if (code != null) {
 			System.out.println("got authorization code");
 			try {
@@ -134,12 +134,12 @@ public class AuthController {
 	public ResponseEntity<String> integrateWithSlack(Authentication authentication,
 			@RequestParam(name="code", required=false) String code,
 			@RequestParam(name="error", required=false) String error) {
-		String url = rideshareUrl + "/";
+		String url = rideshareUrl + "/#/error?code=418";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("WWW-Authenticate", "Bearer realm='Revature RideShare application'");
-		headers.add("Location", url);
+		headers.add("Location", rideshareUrl);
 		String body = "{slack_error: " + error + "}";
-		ResponseEntity<String> response = new ResponseEntity<String>(body, headers, HttpStatus.UNAUTHORIZED);
+		ResponseEntity<String> response = new ResponseEntity<String>(body, headers, HttpStatus.SEE_OTHER);
 		if (code != null) {
 			System.out.println("got authorization code");
 			try {

@@ -1,3 +1,8 @@
+// import 'angular';
+// import '@uirouter/angularjs';
+import 'moment';
+import './js/dateTimePicker/datetimepicker.js';
+import './js/dateTimePicker/datetimepicker.templates.js';
 import { angularJwt } from 'angular-jwt';
 import { mainController } from './js/controllers/main.controller.js';
 import { passengerController } from './js/controllers/passenger.controller.js';
@@ -22,7 +27,7 @@ app.run(function(authManager, $http) {
 	authManager.checkAuthOnRefresh();
 	authManager.redirectWhenUnauthenticated();
 
-	$http.get('')
+	// $http.get('')
 });
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){

@@ -28,8 +28,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@uirouter/angularjs": "^1.0.5",
-    "@uirouter/core": "^5.0.5",
     "angular": "1.5.7",
     "angular-bootstrap-datetimepicker": "^1.1.4",
     "angular-jwt": "^0.1.9",

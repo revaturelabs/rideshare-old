@@ -51,7 +51,6 @@ module.exports = (env = {}) => {
           { from: `${source}/images`, to: `${output}/images` },
           { from: `${source}/partials`, to: `${output}/partials` },
           { from: `${source}/js/googleMapAPI`, to: `${output}/js/googleMapAPI` },
-          { from: `${source}/js/lib`, to: `${output}/js/lib` },
           { from: `${source}/js/moment.js`, to: `${output}/js/moment.js` },
           { from: `${source}/index.html`, to: `${output}/index.html` },
         ]

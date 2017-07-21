@@ -42,6 +42,10 @@ public class AuthServiceImpl implements AuthService {
 	private String slackAppVerificationToken;
 	@Value("${slack.teamId}")
 	private String slackAppTeamId;
+	@Value("${deploy.url}")
+	private String rideshareUrl;
+	private String loginRedirectUrl = rideshareUrl + "/auth/login";
+	private String integrationRedirectUrl = rideshareUrl + "/auth/integrate";
 	
 //	@Autowired
 //	OAuth2ClientContext oauth2ClientContext;
@@ -89,11 +93,15 @@ public class AuthServiceImpl implements AuthService {
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
 		String url = "https://slack.com/api/oauth.access";
-		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-		requestBody.add("client_id", slackAppId);
-		requestBody.add("client_secret", slackAppSecret);
-		requestBody.add("code", code);
-		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+		String requestUrl = url + "?client_id=" + slackAppId + "&client_secret=" + slackAppSecret + "&code=" + code
+				+ "&redirect_uri=" + loginRedirectUrl;
+//		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
+//		requestBody.add("client_id", slackAppId);
+//		requestBody.add("client_secret", slackAppSecret);
+//		requestBody.add("code", code);
+//		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
+		System.out.println(response.getBody());
 		try {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
@@ -116,11 +124,14 @@ public class AuthServiceImpl implements AuthService {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
 		String url = "https://slack.com/api/oauth.access";
-		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-		requestBody.add("client_id", slackAppId);
-		requestBody.add("client_secret", slackAppSecret);
-		requestBody.add("code", code);
-		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+		String requestUrl = url + "?cient_id=" + slackAppId + "&client_secret=" + slackAppSecret + "&code=" + code
+				+ "&redirect_uri=" + integrationRedirectUrl;
+//		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
+//		requestBody.add("client_id", slackAppId);
+//		requestBody.add("client_secret", slackAppSecret);
+//		requestBody.add("code", code);
+//		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
 		try {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
@@ -140,9 +151,11 @@ public class AuthServiceImpl implements AuthService {
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
 		String url = "https://slack.com/api/users.identity";
-		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-		requestBody.add("token", token);
-		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+		String requestUrl = url + "?token=" + token;
+//		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
+//		requestBody.add("token", token);
+//		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
 		try {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
@@ -185,10 +198,12 @@ public class AuthServiceImpl implements AuthService {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
 		String url = "https://slack.com/api/users.info";
-		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-		requestBody.add("token", token);
-		requestBody.add("user", slackId);
-		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+		String requestUrl = url + "?token=" + token + "&user=" + slackId;
+//		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
+//		requestBody.add("token", token);
+//		requestBody.add("user", slackId);
+//		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
 		try {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
