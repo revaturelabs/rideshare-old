@@ -212,14 +212,18 @@ public class SlackController {
 //					System.out.println("Original Message: " + originalMessage);
 					boolean acceptRequest = slackService.isMessageActionable(payload);
 					
-					if (acceptRequest)
+					if (acceptRequest) {
 						System.out.println("Accept Request");
+						String confirmationMessage = slackService.createRequestConfirmation(payload);
+						System.out.println("Confirmation: " + confirmationMessage);
+						restTemplate.postForLocation(messageurl, "{\"replace_original\":\"true\",\"text\":\"" + confirmationMessage + "\"}");
+					}
 					else 
 						System.out.println("Reject Request");
 				}
 				else if (value.equals("cancel")) {
 					System.out.println("Cancel Button clicked");
-					restTemplate.postForLocation(messageurl, "{\"replace_original\":\"true\",\"text\":\"Ride request cancelled\"}");
+					restTemplate.postForLocation(messageurl, "{\"replace_original\":\"true\",\"text\":\"Your ride request has been cancelled\"}");
 				}
 			}
 		} catch (IOException e) {

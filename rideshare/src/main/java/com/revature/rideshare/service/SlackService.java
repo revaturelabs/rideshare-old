@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -150,9 +151,69 @@ public class SlackService{
 		return null;
 	}
 	
+	/**
+	 * Creates a request confirmation message that contains the values that the user selected
+	 * and creates a ride request in the application.
+	 * @param payload, the slack payload
+	 * @return the confirmation message
+	 */
+	public String createRequestConfirmation(JsonNode payload) {
+		String userId = payload.path("user").path("id").asText();
+		String message = payload.path("original_message").toString();
+		ObjectMapper mapper = new ObjectMapper();
+		
+		
+		System.out.println("User ID: " + userId);
+		System.out.println("Message: " + message);
+		
+		try {
+			ArrayList<String> values = new ArrayList<String>();
+			SlackJSONBuilder slackMessage = mapper.readValue(message, SlackJSONBuilder.class);
+			values = getTextFields(slackMessage);
+			values.forEach(v -> System.out.println("Value: " + v));
+			String date = values.get(0);
+			String hour = values.get(1);
+			String minutes = values.get(2);
+			String meridian = values.get(3);
+			Date time = createRideDate(date, hour, minutes, meridian);
+			String fromPOI = values.get(4);
+			String toPOI = values.get(5);
+			String confirmationMessage = "Your ride request for " + time.toString()
+										+ " from " + fromPOI + " to " + toPOI + " has been created";
+			return confirmationMessage;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	@SuppressWarnings("deprecation")
+    public Date createRideDate(String dateString,String hour,String minute,String meridian){
+        int currentYear=new Date().getYear();
+        int month = Integer.parseInt(dateString.split("/")[0]) - 1;
+        int day = Integer.parseInt(dateString.split("/")[1]);
+        int startHour = Integer.parseInt(hour);
+        int startMinute = Integer.parseInt(minute);
+        if(meridian.equals("AM")){
+            if(startHour==12){
+                startHour=0;
+            }
+        }else if(meridian.equals("PM")){
+            if(startHour<12){
+                startHour=startHour+12;
+            }
+        }
+        Date time = new Date(currentYear,month,day,startHour,startMinute);
+        return time;
+    }
+	
 	public ArrayList<String> getTextFields(SlackJSONBuilder slackMessage){
 		ArrayList<Attachment> attachments = slackMessage.getAttachments();
-		ArrayList<String> strings=new ArrayList<String>();
+		ArrayList<String> strings = new ArrayList<String>();
+		String[] dateSplit = slackMessage.getText().split(" ");
+        strings.add(dateSplit[dateSplit.length-1]);
 		for(Attachment attachment:attachments){
 			ArrayList<Action> actions = attachment.getActions();
 			for(Action action:actions){
