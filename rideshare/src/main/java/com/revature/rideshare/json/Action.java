@@ -7,6 +7,10 @@ import java.util.ArrayList;
  */
 public class Action {
 	
+	private String id;
+	private String data_source;
+	private String style;
+	
 	/*
 	 * Provide a string to give this specific action a name. The name will be returned to your 
 	 * Action URL along with the message's callback_id when this action is invoked.
@@ -31,6 +35,17 @@ public class Action {
 	 * no-arg constructor
 	 */
 	public Action() {}
+	
+	public Action(String id, String dataSource, String style, String name, String text, String type, ArrayList<Option> options) {
+		super();
+		this.id = id;
+		this.data_source = dataSource;
+		this.style = style;
+		this.name = name;
+		this.text = text;
+		this.type = type;
+		this.options = options;
+	}
 	
 	/**
 	 * Option-less constructor used to create an Action
@@ -140,6 +155,30 @@ public class Action {
 	 */
 	public void setOptions(ArrayList<Option> options) {
 		this.options = options;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getData_source() {
+		return data_source;
+	}
+
+	public void setData_source(String data_source) {
+		this.data_source = data_source;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
 	/**

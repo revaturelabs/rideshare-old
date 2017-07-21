@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * This class is used to create a JSON object for passing messages to the user
  */
-public class RideRequestJSON {
+public class SlackJSONBuilder {
 	
 	// Name of the channel, @username, or user_id
 	private String channel;
@@ -25,6 +25,11 @@ public class RideRequestJSON {
 	 */
 	private String response_type;
 	
+	private String bot_id;
+	private String type;
+	private String subtype;
+	private String ts;
+	
 	// Provide a JSON array of attachment objects. Adds additional components to the message. 
 	// Messages should contain no more than 20 attachments.
 	private ArrayList<Attachment> attachments;
@@ -32,7 +37,16 @@ public class RideRequestJSON {
 	/**
 	 * No-arg constructor 
 	 */
-	public RideRequestJSON() {}
+	public SlackJSONBuilder() {}
+	
+	public SlackJSONBuilder(String text, String botId, String type, String subtype, String ts, ArrayList attachments) {
+		this.text = text;
+		this.bot_id = botId;
+		this.type = type;
+		this.subtype = subtype;
+		this.ts = ts;
+		this.attachments = attachments;
+	}
 	
 	/**
 	 * Constructor used for creating a Request JSON object
@@ -41,7 +55,7 @@ public class RideRequestJSON {
 	 * @param response_type
 	 * @param attachments
 	 */
-	public RideRequestJSON(String channel, String text, String response_type, ArrayList attachments) {
+	public SlackJSONBuilder(String channel, String text, String response_type, ArrayList attachments) {
 		this.channel = channel;
 		this.text = text;
 		this.response_type = response_type;
@@ -110,6 +124,38 @@ public class RideRequestJSON {
 	 */
 	public void setAttachments(ArrayList<Attachment> attachments) {
 		this.attachments = attachments;
+	}
+
+	public String getBot_id() {
+		return bot_id;
+	}
+
+	public void setBot_id(String bot_id) {
+		this.bot_id = bot_id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(String subtype) {
+		this.subtype = subtype;
+	}
+
+	public String getTs() {
+		return ts;
+	}
+
+	public void setTs(String ts) {
+		this.ts = ts;
 	}
 
 	/**

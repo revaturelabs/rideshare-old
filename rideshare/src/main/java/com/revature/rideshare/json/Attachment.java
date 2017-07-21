@@ -7,6 +7,8 @@ import java.util.ArrayList;
  */
 public class Attachment {
 	
+	private String id;
+	
 	// The basic text of the message. Only required if the message contains zero attachments.
 	private String text;
 	
@@ -37,6 +39,16 @@ public class Attachment {
 	 * no-arg constructor
 	 */
 	public Attachment() {}
+	
+	public Attachment(String id, String text, String fallback, String callback_id, String color, String attachment_type, ArrayList actions) {
+		this.id = id;
+		this.text = text;
+		this.fallback = fallback;
+		this.callback_id = callback_id;
+		this.color = color;
+		this.attachment_type = attachment_type;
+		this.actions = actions;
+	}
 	
 	/**
 	 * Constructor used for creating an Attachment
@@ -150,6 +162,14 @@ public class Attachment {
 	 */
 	public void setActions(ArrayList<Action> actions) {
 		this.actions = actions;
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	/**
