@@ -18,14 +18,6 @@
 
 <script src="../js/googleMapAPI/markerclusterer.js"></script>
 
-
-
-
-
-
-
-
-
 <!-- Tabs that display active rides and ride history for a user -->
 <div>
 
@@ -202,9 +194,10 @@
 						<tr>
 							<td>
 								<select id="fromPOI" class="form-control" ng-model="pickup">
+									<option value="" disabled selected>Destination</option>
 									<option ng-repeat="x in allMainPOI"
 										ng-selected="start{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
-										x.poiName + " - " + x.addressLine1 }}</option>
+										x.poiName }}</option>
 								</select>
 							</td>
 						</tr>
@@ -214,9 +207,10 @@
 						<tr>
 							<td>
 								<select id="toPOI" class="form-control" ng-model="dropoff">
+									<option value="" disabled selected>Destination</option>
 									<option ng-repeat="x in allMainPOI"
 										ng-selected="destination{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
-										x.poiName + " - " + x.addressLine1 }}</option>
+										x.poiName }}</option>
 								</select>
 
 							</td>

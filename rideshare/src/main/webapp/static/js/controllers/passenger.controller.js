@@ -3,22 +3,10 @@ export let passengerController = function($scope, $http, $state, $location){
 	// global variables
 	let user;
 	let poiLimit = 0;
-
+	
 	$http.get("user/me").then(function(response){
 		// get current user
 		user = response.data;
-		
-		// gets user main POI then sets the starting point
-		// drop down to the users main POI
-		if(user.mainPOI == null){
-			// sets the default drop down option to 1
-			let userPOI = 'start1';
-			$scope[userPOI] = true;
-		}else{
-			// sets the start drop down to the users main POI
-			let userPOI = 'start'+user.mainPOI.poiId;
-			$scope[userPOI] = true;
-		}
 	})
 	.then(function(){
 		$http.get('poiController').then(function(response){
@@ -43,12 +31,6 @@ export let passengerController = function($scope, $http, $state, $location){
 				locations.push(temp);
 			};
 			
-			// create the label numbering
-			let labels = [];
-			for(let x = 1; x < response.data.length+1; x++){
-				labels.push(x.toString());
-			}
-			
 			// used to initialize the google map
 			function initMap() {
 				let directionsDisplay = new google.maps.DirectionsRenderer();
@@ -60,10 +42,6 @@ export let passengerController = function($scope, $http, $state, $location){
 					disableDefaultUI: true
 				});
 
-				var infowindow = new google.maps.InfoWindow({
-					content: "here"
-				});
-
 				// Add some markers to the map.
 				// Note: The code uses the JavaScript Array.prototype.map()
 				// method to create an array of markers based on a given
@@ -71,8 +49,7 @@ export let passengerController = function($scope, $http, $state, $location){
 				// to do with the Google Maps API.
 				var markers = locations.map(function(location, i) {
 					return new google.maps.Marker({
-						position: location,
-						label: labels[i]
+						position: location
 					});
 				});
 				
@@ -139,7 +116,8 @@ export let passengerController = function($scope, $http, $state, $location){
 					//get the current drop down options id
 					let select1 = document.getElementById("fromPOI");
 					let start = select1.options[select1.selectedIndex].id;
-					
+					console.log(start);
+					 
 					let select2 = document.getElementById("toPOI");
 					let destination = select2.options[select2.selectedIndex].id;
 					
