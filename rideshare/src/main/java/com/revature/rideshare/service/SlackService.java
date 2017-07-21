@@ -151,7 +151,7 @@ public class SlackService{
 	public Attachment createSeatsAttachment(String callbackId){
 		ArrayList<Option> seatOptions = new ArrayList<Option>();
 		ArrayList<Action> actions = new ArrayList<Action>();
-		for(int i=0;i<5;i++){
+		for(int i=1;i<5;i++){
 			Option o = new Option(Integer.toString(i),Integer.toString(i));
 			seatOptions.add(o);
 		}
