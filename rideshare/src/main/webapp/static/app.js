@@ -14,20 +14,26 @@ import { adminRidesController } from './js/controllers/adminRides.controller.js'
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
 import { userProfileController } from './js/controllers/userProfile.controller.js';
-// import { authService } from './js/auth.service.js'
+
+// Clearing the token out of local storage
+localStorage.removeItem('RideShare_auth_token');
 
 //var = function scope
 //const and let = block scope 
 
 const app = angular.module('app', ['ui.router', 'angular-jwt', 'ui.bootstrap.datetimepicker']);
 
-// app.service('authService', authService);
-
 app.run(function(authManager, $http) {
 	authManager.checkAuthOnRefresh();
 	authManager.redirectWhenUnauthenticated();
 
-	// $http.get('')
+	$http.get('/auth/process')
+		.then(function(res) {
+
+		})
+		.catch(function(reason) {
+			
+		});
 });
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
@@ -44,7 +50,6 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 
 	$httpProvider.interceptors.push('jwtInterceptor');
 
-
 	$urlRouterProvider.otherwise('/login');
 
 	$stateProvider
@@ -58,7 +63,8 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		.state('slackLogin', {
 			url: '/login',
 			templateUrl: 'partials/slackLogin.html',
-			controller: slackLoginController
+			controller: slackLoginController,
+			data: { requiresLogin: false }
 		})
 	
 		.state('main.passenger',{
@@ -106,6 +112,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		.state('error', {
 			url: '/error',
 			templateUrl: 'partials/error.html',
-			controller: errorController
+			controller: errorController,
+			data: { requiresLogin: false }
 		})
 });

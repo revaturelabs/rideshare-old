@@ -4,7 +4,7 @@ export let authService = function($http, $window) {
 		if (angular.isDefined(token)) {
 			return token;
 		} else {
-
+			return null;
 		}
 	};
 	this.getUser = function() {
@@ -12,7 +12,7 @@ export let authService = function($http, $window) {
 		if (angular.isDefined(user)) {
 			return user;
 		} else {
-			console.log('no user information available.')
+			return null;
 		}
 	};
 }
