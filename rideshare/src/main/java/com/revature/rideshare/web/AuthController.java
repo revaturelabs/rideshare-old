@@ -1,6 +1,5 @@
 package com.revature.rideshare.web;
 
-import java.io.IOException;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.exception.SlackApiException;
 import com.revature.rideshare.security.RideshareAuthenticationToken;
@@ -65,6 +64,12 @@ public class AuthController {
 	@RequestMapping("/check")
 	public Boolean isAuthenticated(Principal principal) {
 		return principal != null;
+	}
+	
+	@RequestMapping("/process")
+	public ResponseEntity<String> processAuthentication() {
+		ResponseEntity<String> response = null;
+		return response;
 	}
 	
 	@RequestMapping("/authorize")
@@ -182,58 +187,72 @@ public class AuthController {
 			userService.addUser(u);
 		}
 		return u;
-	}
+	} 
 
-//	@GetMapping("/token")
-//	public User getJsonWebToken(OAuth2Authentication authentication, HttpServletResponse response) {
-//		String[] nameTokens = authentication.getName().split(", ");
-//		String slackId = nameTokens[1].substring(3);
-//		String token = authService.createJsonWebToken(slackId);
-//		System.out.println(token);
-//		response.addHeader("token", token);
-//		return u;
+	@GetMapping("/token")
+	public ResponseEntity<String> getJsonWebToken(OAuth2Authentication authentication) {
+		ResponseEntity<String> response = null;
+		System.out.println(authentication);
+		System.out.println("authorities: " + authentication.getAuthorities());
+		OAuth2Request request = authentication.getOAuth2Request();
+		System.out.println("user authentication: " + authentication.getUserAuthentication());
+		System.out.println("is authenticated: " + authentication.isAuthenticated());
+		OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
+		System.out.println("token value: " + details.getTokenValue());
+		System.out.println("token type: " + details.getTokenType());
+		System.out.println("decoded details: " + details.getDecodedDetails());
+		
+		String[] nameTokens = authentication.getName().split(", ");
+		String slackId = nameTokens[1].substring(3);
+		User u = userService.getUserBySlackId(slackId);
+		String token = authService.createJsonWebToken(u);
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("rideshare-token", token);
+		response = new ResponseEntity<String>(headers, HttpStatus.OK);
+		return response;
+	}
+	
+//	@RequestMapping("/getCode")
+//	public void loginUser(@RequestParam("code") String code, HttpServletResponse response) {
+//		String destination = "/login?error=true";
+//		RestTemplate restTemplate = new RestTemplate();
+//		ObjectMapper mapper = new ObjectMapper();
+//		String accessUrl = "https://slack.com/api/oauth.access?client_id=" + slackAppId + "&client_secret="
+//				+ slackAppSecret + "&code=" + code;
+//		ResponseEntity<String> accessResponse = restTemplate.getForEntity(accessUrl, String.class);
+//		try {
+//			JsonNode root = mapper.readTree(accessResponse.getBody());
+//			String accessToken = root.path("access_token").asText();
+//			String tokenUrl = "https://slack.com/api/users.identity?token=" + accessToken;
+//			RestTemplate requestTemplate = new RestTemplate();
+//			ResponseEntity<String> tokenResponse = requestTemplate.getForEntity(tokenUrl, String.class);
+//			System.out.println(tokenResponse);
+//			JsonNode tokenRoot = mapper.readTree(tokenResponse.getBody());
+//			String userName = tokenRoot.path("user").path("name").asText();
+//			String userId = tokenRoot.path("user").path("id").asText();
+//			System.out.println("userName: " + userName + ", userId: " + userId);
+//			User u = userService.getUserBySlackId(userId);
+//			// TODO:update user information here
+//			if (u == null) {
+//				u = new User();
+//				u.setFullName(userName);
+//				u.setSlackId(userId);
+//				userService.addUser(u);
+//			}
+//			Authentication authentication = new PreAuthenticatedAuthenticationToken(u, "blahblahblah");
+//			// can include authorities as third parameter
+//			SecurityContextHolder.getContext().setAuthentication(authentication);
+//			destination = "/";
+//			response.sendRedirect(destination);
+//		} catch (IOException e) {
+//			e.printStackTrace(); // TODO: change this when logging is set up
+//			try {
+//				response.sendRedirect(destination);
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
 //	}
-
-	@RequestMapping("/getCode")
-	public void loginUser(@RequestParam("code") String code, HttpServletResponse response) {
-		String destination = "/login?error=true";
-		RestTemplate restTemplate = new RestTemplate();
-		ObjectMapper mapper = new ObjectMapper();
-		String accessUrl = "https://slack.com/api/oauth.access?client_id=" + slackAppId + "&client_secret="
-				+ slackAppSecret + "&code=" + code;
-		ResponseEntity<String> accessResponse = restTemplate.getForEntity(accessUrl, String.class);
-		try {
-			JsonNode root = mapper.readTree(accessResponse.getBody());
-			String accessToken = root.path("access_token").asText();
-			String tokenUrl = "https://slack.com/api/users.identity?token=" + accessToken;
-			RestTemplate requestTemplate = new RestTemplate();
-			ResponseEntity<String> tokenResponse = requestTemplate.getForEntity(tokenUrl, String.class);
-			System.out.println(tokenResponse);
-			JsonNode tokenRoot = mapper.readTree(tokenResponse.getBody());
-			String userName = tokenRoot.path("user").path("name").asText();
-			String userId = tokenRoot.path("user").path("id").asText();
-			System.out.println("userName: " + userName + ", userId: " + userId);
-			User u = userService.getUserBySlackId(userId);
-			// TODO:update user information here
-			if (u == null) {
-				u = new User();
-				u.setFullName(userName);
-				u.setSlackId(userId);
-				userService.addUser(u);
-			}
-			Authentication authentication = new PreAuthenticatedAuthenticationToken(u, "blahblahblah");
-			// can include authorities as third parameter
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			destination = "/";
-			response.sendRedirect(destination);
-		} catch (IOException e) {
-			e.printStackTrace(); // TODO: change this when logging is set up
-			try {
-				response.sendRedirect(destination);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
-	}
 
 }

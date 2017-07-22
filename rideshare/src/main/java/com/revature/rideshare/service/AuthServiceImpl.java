@@ -44,8 +44,8 @@ public class AuthServiceImpl implements AuthService {
 	private String slackAppTeamId;
 	@Value("${deploy.url}")
 	private String rideshareUrl;
-	private String loginRedirectUrl = rideshareUrl + "/auth/login";
-	private String integrationRedirectUrl = rideshareUrl + "/auth/integrate";
+	private String loginRedirectUrl = "https://localhost:8443/auth/login";
+	private String integrationRedirectUrl = "https://localhost:8443/auth/integrate";
 	
 //	@Autowired
 //	OAuth2ClientContext oauth2ClientContext;
@@ -292,7 +292,6 @@ public class AuthServiceImpl implements AuthService {
 			jwt = JWT.create()
 					.withIssuer("Revature RideShare")
 					.withIssuedAt(new Date())
-//					.withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
 					.withAudience("Revature RideShare AngularJS Client")
 					.withClaim("user", userJson)
 					.sign(alg);
