@@ -77,6 +77,95 @@ public class SlackController {
 		this.poiService = poiService;
 	}
 
+	// REQUESTS
+	@PostMapping("/request/add")
+	public void addRequest(@RequestParam(name = "user_id") String userId, @RequestParam(name = "text") String text) {
+		// /request MM/DD tt:tt
+		User u = userService.getUserBySlackId(userId);
+		RideRequest request = new RideRequest();
+		try {
+
+			// Split the input by a space
+			String delim = " ";
+			String[] tokens = text.split(delim);
+			// Split the variables for the Date Object
+			String[] dateTokens = tokens[0].split("/");
+			String[] timeTokens = tokens[1].split(":");
+			@SuppressWarnings("deprecation")
+			Date rideDate = new Date(LocalDate.now().getYear() - 1900, Integer.parseInt(dateTokens[0]) - 1,
+					Integer.parseInt(dateTokens[1]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
+
+			request.setUser(u);
+			request.setTime(rideDate);
+			rideService.addRequest(request);
+		} catch (NumberFormatException nfe) {
+
+		}catch (NullPointerException npe){
+
+		}
+	}
+
+	// RIDES
+	@PostMapping("/ride/add")
+	public void addRide(@RequestParam(name = "user_id") String userId, @RequestParam(name= "text") String text){
+		// /ride MM/DD hr:mm seats
+		User u = userService.getUserBySlackId(userId);
+		Car car = carService.getCarForUser(u);
+		AvailableRide offer = new AvailableRide();
+		try{
+			String delim = " ";
+			String[] tokens = text.split(delim);
+			String[] dateTokens = tokens[0].split("/");
+			String[] timeTokens = tokens[1].split(":");
+			@SuppressWarnings("deprecation")
+			Date offerDate = new Date(LocalDate.now().getYear() - 1900, Integer.parseInt(dateTokens[0]) - 1,
+					Integer.parseInt(dateTokens[1]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
+			short seats = Short.parseShort(tokens[2]);
+			offer.setCar(car);
+			offer.setSeatsAvailable(seats);
+			offer.setTime(offerDate);
+			rideService.addOffer(offer);
+		}catch(NumberFormatException nfe){
+
+		}catch(NullPointerException npe){
+
+		}
+	}
+
+	@PostMapping("/findRides")
+	public void sendFindRidesMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
+		RestTemplate restTemplate = new RestTemplate();
+		
+		String messageurl = responseUrl;
+		// TODO: error check for date prior to current date
+		String[] params = text.split(" ");
+		String date = params[0];
+		if(date.split("/").length<2){
+			restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\""+"Please Select a Date."+"\"}");
+		}else{
+			String findRidesMessage = slackService.findRidesMessage(userId, date);
+	        restTemplate.postForLocation(responseUrl, findRidesMessage);
+		}
+	}
+	
+	@PostMapping("/findRequests")
+	public void sendFindRequestsMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
+		request = URLDecoder.decode(request, "UTF-8");
+		RestTemplate restTemplate = new RestTemplate();
+		
+		// TODO: error check for date prior to current date
+		String[] params = text.split(" ");
+		String date = params[0];
+
+//		String[] date = text.split(" ")[0].split("/");
+//		int month = Integer.parseInt(date[0]);
+//		int day = Integer.parseInt(date[1]);
+
+		
+		String rideMessage = slackService.newRideMessage(userId, date);
+        restTemplate.postForLocation(responseUrl, rideMessage);
+	}
+	
 	@PostMapping("/newride")
 	public void sendRideMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
 		request = URLDecoder.decode(request, "UTF-8");
@@ -144,7 +233,7 @@ public class SlackController {
 			JsonNode payload = mapper.readTree(request);
 			int attachId = payload.path("attachment_id").asInt() - 1;
 			String type = payload.path("actions").path(0).path("type").asText();
-
+			String callbackId = payload.path("callback_id").asText();
 			if (type.equals("select")) {
 				String selectedValue = payload.path("actions").path(0).path("selected_options").path(0).path("value").asText();
 				String[] positionValue = selectedValue.split("-");
@@ -173,9 +262,17 @@ public class SlackController {
 							restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\"" + error + "\"}");
 						}
 						else {
+							boolean isMessageEndOfBranch =slackService.isMessageEndOfBranch(callbackId); 
 							String confirmationMessage=slackService.handleMessage(payload);
-							restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\""+confirmationMessage+"\"}");
-							System.out.println("Accept Request");
+							System.out.println(isMessageEndOfBranch);
+							if(isMessageEndOfBranch){
+								restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\""+confirmationMessage+"\"}");
+								System.out.println("Accept Request");
+							}else{
+								System.out.println("Confirmation Message:\n"+confirmationMessage);
+								System.out.println("Payload:\n"+payload.toString());
+								restTemplate.postForLocation(messageurl,confirmationMessage);
+							}
 						}
 					}
 					else {

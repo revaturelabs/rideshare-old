@@ -1,8 +1,10 @@
 package com.revature.rideshare.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -16,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.revature.rideshare.dao.AvailableRideRepository;
-import com.revature.rideshare.dao.RideRepository;
-import com.revature.rideshare.dao.RideRequestRepository;
+
 import com.revature.rideshare.domain.AvailableRide;
 import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.PointOfInterest;
@@ -36,8 +36,6 @@ public class SlackService{
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	private RideRepository rideRepo;
 
 	@Autowired
 	private RideService rideService;
@@ -47,12 +45,6 @@ public class SlackService{
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private RideRequestRepository rideReqRepo;
-
-	@Autowired
-	private AvailableRideRepository availableRideRepo;
 
 	@Autowired
 	private PointOfInterestService poiService;
@@ -90,18 +82,6 @@ public class SlackService{
 		this.rideService = rideService;
 	}
 
-	public void setRideRepo(RideRepository rideRepo) {
-		this.rideRepo = rideRepo;
-	}
-
-	public void setRideReqRepo(RideRequestRepository rideReqRepo) {
-		this.rideReqRepo = rideReqRepo;
-	}
-
-	public void setAvailableRideRepo(AvailableRideRepository availableRideRepo) {
-		this.availableRideRepo = availableRideRepo;
-	}
-
 	public void setPoiService(PointOfInterestService poiService) {
 		this.poiService = poiService;
 	}
@@ -121,11 +101,7 @@ public class SlackService{
 	public String newRideMessage(String userId, String date) {
 		ObjectMapper mapper = new ObjectMapper();
 
-		// Creating the JSON string
-		ArrayList<Action> actions = new ArrayList<Action>();
-		ArrayList<Action> actions2 = new ArrayList<Action>();
 		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
-		ArrayList<Option> options = new ArrayList<Option>();
 		String callbackId = "newRideMessage";
 
 		// Creating the attachments
@@ -166,12 +142,8 @@ public class SlackService{
 	 */
 	public String newRequestMessage(String userId, String date) {
 		ObjectMapper mapper = new ObjectMapper();
-
-		// Creating the JSON string
-		ArrayList<Action> actions = new ArrayList<Action>();
-		ArrayList<Action> actions2 = new ArrayList<Action>();
+		
 		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
-		ArrayList<Option> options = new ArrayList<Option>();
 		String callbackId = "newRequestMessage";
 
 		// Creating the attachments
@@ -195,6 +167,38 @@ public class SlackService{
 		return requestMessage;
 	}
 
+	public String findRidesMessage(String userId,String date){
+		ObjectMapper mapper = new ObjectMapper();
+
+		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+		String callbackId = "findRidesMessage";
+
+		// Creating the attachments
+		Attachment toFromPOIAttachment = createPoiSelectDestinationAttachment(callbackId);
+		Attachment startTimeAttachment = createTimeAttachment(callbackId);
+		Attachment endTimeAttachment = createTimeAttachment(callbackId);
+		startTimeAttachment.setText("Select start time.");
+		endTimeAttachment.setText("Set end time.");
+		attachments.add(toFromPOIAttachment);
+		attachments.add(startTimeAttachment);
+		attachments.add(endTimeAttachment);
+		attachments.add(createConfirmationButtonsAttachment(callbackId));
+		SlackJSONBuilder rr = new SlackJSONBuilder(userId, "Ride request for " + date, "in_channel", attachments);
+		rr.addDelimiters();
+
+		String ridesMessage = "";
+		try {
+			ridesMessage = mapper.writeValueAsString(rr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return ridesMessage;
+	}
+	
+	public String findRequestsMessage(String userId,String date){
+		return null;
+	}
+	
 	/**
 	 * Creates the Attachment that contains a drop down menu with the number of seats a ride can have.
 	 * @param callbackId
@@ -251,7 +255,7 @@ public class SlackService{
 				availableRide.setTime(time);
 				availableRide.setNotes("");
 				System.out.println(availableRide);
-				availableRideRepo.saveAndFlush(availableRide);
+				rideService.addOffer(availableRide);
 				String confirmationMessage = "Your ride for " + time.toString()
 				+ " from " + pickupName + " to " + dropoffName +" with "+seatsAvailable+" seats  has been created";
 				return confirmationMessage;
@@ -309,7 +313,69 @@ public class SlackService{
 		}
 		return null;
 	}
+	public boolean foundRidesByMessage(String message){
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try {
+			SlackJSONBuilder cMessage = mapper.readValue(message, SlackJSONBuilder.class);
+			if(cMessage.getAttachments().get(0).getActions().get(0).getText().equals("Select from the following rides")){
+				return false;
+			}else{
+				return true;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public String foundRidesByMessage(JsonNode payload){
+		ObjectMapper mapper = new ObjectMapper();
+		String userId=getUserId(payload);
+		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+		String callbackId = "foundRidesByMessage";
+		ArrayList<String> strings = getTextFields(payload);
+		String dateString = strings.get(0);
+		String filter = strings.get(1);
+		String poiName = strings.get(2);
+		String startHour = strings.get(3);
+		String startMinute = strings.get(4);
+		String startMeridian = strings.get(5);
+		String endHour = strings.get(6);
+		String endMinute = strings.get(7);
+		String endMeridian = strings.get(8);
+		//TODO:remove test print statement 
+		for(String string:strings){
+			System.out.println("Form Input: "+string);
+		}
+		Date startTime = createRideDate(dateString,startHour,startMinute,startMeridian);
+		Date endTime = createRideDate(dateString,endHour,endMinute,endMeridian);
+		// Creating the attachments
+		System.out.println("start time: "+startTime);
+		System.out.println("end time: "+endTime);
+		Attachment availableRideAttachment = createAvailableRidesAttachment(startTime,endTime,filter,poiName,callbackId);
+		
+		attachments.add(availableRideAttachment);
+		attachments.add(createConfirmationButtonsAttachment(callbackId));
+		if(attachments.get(0).getActions().get(0).getOptions().size()==0){
+			return "{\"replace_original\":\"true\",\"text\":\""+"No rides matching that time were found."+"\"}";
+		}
+		SlackJSONBuilder rr = new SlackJSONBuilder(userId, "Matching rides for "+ dateString, "in_channel", attachments);
+		rr.addDelimiters();
 
+		String requestMessage = "";
+		try {
+			requestMessage = mapper.writeValueAsString(rr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return requestMessage;
+	}
+	
+	public String foundRequestsByMessage(JsonNode payload){
+		return "Message not implemented";
+	}
+	
 	/**
 	 * Creates a date object
 	 * @param dateString, a string that has the following format: "MM/DD"
@@ -337,12 +403,48 @@ public class SlackService{
 		Date time = new Date(currentYear,month,day,startHour,startMinute);
 		return time;
 	}
-
+	
 	/**
 	 * Gets the "text" fields from each drop down menu in the message
 	 * @param slackMessage
 	 * @return an ArrayList that contains all the text fields
 	 */
+	public ArrayList<String> getTextFields(JsonNode payload){
+		String message = payload.path("original_message").toString();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			ArrayList<String> values = new ArrayList<String>();
+			SlackJSONBuilder slackMessage = mapper.readValue(message, SlackJSONBuilder.class);
+			values = getTextFields(slackMessage);
+			return values;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String getUserId(JsonNode payload){
+		return payload.path("user").path("id").asText();
+	}
+	public String getMessageUrl(JsonNode payload){
+		return payload.path("response_url").asText();
+	}
+	//only works for interactivemessage payloads
+	public JsonNode convertMessageRequestToPayload(String request) throws UnsupportedEncodingException{
+		request = URLDecoder.decode(request, "UTF-8");
+		request = request.substring(8);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			JsonNode payload = mapper.readTree(request);
+			System.out.println("payload is "+payload);
+			return payload;
+		} catch (IOException e) {
+			logger.error("Payload conversion exception");
+			return null;
+		}
+	}
+	
 	public ArrayList<String> getTextFields(SlackJSONBuilder slackMessage){
 		ArrayList<Attachment> attachments = slackMessage.getAttachments();
 		ArrayList<String> strings = new ArrayList<String>();
@@ -411,7 +513,7 @@ public class SlackService{
 		ArrayList<Action> actions = new ArrayList<Action>();
 		ArrayList<Option> poiOptions = new ArrayList<Option>();
 
-		ArrayList<PointOfInterest> pois = (ArrayList) poiService.getAll();
+		ArrayList<PointOfInterest> pois = (ArrayList<PointOfInterest>) poiService.getAll();
 		for (PointOfInterest poi : pois) {
 			Option o = new Option(poi.getPoiName(), poi.getPoiName());
 			poiOptions.add(o);
@@ -442,7 +544,80 @@ public class SlackService{
 
 		return buttonAttachment;
 	}
-
+	
+	@SuppressWarnings("deprecation")
+	public Attachment createAvailableRidesAttachment(Date starttime, Date endtime,String filter,String poiName,String callbackId){
+		ArrayList<Action> actions = new ArrayList<Action>();
+		ArrayList<Option> options = new ArrayList<Option>();
+		PointOfInterest poi = poiService.getPoi(poiName);
+		String destinationText="";
+		String alternateDestinationText="";
+		ArrayList<AvailableRide> rides = rideService.getAvailableRidesByTime(starttime, endtime);
+		//TODO: remove this testing print statement
+		System.out.println(""+rides.size()+" rides matching the specified time");
+		for(AvailableRide ride:rides){
+			System.out.println(ride.toString());
+		}
+		if(filter.equals("To")){
+			rides=rideService.filterAvailableRidesByDropoffPoi(rides, poi);
+			destinationText=poi.getPoiName();
+		}else if(filter.equals("From")){
+			rides=rideService.filterAvailableRidesByPickupPoi(rides, poi);
+			destinationText=poi.getPoiName();
+		}
+		for(AvailableRide ride:rides){
+			if(ride.isOpen()){
+				if(filter.equals("To")){
+					alternateDestinationText=ride.getPickupPOI().getPoiName();
+				}else if(filter.equals("From")){
+					alternateDestinationText=ride.getDropoffPOI().getPoiName();
+				}
+					Date time = ride.getTime();
+					String hours = ""+time.getHours();
+					String minutes = ""+time.getMinutes();
+					String meridian = "AM";
+					if(minutes.equals("0")){
+						minutes = minutes+"0";
+					}
+					if(time.getHours()>=12){
+						meridian = "PM";
+						if(time.getHours()>12){
+							hours = ""+(time.getHours()-12);
+						}
+					}
+					String timeText = hours + ":" + minutes + meridian;
+					String text = timeText+" "+destinationText+">"+alternateDestinationText+" ID:"+ride.getAvailRideId();
+					Option o = new Option(text,text);
+					options.add(o);
+			}
+		}
+		Action action = new Action("AvailableRides","Select from the following rides","select",options);
+		actions.add(action);
+		Attachment availableRidesAttachment = new Attachment("AvailableRides","Available Rides","Unable to display available rides", callbackId, "#3AA3E3", "default", actions);
+		return availableRidesAttachment;
+	}
+	
+	public Attachment createPoiSelectDestinationAttachment(String callbackId){
+		ArrayList<Action> actions = new ArrayList<Action>();
+		ArrayList<Option> poiOptions = new ArrayList<Option>();
+		ArrayList<Option> toFromOptions = new ArrayList<Option>();
+		Option toOption = new Option("To","To");
+		Option fromOption = new Option("From","From");
+		toFromOptions.add(toOption);
+		toFromOptions.add(fromOption);
+		ArrayList<PointOfInterest> pois = (ArrayList<PointOfInterest>) poiService.getAll();
+		for (PointOfInterest poi : pois) {
+			Option o = new Option(poi.getPoiName(), poi.getPoiName());
+			poiOptions.add(o);
+		}
+		Action toFromAction = new Action("To/From","To/From","select",toFromOptions);
+		Action poiAction = new Action("POI", "Pick a destination", "select",poiOptions);
+		actions.add(toFromAction);
+		actions.add(poiAction);
+		Attachment attachment = new Attachment("Select a destination or origin", "Unable to view destinations", "newRideMessage", "#3AA3E3", "default", actions);
+		return attachment;
+	}
+	
 	/**
 	 * Process the values that the user submitted in the interactive message
 	 * @param payload
@@ -456,21 +631,71 @@ public class SlackService{
 		try {
 			cMessage = mapper.readValue(currentMessage, SlackJSONBuilder.class);
 			ArrayList<String> strings= getTextFields(cMessage);
-			if(strings.get(4).equals(strings.get(5))){
+			boolean isNewRequestOrRide=(callbackId.equals("newRideMessage")||callbackId.equals("newRequestMessage"));
+			if(isNewRequestOrRide&&strings.get(4).equals(strings.get(5))){
 				return ("Invalid Selection: Cannot use matching origin and destination.");
+			}
+			boolean isFindRequestOrRide=(callbackId.equals("findRideMessage")||callbackId.equals("findRequestMessage"));
+			if(isFindRequestOrRide&&strings.get(6).equals(strings.get(7))){
+				return("Invalid Selection: Cannot use matching origin and destination");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
 		switch(callbackId){
 		case("newRideMessage"):
-
 			return createRideByMessage(payload);
-
 		case("newRequestMessage"):
 			return createRequestByMessage(payload);		
+		case("findRidesMessage"):
+			return foundRidesByMessage(payload);
+		case("findRequestsMessage"):
+			return foundRequestsByMessage(payload);
+		case("foundRequestsByMessage"):
+			return addPassengersToRideByMessage(payload);
+		case("foundRidesByMessage"):
+			return addUserToRideByMessage(payload);
 		default:
-			return "Message does not match any known callbackid";
+			return "Message does not match any known callbackid, callbackId is "+callbackId;
+		}
+	}
+	
+	//for drivers looking to add passengers
+	private String addPassengersToRideByMessage(JsonNode payload) {
+		return "Message not implemented";
+	}
+	
+	//for passengers looking to join a ride
+	private String addUserToRideByMessage(JsonNode payload) {
+		SlackJSONBuilder message = this.convertPayloadToSlackJSONBuilder(payload);
+		String userId = this.getUserId(payload);
+		ArrayList<String> strings = this.getTextFields(payload);
+		String rideInfo = message.getAttachments().get(0).getActions().get(0).getText();
+		long rideId = Long.parseLong(rideInfo.split(":")[rideInfo.split(":").length-1]);
+		User u = userService.getUserBySlackId(userId);
+		AvailableRide ride = rideService.getRideById(rideId);
+		Date time = ride.getTime();
+		String fromPOI = ride.getPickupPOI().getPoiName();
+		String toPOI = ride.getDropoffPOI().getPoiName();
+		boolean addedUser = rideService.acceptOffer(rideId, u);
+		String confirmationMessage;
+		if(addedUser){
+			confirmationMessage = "Your ride request for " + time.toString()
+			+ " from " + fromPOI + " to " + toPOI + " has been created";
+		}else{
+			confirmationMessage = "There was a problem with your request. Please try again.";
+		}
+		return confirmationMessage;
+	}
+	public SlackJSONBuilder convertPayloadToSlackJSONBuilder(JsonNode payload){
+		ObjectMapper mapper = new ObjectMapper();
+		String currentMessage = payload.path("original_message").toString();
+		try {
+			SlackJSONBuilder cMessage = mapper.readValue(currentMessage, SlackJSONBuilder.class);
+			return cMessage;
+		} catch (IOException e) {
+			logger.error("Message extraction exception");
+			return null;
 		}
 	}
 
@@ -485,16 +710,32 @@ public class SlackService{
 		String userId = payload.path("user").path("id").asText();
 		String text = payload.path("original_message").path("text").asText();
 		String date = text.split(" ")[text.split(" ").length - 1];
-
+		
 		Method method;
 		try{
-			method = this.getClass().getMethod(callbackId, userId.getClass(),date.getClass());
-			String template = (String) method.invoke(this, userId,date);
-			return compareMessages(currentMessage, template);
+			String template="";
+			if(templateCanBeBuiltFromPayload(callbackId)){
+				method = this.getClass().getMethod(callbackId, userId.getClass(),date.getClass());
+				template = (String) method.invoke(this, userId,date);
+				return compareMessages(currentMessage, template);
+			}else{//returns the boolean without template comparison(requires direct logic in named method[payload-args])
+				method = this.getClass().getMethod(callbackId,currentMessage.getClass());
+				return (Boolean) method.invoke(this,currentMessage);
+			}
+			
+			
 		}catch(SecurityException|IllegalArgumentException|NoSuchMethodException|IllegalAccessException|InvocationTargetException ex){
 			logger.error("Reflection call error",ex);
 		}
 		return false;
+	}
+
+	public boolean isMessageEndOfBranch(String callbackId){
+		return callbackId.equals("newRideMessage")||callbackId.equals("newRequestMessage")||callbackId.equals("foundRidesByMessage")||callbackId.equals("foundRequestsByMessage");
+	}
+	
+	public boolean templateCanBeBuiltFromPayload(String callbackId){
+		return !(callbackId.equals("foundRidesByMessage")||callbackId.equals("foundRequestsByMessage"));
 	}
 
 	/**
