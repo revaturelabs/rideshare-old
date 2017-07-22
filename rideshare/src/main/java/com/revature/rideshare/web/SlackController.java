@@ -43,141 +43,143 @@ import com.revature.rideshare.service.UserService;
 @RequestMapping("slack")
 public class SlackController {
 
+	
+	/**
+	 * creates an instance of the rideService
+	 */
 	@Autowired
 	private RideService rideService;
+	/**
+	 * creates and instance of the userService
+	 */
 	@Autowired
 	private UserService userService;
+	/**
+	 * creates an instance of the poiService
+	 */
 	@Autowired
 	private PointOfInterestService poiService;
 
+	/**
+	 * Uses a factory and Reflection to build a logger aspect for logging what happens with our database.
+	 */
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	/**
+	 * creates and instance of the carService
+	 */
 	@Autowired
 	private CarService carService;
-
+	/**
+	 * creates an instance of the slackService
+	 */
 	@Autowired
 	private SlackService slackService;
 
+	//set the slack service
 	public void setSlackService(SlackService slackService) {
 		this.slackService = slackService;
 	}
-
+	
+	//set the ride service
 	public void setRideService(RideService rideService) {
 		this.rideService = rideService;
 	}
 
+	//set the user service
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 
+	//set the car service
 	public void setCarService(CarService carService) {
 		this.carService = carService;
 	}
 
+	//set the poi service
 	public void setPoiService(PointOfInterestService poiService) {
 		this.poiService = poiService;
 	}
 
-	// REQUESTS
-	@PostMapping("/request/add")
-	public void addRequest(@RequestParam(name = "user_id") String userId, @RequestParam(name = "text") String text) {
-		// /request MM/DD tt:tt
-		User u = userService.getUserBySlackId(userId);
-		RideRequest request = new RideRequest();
-		try {
 
-			// Split the input by a space
-			String delim = " ";
-			String[] tokens = text.split(delim);
-			// Split the variables for the Date Object
-			String[] dateTokens = tokens[0].split("/");
-			String[] timeTokens = tokens[1].split(":");
-			@SuppressWarnings("deprecation")
-			Date rideDate = new Date(LocalDate.now().getYear() - 1900, Integer.parseInt(dateTokens[0]) - 1,
-					Integer.parseInt(dateTokens[1]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
-
-			request.setUser(u);
-			request.setTime(rideDate);
-			rideService.addRequest(request);
-		} catch (NumberFormatException nfe) {
-
-		}catch (NullPointerException npe){
-
-		}
-
-
-	}
-
-	// RIDES
-	@PostMapping("/ride/add")
-	public void addRide(@RequestParam(name = "user_id") String userId, @RequestParam(name= "text") String text){
-		// /ride MM/DD hr:mm seats
-		User u = userService.getUserBySlackId(userId);
-		Car car = carService.getCarForUser(u);
-		AvailableRide offer = new AvailableRide();
-		try{
-			String delim = " ";
-			String[] tokens = text.split(delim);
-			String[] dateTokens = tokens[0].split("/");
-			String[] timeTokens = tokens[1].split(":");
-			@SuppressWarnings("deprecation")
-			Date offerDate = new Date(LocalDate.now().getYear() - 1900, Integer.parseInt(dateTokens[0]) - 1,
-					Integer.parseInt(dateTokens[1]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
-			short seats = Short.parseShort(tokens[2]);
-			offer.setCar(car);
-			offer.setSeatsAvailable(seats);
-			offer.setTime(offerDate);
-			rideService.addOffer(offer);
-		}catch(NumberFormatException nfe){
-
-		}catch(NullPointerException npe){
-
-		}
-
-	}
-
+	/**
+	 * This method will decode a request to make a ride, construct a ride message with the necessary fields
+	 * to make a ride, and send back the options to the user on slack.
+	 * 
+	 * @param userId
+	 * @param responseUrl
+	 * @param text
+	 * @param request
+	 * @throws UnsupportedEncodingException
+	 */
 	@PostMapping("/newride")
 	public void sendRideMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
+		//decode the passed in request
 		request = URLDecoder.decode(request, "UTF-8");
 
 		// TODO: error check for date prior to current date
+		
+		//split the text parameters by space.
 		String[] params = text.split(" ");
+		
+		//grab the date from the array of parameters and make it its own variable.
 		String date = params[0];
 
-//		String[] date = text.split(" ")[0].split("/");
-//		int month = Integer.parseInt(date[0]);
-//		int day = Integer.parseInt(date[1]);
 
+		
 		RestTemplate restTemplate = new RestTemplate();
+		
+		//call our slack service to construct a ride message to send to the user.
 		String rideMessage = slackService.newRideMessage(userId, date);
-        restTemplate.postForLocation(responseUrl, rideMessage);
+		
+        // posts the message to the user on slack.
+		restTemplate.postForLocation(responseUrl, rideMessage);
 	}
 
+	/**
+	 * This method will decode a sent request to ask for a ride, construct  a request message with
+	 * the necessary fields to construct a ride, and send those options back to the user on slack.
+	 * 
+	 * @param userId
+	 * @param responseUrl
+	 * @param text
+	 * @param request
+	 * @throws UnsupportedEncodingException
+	 */
 	@PostMapping("/newrequest")
 	public void sendRequestMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
+		
+		//Decodes the request from the user, UTF-8 encoding.
 		request = URLDecoder.decode(request, "UTF-8");
 
 		// TODO: error check for date prior to current date
+		//split the text parameters by space.
 		String[] params = text.split(" ");
+		// posts the message to the user on slack.
 		String date = params[0];
 
-//		String[] date = text.split(" ")[0].split("/");
-//		int month = Integer.parseInt(date[0]);
-//		int day = Integer.parseInt(date[1]);
 
 		RestTemplate restTemplate = new RestTemplate();
+		//construct a request message from the slack service. 
 		String requestMessage = slackService.newRequestMessage(userId, date);
+		//post the message back to the user in slack.
         restTemplate.postForLocation(responseUrl, requestMessage);
 	}
-
+	/**
+	 * Checks to see when slack controller is being accessed.
+	 */
 	@GetMapping("/check")
 	public void getCheck(){
 		System.out.println("in slack controller");
 	}
 
+	
+	/**
+	 * The endpoint, keeps track of user interaction with the slack messages.
+	 * @param request
+	 * @throws UnsupportedEncodingException
+	 */
 	@PostMapping("/postcheck")
-//	@RequestMapping(value = "/postcheck", method = RequestMethod.POST,
-//	        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-//	        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+
 	public void postCheck(@RequestBody String request) throws UnsupportedEncodingException {
 		// Decodes the request
 		request = URLDecoder.decode(request, "UTF-8");
@@ -191,7 +193,8 @@ public class SlackController {
 			JsonNode payload = mapper.readTree(request);
 			int attachId = payload.path("attachment_id").asInt() - 1;
 			String type = payload.path("actions").path(0).path("type").asText();
-
+			
+			//tracks when the user selects a dropdown box option.
 			if (type.equals("select")) {
 				String selectedValue = payload.path("actions").path(0).path("selected_options").path(0).path("value").asText();
 				String[] positionValue = selectedValue.split("-");
@@ -205,15 +208,16 @@ public class SlackController {
 		        String messageurl = payload.path("response_url").asText();
 		        restTemplate.postForLocation(messageurl, originalMessage.toString());
 			}
+			//tracks the user when using a button.
 			else if (type.equals("button")){
 				String value = payload.path("actions").path(0).path("value").asText();
 				System.out.println("Values: " + value);
 				String messageurl = payload.path("response_url").asText();
 				if (value.equals("okay")) {
-//					String originalMessage = payload.path("original_message").toString();
-//					System.out.println("Original Message: " + originalMessage);
+					
 					boolean acceptRequest = slackService.isMessageActionable(payload);
 
+					//if request is accepted, send the user the confirmation message. Else, do nothing
 					if (acceptRequest){
 						String confirmationMessage=slackService.handleMessage(payload);
 						restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\""+confirmationMessage+"\"}");
@@ -223,6 +227,7 @@ public class SlackController {
 						System.out.println("Reject Request");
 					}
 				}
+				//if cancel is clicked, message sent saying the ride was canceled.
 				else if (value.equals("cancel")) {
 					System.out.println("Cancel Button clicked");
 					restTemplate.postForLocation(messageurl, "{\"replace_original\":\"true\",\"text\":\"Your ride request has been cancelled\"}");
@@ -240,7 +245,7 @@ public class SlackController {
 		RestTemplate restTemplate = new RestTemplate();
         String messageurl="https://hooks.slack.com/services/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";
 		ObjectMapper mapper = new ObjectMapper();
-		//PointOfInterestService service = new PointOfInterestService();
+
 
 		// Creating the JSON string
 		ArrayList<Action> actions = new ArrayList<Action>();
@@ -254,12 +259,7 @@ public class SlackController {
 			Option o = new Option(poi.getPoiName(), poi.getPoiName().toLowerCase());
 			options.add(o);
 		}
-//		Option o1 = new Option("Revature", "revature");
-//		Option o2 = new Option("Camden", "camden");
-//		Option o3 = new Option("ICON", "icon");
-//		options.add(o1);
-//		options.add(o2);
-//		options.add(o3);
+
 
 		// Creating the first set of actions
 		Action action = new Action("POI", "Pick a destination", "select", options);
