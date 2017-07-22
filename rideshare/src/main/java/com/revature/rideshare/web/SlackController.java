@@ -77,96 +77,52 @@ public class SlackController {
 		this.poiService = poiService;
 	}
 
-	// REQUESTS
-	@PostMapping("/request/add")
-	public void addRequest(@RequestParam(name = "user_id") String userId, @RequestParam(name = "text") String text) {
-		// /request MM/DD tt:tt
-		User u = userService.getUserBySlackId(userId);
-		RideRequest request = new RideRequest();
-		try {
-
-			// Split the input by a space
-			String delim = " ";
-			String[] tokens = text.split(delim);
-			// Split the variables for the Date Object
-			String[] dateTokens = tokens[0].split("/");
-			String[] timeTokens = tokens[1].split(":");
-			@SuppressWarnings("deprecation")
-			Date rideDate = new Date(LocalDate.now().getYear() - 1900, Integer.parseInt(dateTokens[0]) - 1,
-					Integer.parseInt(dateTokens[1]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
-
-			request.setUser(u);
-			request.setTime(rideDate);
-			rideService.addRequest(request);
-		} catch (NumberFormatException nfe) {
-
-		}catch (NullPointerException npe){
-
-		}
-
-
-	}
-
-	// RIDES
-	@PostMapping("/ride/add")
-	public void addRide(@RequestParam(name = "user_id") String userId, @RequestParam(name= "text") String text){
-		// /ride MM/DD hr:mm seats
-		User u = userService.getUserBySlackId(userId);
-		Car car = carService.getCarForUser(u);
-		AvailableRide offer = new AvailableRide();
-		try{
-			String delim = " ";
-			String[] tokens = text.split(delim);
-			String[] dateTokens = tokens[0].split("/");
-			String[] timeTokens = tokens[1].split(":");
-			@SuppressWarnings("deprecation")
-			Date offerDate = new Date(LocalDate.now().getYear() - 1900, Integer.parseInt(dateTokens[0]) - 1,
-					Integer.parseInt(dateTokens[1]), Integer.parseInt(timeTokens[0]), Integer.parseInt(timeTokens[1]));
-			short seats = Short.parseShort(tokens[2]);
-			offer.setCar(car);
-			offer.setSeatsAvailable(seats);
-			offer.setTime(offerDate);
-			rideService.addOffer(offer);
-		}catch(NumberFormatException nfe){
-
-		}catch(NullPointerException npe){
-
-		}
-
-	}
-
 	@PostMapping("/newride")
 	public void sendRideMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
 		request = URLDecoder.decode(request, "UTF-8");
-
-		// TODO: error check for date prior to current date
-		String[] params = text.split(" ");
-		String date = params[0];
-
-//		String[] date = text.split(" ")[0].split("/");
-//		int month = Integer.parseInt(date[0]);
-//		int day = Integer.parseInt(date[1]);
-
 		RestTemplate restTemplate = new RestTemplate();
-		String rideMessage = slackService.newRideMessage(userId, date);
-        restTemplate.postForLocation(responseUrl, rideMessage);
+		
+		if (slackService.isValidUser(userId) != null) {
+			String[] params = text.split(" ");
+			String date = params[0];
+			
+			if (slackService.acceptDate(date)) {
+				String rideMessage = slackService.newRideMessage(userId, date);
+		        restTemplate.postForLocation(responseUrl, rideMessage);
+			}
+			else {
+				String requestError = "{\"text\":\"The date you have chosen is not a valid date\"}";
+				restTemplate.postForLocation(responseUrl, requestError);
+			}
+		}
+		else {
+			String validationError = "{\"text\":\"You are not authorized to use this command\"}";
+			restTemplate.postForLocation(responseUrl, validationError);
+		}
 	}
 
 	@PostMapping("/newrequest")
 	public void sendRequestMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
 		request = URLDecoder.decode(request, "UTF-8");
-
-		// TODO: error check for date prior to current date
-		String[] params = text.split(" ");
-		String date = params[0];
-
-//		String[] date = text.split(" ")[0].split("/");
-//		int month = Integer.parseInt(date[0]);
-//		int day = Integer.parseInt(date[1]);
-
 		RestTemplate restTemplate = new RestTemplate();
-		String requestMessage = slackService.newRequestMessage(userId, date);
-        restTemplate.postForLocation(responseUrl, requestMessage);
+		
+		if (slackService.isValidUser(userId) != null) {
+			String[] params = text.split(" ");
+			String date = params[0];
+			
+			if (slackService.acceptDate(date)) {
+				String requestMessage = slackService.newRequestMessage(userId, date);
+		        restTemplate.postForLocation(responseUrl, requestMessage);
+			}
+			else {
+		        String requestError = "{\"text\":\"The date you have chosen is not a valid date\"}";
+				restTemplate.postForLocation(responseUrl, requestError);
+			}
+		}
+		else {
+			String validationError = "{\"text\":\"You are not authorized to use this command\"}";
+			restTemplate.postForLocation(responseUrl, validationError);
+		}
 	}
 
 	@GetMapping("/check")
@@ -175,9 +131,6 @@ public class SlackController {
 	}
 
 	@PostMapping("/postcheck")
-//	@RequestMapping(value = "/postcheck", method = RequestMethod.POST,
-//	        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-//	        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public void postCheck(@RequestBody String request) throws UnsupportedEncodingException {
 		// Decodes the request
 		request = URLDecoder.decode(request, "UTF-8");
@@ -207,7 +160,7 @@ public class SlackController {
 			}
 			else if (type.equals("button")){
 				String value = payload.path("actions").path(0).path("value").asText();
-				System.out.println("Values: " + value);
+				//System.out.println("Values: " + value);
 				String messageurl = payload.path("response_url").asText();
 				if (value.equals("okay")) {
 //					String originalMessage = payload.path("original_message").toString();
@@ -215,9 +168,15 @@ public class SlackController {
 					boolean acceptRequest = slackService.isMessageActionable(payload);
 
 					if (acceptRequest){
-						String confirmationMessage=slackService.handleMessage(payload);
+						if (slackService.isPreviousTime(payload)) {
+							String error = "The time you have entered has already passed";
+							restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\"" + error + "\"}");
+						}
+						else {
+							String confirmationMessage=slackService.handleMessage(payload);
 							restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\""+confirmationMessage+"\"}");
-						System.out.println("Accept Request");
+							System.out.println("Accept Request");
+						}
 					}
 					else {
 						System.out.println("Reject Request");

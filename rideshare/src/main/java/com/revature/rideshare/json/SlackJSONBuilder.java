@@ -160,8 +160,8 @@ public class SlackJSONBuilder {
 	public void addDelimiters() {
 		for (Attachment attachment : this.attachments) {
 			ArrayList<Action> actions = attachment.getActions();
-			System.out.println("PRE-PRINT");
-			System.out.println(actions.toString());
+			//System.out.println("PRE-PRINT");
+			//System.out.println(actions.toString());
 			for (int i = 0; i < actions.size(); i++) {
 				if (actions.get(i).getType().equals("select")) {
 					ArrayList<Option> actionOptions = actions.get(i).getOptions();
@@ -171,8 +171,8 @@ public class SlackJSONBuilder {
 					}
 				}
 			}
-			System.out.println("POST-PRINT");
-			System.out.println(actions.toString());
+			//System.out.println("POST-PRINT");
+			//System.out.println(actions.toString());
 		}
 	}
 	
