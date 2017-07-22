@@ -1,5 +1,7 @@
 package com.revature.rideshare.service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.revature.rideshare.domain.AvailableRide;
@@ -209,5 +211,16 @@ public interface RideService {
 	 * @return List of PointOfInterest objects.
 	 */
 	List<AvailableRide> sortAvailableByPOI(List<AvailableRide> reqs, PointOfInterest poi);
+
+	List<AvailableRide> getOpenOffersByDestination(int poiId);
+
+	ArrayList<AvailableRide> getAvailableRidesByTime(Date starttime, Date endtime);
+
+	ArrayList<AvailableRide> filterAvailableRidesByDropoffPoi(ArrayList<AvailableRide> rides,
+			PointOfInterest dropoffPoi);
+
+	ArrayList<AvailableRide> filterAvailableRidesByPickupPoi(ArrayList<AvailableRide> rides, PointOfInterest pickupPoi);
+
+	AvailableRide getRideById(long availableRideId);
 
 }

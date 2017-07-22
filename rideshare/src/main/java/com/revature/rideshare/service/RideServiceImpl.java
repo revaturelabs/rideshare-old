@@ -2,6 +2,7 @@ package com.revature.rideshare.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -293,6 +294,11 @@ public class RideServiceImpl implements RideService {
 		return openOffers;
 	}
 
+	@Override
+	public List<AvailableRide> getOpenOffersByDestination(int poiId){
+		return availRideRepo.findByDropoffPOI(poiService.getPoi(poiId));
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getOpenOffersForUser(com.revature.rideshare.domain.User)
 	 */
@@ -438,5 +444,33 @@ public class RideServiceImpl implements RideService {
 
 		return poiByDistance;
 	}
-
+	@Override
+	public ArrayList<AvailableRide> getAvailableRidesByTime(Date starttime, Date endtime){
+		return (ArrayList<AvailableRide>)availRideRepo.findByTimeBetween(starttime, endtime);
+	}
+	@Override
+	public ArrayList<AvailableRide> filterAvailableRidesByDropoffPoi(ArrayList<AvailableRide> rides,PointOfInterest dropoffPoi){
+		ArrayList<AvailableRide> returnList = new ArrayList<AvailableRide>();
+		for(AvailableRide ride:rides){
+			if(ride.getDropoffPOI().getPoiName().equals(dropoffPoi.getPoiName())){
+				returnList.add(ride);
+			}
+		}
+		return returnList;
+	}
+	@Override
+	public ArrayList<AvailableRide> filterAvailableRidesByPickupPoi(ArrayList<AvailableRide> rides,PointOfInterest pickupPoi){
+		ArrayList<AvailableRide> returnList = new ArrayList<AvailableRide>();
+		for(AvailableRide ride:rides){
+			if(ride.getPickupPOI().getPoiName().equals(pickupPoi.getPoiName())){
+				returnList.add(ride);
+			}
+		}
+		return returnList;
+	}
+	@Override
+	public AvailableRide getRideById(long availableRideId){
+		return availRideRepo.findByAvailRideId(availableRideId);
+	}
+	
 }
