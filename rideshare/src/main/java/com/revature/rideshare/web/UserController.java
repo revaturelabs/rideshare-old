@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.rideshare.domain.PointOfInterest;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.UserService;
 

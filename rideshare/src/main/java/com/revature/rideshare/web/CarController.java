@@ -10,12 +10,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.auth0.jwt.JWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.User;
 import com.revature.rideshare.service.CarService;
-import com.revature.rideshare.service.UserService;
 
 @RestController
 @RequestMapping("car")

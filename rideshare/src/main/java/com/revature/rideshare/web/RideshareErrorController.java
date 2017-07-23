@@ -1,13 +1,12 @@
 package com.revature.rideshare.web;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.boot.autoconfigure.web.AbstractErrorController;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,20 +22,24 @@ public class RideshareErrorController extends AbstractErrorController {
 		return "/#/error";
 	}
 
-	@RequestMapping("/error")
-	public void handleError(HttpServletRequest request, HttpServletResponse response) {
-		HttpStatus status = getStatus(request);
-		String destination = getErrorPath() + "?status=" + status.value();
-		try {
-			response.sendRedirect(destination);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-//	public ResponseEntity<String> handleError(HttpServletRequest request) {
+//	public void handleError(HttpServletRequest request, HttpServletResponse response) {
 //		HttpStatus status = getStatus(request);
-//		String destination = getErrorPath() + "?status=" + status.value();
+//		String destination = getErrorPath() + "?reason=" + status.value();
+//		try {
+//			response.sendRedirect(destination);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 //	}
+	
+	@RequestMapping("/error")
+	public ResponseEntity<String> handleError(HttpServletRequest request) {
+		HttpStatus status = getStatus(request);
+		String errorPage = getErrorPath() + "?reason=" + status.value();
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Location", errorPage);
+		ResponseEntity<String> response = new ResponseEntity<String>(headers, HttpStatus.SEE_OTHER);
+		return response;
+	}
 	
 }
