@@ -24,8 +24,6 @@ import com.revature.rideshare.service.RideService;
 @RequestMapping("ride")
 public class RideController {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
 	@Autowired
 	private RideService rideService;
 
@@ -66,7 +64,7 @@ public class RideController {
 	@GetMapping("/request/cancelRide/{id}")
 	public boolean cancelRide(@PathVariable(value = "id") long id,
 			@RequestHeader(name = "Authorization") String token) {
-		User u = User.getUserFromToken(token);
+		User u = authService.getUserFromToken(token);
 		return rideService.cancelRideReopenAvailRide(id, u);
 	}
 	
@@ -87,7 +85,7 @@ public class RideController {
 	@GetMapping("/request/cancelActive/{id}")
 	public boolean cancelActiveRequest(@PathVariable(value = "id") long id,
 			@RequestHeader(name = "Authorization") String token) {
-		User u = User.getUserFromToken(token);
+		User u = authService.getUserFromToken(token);
 		return rideService.cancelActiveRequest(id, u);
 	}
 	
@@ -110,7 +108,7 @@ public class RideController {
 	 */
 	@GetMapping("/request/open")
 	public List<RideRequest> getOpenRequest(@RequestHeader(name = "Authorization") String token) {
-		User u = User.getUserFromToken(token);
+		User u = authService.getUserFromToken(token);
 		return rideService.getOpenRequestsForUser(u);
 	}
 	
@@ -167,7 +165,7 @@ public class RideController {
 	@GetMapping("/offer/cancelActive/{id}")
 	public boolean cancelActiveOffer(@PathVariable(value = "id") long id,
 			@RequestHeader(name = "Authorization") String token) {
-		User u = User.getUserFromToken(token);
+		User u = authService.getUserFromToken(token);
 		return rideService.cancelActiveOffer(id, u);
 	}
 
