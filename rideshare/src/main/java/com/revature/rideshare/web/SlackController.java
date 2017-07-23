@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.revature.rideshare.service.PointOfInterestService;
+import com.revature.rideshare.service.SlackFormatService;
 import com.revature.rideshare.service.SlackService;
 
 @RestController
 @RequestMapping("slack")
 public class SlackController {
-
 
 	/**
 	 * creates an instance of the poiService
@@ -39,6 +39,14 @@ public class SlackController {
 	 */
 	@Autowired
 	private SlackService slackService;
+
+	@Autowired
+	private SlackFormatService slackFormatService;
+	
+	//sets the slack format service (checks dates/users)
+	public void setSlackFormatService(SlackFormatService slackFormatService) {
+		this.slackFormatService = slackFormatService;
+	}
 
 	//set the slack service
 	public void setSlackService(SlackService slackService) {
@@ -60,7 +68,7 @@ public class SlackController {
 	@PostMapping("/findRides")
 	public void sendFindRidesMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request){
 		RestTemplate restTemplate = new RestTemplate();
-		String confirmationMessage = slackService.isValidUserAndDate(userId,text);
+		String confirmationMessage = slackFormatService.isValidUserAndDate(userId,text);
 		if(!confirmationMessage.equals("ok")){
 			restTemplate.postForLocation(responseUrl,"{\"replace_original\":\"true\",\"text\":\""+confirmationMessage+"\"}");
 		}else{
@@ -93,7 +101,7 @@ public class SlackController {
 	@PostMapping("/newride")
 	public void sendRideMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
 		RestTemplate restTemplate = new RestTemplate();
-		String confirmationMessage = slackService.isValidUserAndDate(userId,text);
+		String confirmationMessage = slackFormatService.isValidUserAndDate(userId,text);
 		if(!confirmationMessage.equals("ok")){
 			restTemplate.postForLocation(responseUrl,"{\"replace_original\":\"true\",\"text\":\""+confirmationMessage+"\"}");
 		}else{
@@ -115,7 +123,7 @@ public class SlackController {
 	@PostMapping("/newrequest")
 	public void sendRequestMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
 		RestTemplate restTemplate = new RestTemplate();
-		String confirmationMessage = slackService.isValidUserAndDate(userId,text);
+		String confirmationMessage = slackFormatService.isValidUserAndDate(userId,text);
 		if(!confirmationMessage.equals("ok")){
 			restTemplate.postForLocation(responseUrl,"{\"replace_original\":\"true\",\"text\":\""+confirmationMessage+"\"}");
 		}else{
@@ -170,7 +178,7 @@ public class SlackController {
 
 				//if request is accepted, send the user the confirmation message. Else, do nothing
 				if (acceptRequest){
-					if (slackService.isPreviousTime(payload)) {
+					if (slackFormatService.isPreviousTime(payload)) {
 						String error = "The time you have entered has already passed";
 						restTemplate.postForLocation(messageurl,"{\"replace_original\":\"true\",\"text\":\"" + error + "\"}");
 					}
