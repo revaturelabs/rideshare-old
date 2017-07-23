@@ -121,12 +121,12 @@ public class SlackService{
 	 * 		Attachment 4: contains a drop down menu for number of seats.<br>
 	 * 		Attachment 5: contains two buttons: OKAY and CANCEL<br>
 	 * @param String userId
-	 * @param String date
+	 * @param String text
 	 * @return a JSON string that contains the interactive message for a new ride
 	 */
-	public String newRideMessage(String userId, String date) {
+	public String newRideMessage(String userId, String text) {
 		ObjectMapper mapper = new ObjectMapper();
-
+		String date = getDateFromText(text);
 		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
 		String callbackId = "newRideMessage";
 
@@ -168,12 +168,12 @@ public class SlackService{
 	 * 		Attachment 3: contains a drop down menu for destination POI.<br>
 	 * 		Attachment 4: contains two buttons: OKAY and CANCEL<br>
 	 * @param String userId
-	 * @param String date
+	 * @param String text
 	 * @return String New slack message.
 	 */
-	public String newRequestMessage(String userId, String date) {
+	public String newRequestMessage(String userId, String text) {
 		ObjectMapper mapper = new ObjectMapper();
-		
+		String date = getDateFromText(text);
 		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
 		String callbackId = "newRequestMessage";
 
@@ -197,6 +197,16 @@ public class SlackService{
 		}
 		return requestMessage;
 	}
+	
+	/**
+	 * Pulls date from user slash command text.
+	 * @param String text
+	 * @return String date (mm/dd format)
+	 */
+	public String getDateFromText(String text){
+		return text.split(" ")[text.split(" ").length-1];
+	}
+	
 	/**
 	 * Creates an interactive message that will be sent to the user.<br>
 	 * The message contains four attachments.<br>
@@ -219,12 +229,12 @@ public class SlackService{
 	 * 		</ul>
 	 * 		Attachment 4: contains two buttons: OKAY and CANCEL<br>
 	 * @param String userId
-	 * @param String date
+	 * @param String text
 	 * @return String New slack message.
 	 */
-	public String findRidesMessage(String userId,String date){
+	public String findRidesMessage(String userId,String text){
 		ObjectMapper mapper = new ObjectMapper();
-
+		String date = getDateFromText(text);
 		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
 		String callbackId = "findRidesMessage";
 
@@ -510,11 +520,11 @@ public class SlackService{
 	 * @return JsonNode Payload which can be parsed for message values.
 	 * @throws UnsupportedEncodingException
 	 */
-	public JsonNode convertMessageRequestToPayload(String request) throws UnsupportedEncodingException{
-		request = URLDecoder.decode(request, "UTF-8");
-		request = request.substring(8);
+	public JsonNode convertMessageRequestToPayload(String request){
 		ObjectMapper mapper = new ObjectMapper();
 		try {
+			request = URLDecoder.decode(request, "UTF-8");
+			request = request.substring(8);
 			JsonNode payload = mapper.readTree(request);
 			System.out.println("payload is "+payload);
 			return payload;
@@ -725,7 +735,7 @@ public class SlackService{
 			if(isNewRequestOrRide&&strings.get(4).equals(strings.get(5))){
 				return ("Invalid Selection: Cannot use matching origin and destination.");
 			}
-			boolean isFindRequestOrRide=(callbackId.equals("findRideMessage")||callbackId.equals("findRequestMessage"));
+			boolean isFindRequestOrRide=(callbackId.equals("findRidesMessage")||callbackId.equals("findRequestsMessage"));
 			if(isFindRequestOrRide&&strings.get(6).equals(strings.get(7))){
 				return("Invalid Selection: Cannot use matching origin and destination");
 			}
@@ -976,25 +986,45 @@ public class SlackService{
 	 * @return boolean True if time has passed, false otherwise
 	 */
 	public boolean isPreviousTime(JsonNode payload) {
-		String message = payload.path("original_message").toString();
-		ObjectMapper mapper = new ObjectMapper();
-
-		try {
-			ArrayList<String> strings = new ArrayList<String>();
-			SlackJSONBuilder slackMessage = mapper.readValue(message, SlackJSONBuilder.class);
-
-			// This string array contains six elements:
-			// 		date (mm/dd), hour, minute, meridian, from POI, and to POI
-			strings = getTextFields(slackMessage);
-			Date userDate = createRideDate(strings.get(0), strings.get(1), strings.get(2), strings.get(3));
-			if (isToday(userDate)) {
-				if (timeHasPassed(userDate))
-					return true;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		SlackJSONBuilder message = this.convertPayloadToSlackJSONBuilder(payload);
+		ArrayList<String> strings = getTextFields(message);
+		String callbackId = payload.path("callback_id").asText();
+		System.out.println(callbackId);
+		Date today = new Date();
+		boolean isFoundRequestOrRide=(callbackId.equals("foundRidesByMessage")||callbackId.equals("foundRequestsByMessage"));
+		if(isFoundRequestOrRide){
+			//bypass the check for messages which have already undergone validation of time fields
+			return false;
 		}
-		return false;
+		// This string array contains six elements:
+		// 		date (mm/dd), hour, minute, meridian, from POI, and to POI
+		boolean isFindRequestOrRide=(callbackId.equals("findRidesMessage")||callbackId.equals("findRequestsMessage"));
+		
+		if(!isFindRequestOrRide){
+				Date userDate = createRideDate(strings.get(0), strings.get(1), strings.get(2), strings.get(3));
+				if(userDate.before(today)){
+					return true;
+				}else{
+					return false;
+				}
+//			if (isToday(userDate)) {
+//				if (timeHasPassed(userDate))
+//					return true;
+//			}
+		}else{
+			Date startDate = createRideDate(strings.get(0),strings.get(3),strings.get(4),strings.get(5));
+			Date endDate = createRideDate(strings.get(0),strings.get(6),strings.get(7),strings.get(8));
+			System.out.println("Start\n"+startDate+"\nEnd\n"+endDate+"\nNow\n"+today);
+			System.out.println(startDate.before(today));
+			System.out.println(endDate.before(today));
+			System.out.println(endDate.before(startDate));
+			if(startDate.before(today)||endDate.before(today)||endDate.before(startDate)){
+				return true;
+			}else{
+				return false;
+			}
+			
+		}
 	}
 
 	/**
@@ -1034,5 +1064,20 @@ public class SlackService{
 	 */
 	public User isValidUser(String slackId) {
 		return userService.getUserBySlackId(slackId);
+	}
+	public String isValidUserAndDate(String slackId,String text){
+		//split the text parameters by space.
+		String[] params = text.split(" ");
+		String date = params[0];
+		if(isValidUser(slackId)!=null){
+			if(acceptDate(date)){
+				return "ok";
+			}else{
+			return "That date has passed. Please select a date of today or later.";
+			}
+		}else{
+			return "You have not permitted the slack application in slack or don't exist in our database."
+					+ " Please log in to the application and permit our application to use slash commands.";
+		}
 	}
 }
