@@ -28,12 +28,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-<<<<<<< HEAD
     "angular": "1.5.7",
-=======
-    "angular": "^1.6.5",
-    "angular-bootstrap-datetimepicker": "^1.1.4",
->>>>>>> 6e648b8d6918cee806c1c83a1d5a4f99697342bf
     "angular-jwt": "^0.1.9",
     "moment": "^2.18.1"
   },
