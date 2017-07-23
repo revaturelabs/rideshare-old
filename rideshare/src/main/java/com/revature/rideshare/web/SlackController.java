@@ -3,9 +3,7 @@ package com.revature.rideshare.web;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -22,36 +20,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.revature.rideshare.domain.AvailableRide;
-import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.PointOfInterest;
-import com.revature.rideshare.domain.RideRequest;
-import com.revature.rideshare.domain.User;
 import com.revature.rideshare.json.Action;
 import com.revature.rideshare.json.Attachment;
 import com.revature.rideshare.json.Option;
 import com.revature.rideshare.json.SlackJSONBuilder;
-import com.revature.rideshare.service.CarService;
 import com.revature.rideshare.service.PointOfInterestService;
-import com.revature.rideshare.service.RideService;
 import com.revature.rideshare.service.SlackService;
-import com.revature.rideshare.service.UserService;
 
 @RestController
 @RequestMapping("slack")
 public class SlackController {
 
 
-	/**
-	 * creates an instance of the rideService
-	 */
-	@Autowired
-	private RideService rideService;
-	/**
-	 * creates and instance of the userService
-	 */
-	@Autowired
-	private UserService userService;
 	/**
 	 * creates an instance of the poiService
 	 */
@@ -63,12 +44,7 @@ public class SlackController {
 	 */
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	/**
-	 * creates and instance of the carService
-	 */
-	@Autowired
-	private CarService carService;
-	/**
-	 * creates an instance of the slackService
+	 * Creates an instance of the slackService
 	 */
 	@Autowired
 	private SlackService slackService;
@@ -76,21 +52,6 @@ public class SlackController {
 	//set the slack service
 	public void setSlackService(SlackService slackService) {
 		this.slackService = slackService;
-	}
-
-	//set the ride service
-	public void setRideService(RideService rideService) {
-		this.rideService = rideService;
-	}
-
-	//set the user service
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	//set the car service
-	public void setCarService(CarService carService) {
-		this.carService = carService;
 	}
 
 	//set the poi service
@@ -111,37 +72,13 @@ public class SlackController {
 	 */
 	@PostMapping("/newride")
 	public void sendRideMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
-		//decode the passed in request
-		request = URLDecoder.decode(request, "UTF-8");
-		RestTemplate restTemplate = new RestTemplate();
-
-		// TODO: error check for date prior to current date
-
-		//split the text parameters by space.
-		String[] params = text.split(" ");
-
-		//grab the date from the array of parameters and make it its own variable.
-		String date = params[0];
-
-
-		String rideMessage = slackService.newRideMessage(userId, date);
-		//call our slack service to construct a ride message to send to the user.
-		RestTemplate restTemplate = new RestTemplate();
-
-    // posts the message to the user on slack.
-		restTemplate.postForLocation(responseUrl, rideMessage);
-	}
-
-	@PostMapping("/newride")
-	public void sendRideMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
 		request = URLDecoder.decode(request, "UTF-8");
 		RestTemplate restTemplate = new RestTemplate();
 
 		if (slackService.isValidUser(userId) != null) {
 			String[] params = text.split(" ");
 			String date = params[0];
-
-			if (slackService.acceptDate(date)) {
+			if (slackService.acceptDate(date)){
 				String rideMessage = slackService.newRideMessage(userId, date);
 		        restTemplate.postForLocation(responseUrl, rideMessage);
 			}

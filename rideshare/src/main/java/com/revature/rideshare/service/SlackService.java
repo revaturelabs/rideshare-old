@@ -896,31 +896,37 @@ public class SlackService{
 	 */
 	@SuppressWarnings("deprecation")
 	public boolean acceptDate(String date) {
+		System.out.println(date);
 		String[] dateArray = date.split("/");
 		String monthString = dateArray[0];
 		String dayString = dateArray[1];
 		String yearString = "" + ((new Date()).getYear() + 1900);
-
-		if (isValidDate(yearString + monthString + dayString)) {
-			// Create the user date in the format: yyyymmdd
-			String userDate = yearString + monthString + dayString;
-
-			// Create today's date in the format: yyyymmdd
-			Date today = new Date();
-			String todayMonth = "";
-			if (today.getMonth() < 10)
-				todayMonth = "0" + (today.getMonth() + 1);
-			else
-				todayMonth = "" + (today.getMonth() + 1);
-			String todayDay = "" + today.getDate();;
-			String todayYear = "" + ((new Date()).getYear() + 1900);
-			String todayDate = todayYear + todayMonth + todayDay;
-
-			// Return true if the userDate is either >= today's date
-			if (userDate.compareTo(todayDate) >= 0)
-				return true;
-		}
-		return false;
+		Date checkedDate = this.createRideDate(date, "11", "59", "PM");
+		Date today = new Date();
+		boolean isBeforeToday = today.before(checkedDate);
+		System.out.println(""+checkedDate+today+isBeforeToday);
+		return isBeforeToday;
+//		if (isValidDate(yearString + monthString + dayString)) {
+//			// Create the user date in the format: yyyymmdd
+//			String userDate = yearString + monthString + dayString;
+//			
+//			// Create today's date in the format: yyyymmdd
+//			Date today = new Date();
+//			String todayMonth = "";
+//			if (today.getMonth() < 10)
+//				todayMonth = "0" + (today.getMonth() + 1);
+//			else
+//				todayMonth = "" + (today.getMonth() + 1);
+//			String todayDay = "" + today.getDate();;
+//			String todayYear = "" + ((new Date()).getYear() + 1900);
+//			String todayDate = todayYear + todayMonth + todayDay;
+//
+//			// Return true if the userDate is either >= today's date
+//			if (userDate.compareTo(todayDate) >= 0){
+//				return true;
+//			}
+//		}
+//		return false;
 	}
 
 	/**
