@@ -20,9 +20,7 @@ import { authFactory } from './js/auth.factory.js';
 //const and let = block scope 
 
 const app = angular.module('app', ['ui.router', 'angular-jwt', 'ui.bootstrap.datetimepicker'])//;
-	.factory('authFactory', ['$http', '$window', 'jwtHelper', authFactory]);
-
-// app.service('authService', ['$window', AuthService]);
+	.factory('authFactory', ['$window', '$log', 'jwtHelper', authFactory]);
 
 app.run(function(authManager, $http) {
 	authManager.checkAuthOnRefresh();
@@ -36,8 +34,8 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		unauthenticatedRedirectPath: '/',
 		authPrefix: '',
 		authHeader: 'X-JWT-RIDESHARE',
-		tokenGetter: ['options', function(options) {
-			return localStorage.getItem('RideShare_auth_token')
+		tokenGetter: ['authFactory', function(authFactory) {
+			return authFactory.getToken();
 		}],
 		whiteListedDomains: ['maps.googleapis.com']
 	});
@@ -79,21 +77,54 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			url: '/adminRides', 
 			templateUrl : 'partials/adminRides.html',
 			controller : adminRidesController,
-			data: { requiresLogin: true }
+			data: { requiresLogin: true },
+			resolve: {
+				adminAccess: function() {
+					return new Promise((resolve, reject) => {
+						if (authFactory.isAdmin()) {
+							resolve('You are an admin');
+						} else {
+							reject('You are not an admin');
+						}
+					});
+				}
+			}
 		})
 		
 		.state('main.adminUsers', {
 			url: '/adminUsers',
 			templateUrl: 'partials/adminUsers.html',
 			controller : adminUsersController,
-			data: { requiresLogin: true }
+			data: { requiresLogin: true },
+			resolve: {
+				adminAccess: function() {
+					return new Promise((resolve, reject) => {
+						if (authFactory.isAdmin()) {
+							resolve('You are an admin');
+						} else {
+							reject('You are not an admin');
+						}
+					});
+				}
+			}
 		})
 		
 		.state('main.adminPoi',{
 			url: '/adminPoi',
 			templateUrl : 'partials/adminPOI.html',
 			controller : adminPoiController,
-			data: { requiresLogin: true }
+			data: { requiresLogin: true },
+			resolve: {
+				adminAccess: function() {
+					return new Promise((resolve, reject) => {
+						if (authFactory.isAdmin()) {
+							resolve('You are an admin');
+						} else {
+							reject('You are not an admin');
+						}
+					});
+				}
+			}
 		})
     
 		.state('main.userProfile', {
