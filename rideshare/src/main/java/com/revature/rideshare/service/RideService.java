@@ -60,6 +60,31 @@ public interface RideService {
 	 * @return true on success, false on failure.
 	 */
 	boolean cancelRequest(long id, User u);
+	
+	/**
+	 * Takes in a RideRequest ID. Deletes the open RideRequest.
+	 *
+	 * @param long  id The id of the request to cancel.
+	 * @return true on success, false on failure.
+	 */
+	boolean cancelActiveRequest(long id, User u);
+	
+	/**
+	 * Takes in a Ride ID. Deletes the open Ride and RideRequest, reopens the
+	 * AvailableRide.
+	 *
+	 * @param long  id The id of the request to cancel.
+	 * @return true on success, false on failure.
+	 */
+	boolean cancelRideReopenAvailRide(long id, User u);
+	
+	/**
+	 * Takes in a Ride ID. Completes the open RideRequest and Ride.
+	 *
+	 * @param long  id The id of the request to cancel.
+	 * @return true on success, false on failure.
+	 */
+	boolean completeRequest(long id);
 
 	/**
 	 * Takes in the main poi's id and returns all open requests starting at said
@@ -82,6 +107,16 @@ public interface RideService {
 	 */
 	List<RideRequest> getRequestsForUser(User u);
 
+	/**
+	 * Returns a list of RideRequest objects that are active but not currently associated 
+	 * with an AvailableRide/Ride for the input User.
+	 *
+	 * @param User u  user object to associate list with.
+	 * 
+	 * @return List of Ride objects.
+	 */
+	List<RideRequest> getOpenRequestsForUser(User u);
+	
 	/**
 	 * Takes in a User and returns a list of completed Rides associated with the
 	 * User.
@@ -142,6 +177,15 @@ public interface RideService {
 	 * @return true on success, false on failure.
 	 */
 	boolean cancelOffer(long id, User u);
+	
+	/**
+	 * Takes in an AvailableRide id and removes it from the database.
+	 *
+	 * @param long  id The id of the AvailableRide to cancel.
+	 * 
+	 * @return true on success, false on failure.
+	 */
+	boolean cancelActiveOffer(long id, User u);
 
 	/**
 	 * Takes in the main poi's id and returns all open requests starting at said
@@ -209,5 +253,4 @@ public interface RideService {
 	 * @return List of PointOfInterest objects.
 	 */
 	List<AvailableRide> sortAvailableByPOI(List<AvailableRide> reqs, PointOfInterest poi);
-
 }

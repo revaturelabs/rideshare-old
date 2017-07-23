@@ -33,7 +33,7 @@ public class RideController {
 	public List<Ride> getAllRides() {
 		return rideService.getAll();
 	}
-
+	
 	// REQUESTS
 	@GetMapping("/request")
 	public List<RideRequest> getRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
@@ -49,6 +49,16 @@ public class RideController {
 	}
 
 	/**
+	 * Takes in a rideID, cancels the RideRequest and reopens the AvailableRide.
+	 */
+	@GetMapping("/request/cancelRide/{id}")
+	public boolean cancelRide(@PathVariable(value = "id") long id,
+			@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
+		return rideService.cancelRideReopenAvailRide(id, u);
+	}
+	
+	/**
 	 * Takes in a Ride ID and deleted the Ride and RideRequest objects
 	 * associated.
 	 */
@@ -58,12 +68,40 @@ public class RideController {
 		User u = User.getUserFromToken(token);
 		return rideService.cancelRequest(id, u);
 	}
+	
+	/**
+	 * Takes in a RideRequest ID and deleted the RideRequest objects.
+	 */
+	@GetMapping("/request/cancelActive/{id}")
+	public boolean cancelActiveRequest(@PathVariable(value = "id") long id,
+			@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
+		return rideService.cancelActiveRequest(id, u);
+	}
+	
+	/**
+	 * Takes in a Ride ID and marks the Ride and RideRequest objects
+	 * associated as complete.
+	 */
+	@PostMapping("/request/complete/{id}")
+	public boolean completeRequest(@PathVariable(value = "id") long id) {
+		return rideService.completeRequest(id);
+	}
 
 	@PostMapping("/request/add")
 	public void addRequest(@RequestBody RideRequest req) {
 		rideService.addRequest(req);
 	}
 
+	/**
+	 * Takes in a User and retrieves all active RideRequests for said User.
+	 */
+	@GetMapping("/request/open")
+	public List<RideRequest> getOpenRequest(@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
+		return rideService.getOpenRequestsForUser(u);
+	}
+	
 	@GetMapping("/request/open/{id}")
 	public List<RideRequest> getOpenRequests(@PathVariable(value = "id") int id) {
 		return rideService.getOpenRequests(id);
@@ -109,6 +147,16 @@ public class RideController {
 			@RequestHeader(name = "Authorization") String token) {
 		User u = User.getUserFromToken(token);
 		return rideService.cancelOffer(id, u);
+	}
+	
+	/**
+	 * Takes in an AvailableRide ID and deletes said AvailableRide.
+	 */
+	@GetMapping("/offer/cancelActive/{id}")
+	public boolean cancelActiveOffer(@PathVariable(value = "id") long id,
+			@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
+		return rideService.cancelActiveOffer(id, u);
 	}
 
 	@GetMapping("/offer/open/{id}")
