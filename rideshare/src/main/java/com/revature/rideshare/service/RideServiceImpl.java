@@ -154,6 +154,38 @@ public class RideServiceImpl implements RideService {
 	}
 	
 	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#cancelActiveRequest(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean cancelRideReopenAvailRide(long id, User u) {
+		try {
+			Ride temp = rideRepo.findOne(id);
+			System.out.println(temp.toString());
+			System.out.println(temp.getAvailRide().toString());
+			System.out.println(temp.getRequest().toString());
+			RideRequest req = temp.getRequest();
+			AvailableRide avail = temp.getAvailRide();
+			
+			rideRepo.delete(temp);
+			rideReqRepo.delete(req);
+			
+			avail.setOpen(true);
+			availRideRepo.saveAndFlush(avail);
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#completeRequest(long, com.revature.rideshare.domain.User)
 	 */
 	@Override
@@ -334,6 +366,22 @@ public class RideServiceImpl implements RideService {
 			return false;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#cancelOffer(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean cancelActiveOffer(long id, User u) {
+		try {
+			AvailableRide availRide = availRideRepo.findByAvailRideId(id);
+
+			availRideRepo.delete(availRide);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getOpenOffers(int)
@@ -341,13 +389,13 @@ public class RideServiceImpl implements RideService {
 	@Override
 	public List<AvailableRide> getOpenOffers(int poiId) {
 		List<AvailableRide> openOffers = availRideRepo.findAllByIsOpenTrue();
-
+		
 		Collections.sort(openOffers); // Sorting by date.
 
 		// Sorting by closest to farthest POI
 		PointOfInterest temp = poiService.getAll().get(poiId);
 		openOffers = sortAvailableByPOI(openOffers, temp);
-
+		
 		return openOffers;
 	}
 

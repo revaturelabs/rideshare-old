@@ -121,8 +121,7 @@
 
 						<div class="btn-container">
 								<button type="submit" class="btn btn-primary"
-									ng-click="offerCancel(offer.availRideId)">Cancel Offer</button>
-									
+									ng-click="offerActiveCancel(offer.availRideId)">Cancel Offer {{offer.availRideId}}</button>	
 						</div>
 
 					</div>
@@ -145,12 +144,12 @@
 					</h4>
 				</div>
 				<div id="collapseA{{ride.availRide.availRideId}}" class="panel-collapse collapse">
-					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
+					<div ng-repeat="request in ride.request" class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
 						
 						<div ng-show="isArray(ride.request)">
 							<em>Passengers:</em>
 							<ul class="passenger-list">
-								<li ng-repeat="request in ride.request">
+								<li>
 									{{request.user.fullName}}
 									<span ng-show="request.notes != null"> ( <i>{{request.notes}}</i> )</span>
 									</li>
@@ -160,14 +159,16 @@
 						<div class="btn-container">
 							<button type="submit" class="btn btn-primary"
 								ng-click="offerCancel(ride.availRide.availRideId)">Cancel Offer</button>
-								
+						</div>
+						<div ng-if="request.time < date" class="btn-container" style="display: inline-block;">
+							<button type="submit" class="btn btn-primary"
+								ng-click="completeRequest(ride.rideId)">Complete Request</button>	
 						</div>
 						
-						</div>
 					</div>
-			</div>
 				</div>
-
+			</div>
+			</div>
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="history">

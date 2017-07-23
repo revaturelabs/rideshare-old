@@ -104,8 +104,8 @@
 			</ul>
 						
 			<div class="panel-group" id="accordionActive">
-			<div class="panel panel-default" ng-repeat="x in activeRequests">
-				<div class="panel panel-default" ng-repeat="req in x.request" style = "border: none">
+			<div class="panel panel-default" ng-repeat="req in activeRequests">
+				<div class="panel panel-default" style = "border: none">
 				<div class="panel-heading" data-toggle="collapse" data-target = "#collapseA{{req.requestId}}" style = "background-color: #fafafa;">
 					<h4 class="panel-title">
 						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionActive" href="#collapseA{{req.requestId}}" target="_self" style="text-decoration:none">
@@ -167,12 +167,12 @@
 						<br/>
 						<div class="btn-container" style="display: inline-block;">
 							<button type="submit" class="btn btn-primary" 
-								ng-click="requestCancel(ride.availRide.availRideId)">Cancel Offer</button>
+								ng-click="cancelRide(ride.rideId)">Cancel Ride</button>
 								
 						</div>
 						<div ng-if="request.time < date" class="btn-container" style="display: inline-block;">
 							<button type="submit" class="btn btn-primary"
-								ng-click="completeRequest(ride.rideId)">Complete Request</button>	
+								ng-click="completeRide(ride.rideId)">Complete Request</button>	
 						</div>
 						
 						</div>

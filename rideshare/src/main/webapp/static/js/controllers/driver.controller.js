@@ -112,7 +112,22 @@ export let driverController = function($scope, $http, $state){
 							$scope.$apply;
 						}
 					}
-					
+					console.log("offerCancel........");
+					setTimeout(function(){$state.reload();}, 500);
+				}
+		);
+	};
+	
+	$scope.offerActiveCancel = function(activeRideId) {
+		$http.get('/ride/offer/cancelActive/' + activeRideId).then(
+				(response) => {
+					for(let i = 0; i < $scope.activeRides.length; i++){
+						if($scope.activeRides[i].availRide.availRideId == activeRideId) {
+							$scope.activeRides.splice(i, 1);
+							$scope.$apply;
+						}
+					}
+					console.log("offerActiveCancel........");
 					setTimeout(function(){$state.reload();}, 500);
 				}
 		);
@@ -185,14 +200,24 @@ export let driverController = function($scope, $http, $state){
 					}
 				}
 			}
-			console.log("---------OFFER-------");
-			console.log($scope.activeOffers);
-			console.log("---------OFFER-------");
 		}
 		else if (reqString == "history") {
 			$scope.pastRides = listReq;
 		}
 	}
+	
+	$scope.date = new Date().getTime();
+	$scope.completeRequest = function(rideId) {
+		$http.post('/ride/request/complete/' + rideId).then((response) => {
+			for(let i = 0; i < $scope.activeRides.length; i++){
+				if($scope.activeRides[i].rideId == rideId) {
+					$scope.activeRides.splice(i, 1);
+					$scope.$apply;
+				}
+			}
+			setTimeout(function(){$state.reload();}, 500);
+		});
+	};
 	
 	//stops past dates from being selected in date/time picker
 	$scope.startDateBeforeRender = function($dates) {

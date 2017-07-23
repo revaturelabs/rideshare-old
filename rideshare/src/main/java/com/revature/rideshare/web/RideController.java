@@ -33,7 +33,7 @@ public class RideController {
 	public List<Ride> getAllRides() {
 		return rideService.getAll();
 	}
-
+	
 	// REQUESTS
 	@GetMapping("/request")
 	public List<RideRequest> getRequestsForCurrentUser(@RequestHeader(name = "Authorization") String token) {
@@ -48,6 +48,16 @@ public class RideController {
 		return rideService.acceptRequest(id, u);
 	}
 
+	/**
+	 * Takes in a rideID, cancels the RideRequest and reopens the AvailableRide.
+	 */
+	@GetMapping("/request/cancelRide/{id}")
+	public boolean cancelRide(@PathVariable(value = "id") long id,
+			@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
+		return rideService.cancelRideReopenAvailRide(id, u);
+	}
+	
 	/**
 	 * Takes in a Ride ID and deleted the Ride and RideRequest objects
 	 * associated.
@@ -137,6 +147,16 @@ public class RideController {
 			@RequestHeader(name = "Authorization") String token) {
 		User u = User.getUserFromToken(token);
 		return rideService.cancelOffer(id, u);
+	}
+	
+	/**
+	 * Takes in an AvailableRide ID and deletes said AvailableRide.
+	 */
+	@GetMapping("/offer/cancelActive/{id}")
+	public boolean cancelActiveOffer(@PathVariable(value = "id") long id,
+			@RequestHeader(name = "Authorization") String token) {
+		User u = User.getUserFromToken(token);
+		return rideService.cancelActiveOffer(id, u);
 	}
 
 	@GetMapping("/offer/open/{id}")

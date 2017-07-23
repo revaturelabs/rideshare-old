@@ -70,6 +70,15 @@ public interface RideService {
 	boolean cancelActiveRequest(long id, User u);
 	
 	/**
+	 * Takes in a Ride ID. Deletes the open Ride and RideRequest, reopens the
+	 * AvailableRide.
+	 *
+	 * @param long  id The id of the request to cancel.
+	 * @return true on success, false on failure.
+	 */
+	boolean cancelRideReopenAvailRide(long id, User u);
+	
+	/**
 	 * Takes in a Ride ID. Completes the open RideRequest and Ride.
 	 *
 	 * @param long  id The id of the request to cancel.
@@ -168,6 +177,15 @@ public interface RideService {
 	 * @return true on success, false on failure.
 	 */
 	boolean cancelOffer(long id, User u);
+	
+	/**
+	 * Takes in an AvailableRide id and removes it from the database.
+	 *
+	 * @param long  id The id of the AvailableRide to cancel.
+	 * 
+	 * @return true on success, false on failure.
+	 */
+	boolean cancelActiveOffer(long id, User u);
 
 	/**
 	 * Takes in the main poi's id and returns all open requests starting at said
