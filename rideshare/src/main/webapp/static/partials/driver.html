@@ -43,7 +43,7 @@
 
 			<!-- Select location to filter available rides -->
 			<div class="input-group location-selector">
-				<span class="input-group-addon">Location</span>
+				<span class="input-group-addon">Origin</span>
 				<select class="form-control" ng-model="selectedItem"
 					ng-options="poi.poiName for poi in allPoi track by poi.poiId" ng-change="updateSort(selectedItem)">{{poi[0].poiName}}</select>
 			</div>
