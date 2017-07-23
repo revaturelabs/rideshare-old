@@ -1,8 +1,25 @@
-<!-- Button trigger modal -->
-<div class="btn-container" style="margin: 2em;">
-	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
-		data-target="#myModal">Make offer</button>
+<div id="wrapper">
+   <div id="map" style="height: 250px; width: 100%;"></div>
+
+   <div id="over_map">
+		<button ng-click="clearMapMarkers()" class="btn btn-primary" >Clear Map</button>
+		<!-- <button ng-click="showDirections()" class="btn btn-primary">Directions</button> -->
+		<span id="mapText"></span>
+   </div>
+
+	<!-- Button trigger modal -->
+	<div class="btn-container" style="position:absolute;width:100%;left:0;bottom:-1.5em;z-index:100;">
+		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+			data-target="#myModal">Make Offer</button>
+	</div>
+
 </div>
+
+<p id="display"></p>
+
+<script src="../js/googleMapAPI/markerclusterer.js"></script>
+
+
 
 
 <!-- Tabs that display active rides and ride history for a user -->
@@ -56,7 +73,7 @@
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapse{{req.requestId}}" >
 						
 					<!-- Beginning of expanded portion -->
-					Note: <i>{{req.notes}} <span ng-show=" req.notes == null"> N/A </span></i>
+					<em>Note:</em> {{req.notes}} <span ng-show=" req.notes == null"> N/A </span>
 
 					<div class="btn-container">
 						<button type="button" class="btn btn-primary"
@@ -72,15 +89,45 @@
 
 		</div>
 
-<!-- panel displays active/accepted rides for driver -->
+		<!-- panel displays active/accepted rides for driver -->
 		<div role="tabpanel" class="tab-pane" id="active">
 
 			<!-- html and angular function used to display open rides -->
 			<ul class="tabbed-list">
-				<li ng-if="activeRides.length == 0">No active rides</li>
+				<li ng-if="activeRides.length == 0 && activeOffer.length == 0">No active rides</li>
 			</ul>
 						
 			<div class="panel-group" id="accordionActive">
+			<div class="panel panel-default" ng-repeat="offer in activeOffers" style = "border: none">
+				<div class="panel-heading" data-toggle="collapse" data-target = "#collapseA{{offer.availRideId}}" style = "background-color: #fafafa;">
+					<h4 class="panel-title">
+						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionActive" href="#collapseA{{offer.availRideId}}" target="_self" style="text-decoration:none">
+						
+							<em>@</em> {{offer.time | date: 'h:mm a MMM dd'}}
+							<br/>
+							{{offer.pickupPOI.poiName}}
+							<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+							{{offer.dropoffPOI.poiName}}
+						
+						</a>
+					</h4>
+				</div>
+				<div id="collapseA{{offer.availRideId}}" class="panel-collapse collapse">
+					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{offer.availRideId}}" >
+						<p>This offer has not yet been assigned to a request.</p>
+						<em>Note:</em> {{offer.notes}} <span ng-show=" offer.notes == null"> N/A </span>
+						<br/>
+						<em>Available Seats:</em> {{offer.seatsAvailable}}
+
+						<div class="btn-container">
+								<button type="submit" class="btn btn-primary"
+									ng-click="offerActiveCancel(offer.availRideId)">Cancel Offer</button>	
+						</div>
+
+					</div>
+				</div>
+			</div>
+
 			<div class="panel panel-default" ng-repeat="ride in activeRides" style = "border: none">
 				<div class="panel-heading" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
 					<h4 class="panel-title">
@@ -97,12 +144,15 @@
 					</h4>
 				</div>
 				<div id="collapseA{{ride.availRide.availRideId}}" class="panel-collapse collapse">
-					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
+					<div ng-repeat="request in ride.request" class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
+						<em>Note:</em> {{ride.availRide.notes}} <span ng-show="!ride.availRide.notes"> N/A </span>
+						<br/>
+						<em>Available Seats:</em> {{ride.availRide.seatsAvailable}}
 						
 						<div ng-show="isArray(ride.request)">
 							<em>Passengers:</em>
 							<ul class="passenger-list">
-								<li ng-repeat="request in ride.request">
+								<li>
 									{{request.user.fullName}}
 									<span ng-show="request.notes != null"> ( <i>{{request.notes}}</i> )</span>
 									</li>
@@ -112,14 +162,16 @@
 						<div class="btn-container">
 							<button type="submit" class="btn btn-primary"
 								ng-click="offerCancel(ride.availRide.availRideId)">Cancel Offer</button>
-								
 						</div>
+						<!--<div ng-if="request.time < date" class="btn-container" style="display: inline-block;">
+							<button type="submit" class="btn btn-primary"
+								ng-click="completeRequest(ride.rideId)">Complete Request</button>	
+						</div>-->
 						
-						</div>
-					</div>
 					</div>
 				</div>
-
+			</div>
+			</div>
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="history">
@@ -157,8 +209,7 @@
 								</li>
 							</ul>
 						</div>
-						<br/>
-						Complaint: <i>{{ride.complaint}} <span ng-show=" ride.complaint == null"> N/A </span></i>
+						<!--<br/> Complaint: <i>{{ride.complaint}} <span ng-show=" ride.complaint == null"> N/A </span></i>-->
 						
 					</div>
 				</div>
@@ -188,18 +239,30 @@
 					<table class="table">
 						<tr>
 							<td>
-								<select class="form-control" ng-model="pickup"
-									ng-options="poi.poiName for poi in allPoi" required="required">
+<!-- 								<select class="form-control" ng-model="pickup" id="fromPOI"  -->
+<!-- 									ng-options="poi.poiName for poi in allPoi track by poi.poiId" required="required"> -->
+<!-- 									<option value="" disabled selected>Starting point</option> -->
+<!-- 								</select> -->
+								<select id="fromPOI" class="form-control" ng-model="pickup">
 									<option value="" disabled selected>Starting point</option>
+									<option ng-repeat="x in allMainPOI"
+										ng-selected="start{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+										x.poiName }}</option>
 								</select>
 							</td>
 						</tr>
 
 						<tr>
 							<td>
-								<select class="form-control" ng-model="dropoff"
-									ng-options="poi.poiName for poi in allPoi" required="required">
+<!-- 								<select class="form-control" ng-model="dropoff" id="toPOI"  -->
+<!-- 									ng-options="poi.poiName for poi in allPoi track by poi.poiId" required="required"> -->
+<!-- 									<option value="" disabled selected>Destination</option> -->
+<!-- 								</select> -->
+								<select id="toPOI" class="form-control" ng-model="dropoff">
 									<option value="" disabled selected>Destination</option>
+									<option ng-repeat="x in allMainPOI"
+										ng-selected="destination{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+										x.poiName }}</option>
 								</select>
 							</td>
 						</tr>

@@ -2,12 +2,15 @@ package com.revature.rideshare.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +28,7 @@ import com.revature.rideshare.domain.User;
 
 @Component("rideService")
 public class RideServiceImpl implements RideService {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private RideRepository rideRepo;
@@ -136,6 +140,69 @@ public class RideServiceImpl implements RideService {
 			return false;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#cancelActiveRequest(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean cancelActiveRequest(long id, User u) {
+		try {
+			RideRequest req = rideReqRepo.findOne(id);
+			rideReqRepo.delete(req);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#cancelActiveRequest(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean cancelRideReopenAvailRide(long id, User u) {
+		try {
+			Ride temp = rideRepo.findOne(id);
+			RideRequest req = temp.getRequest();
+			AvailableRide avail = temp.getAvailRide();
+			
+			rideRepo.delete(temp);
+			rideReqRepo.delete(req);
+			
+			avail.setOpen(true);
+			availRideRepo.saveAndFlush(avail);
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#completeRequest(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean completeRequest(long id) {
+		Ride ride = rideRepo.findOne(id);
+		RideRequest req = ride.getRequest();
+		
+		req.setStatus(RequestStatus.SATISFIED);
+		ride.setWasSuccessful(true);
+		
+		RideRequest temp = rideReqRepo.saveAndFlush(req);
+		Ride tempRide = rideRepo.saveAndFlush(ride);
+		if(temp == null || tempRide == null) {
+			return false;
+		}
+		return true;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getOpenRequests(int)
@@ -161,6 +228,26 @@ public class RideServiceImpl implements RideService {
 		return rideReqRepo.findByUser(u);
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#getActiveRequestsForUser(com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public List<RideRequest> getOpenRequestsForUser(User u) {
+		List<RideRequest> allReqs = rideReqRepo.findByUser(u);
+		List<RideRequest> temp = new ArrayList<RideRequest>();
+
+		for (RideRequest r : allReqs) {
+			if (r.getStatus() == RequestStatus.OPEN) {
+				temp.add(r);
+			} else {
+				logger.debug("NOT ADDED\n\n");
+			}
+		}
+
+		return temp;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getActiveRequestsForUser(com.revature.rideshare.domain.User)
 	 */
@@ -276,6 +363,22 @@ public class RideServiceImpl implements RideService {
 			return false;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#cancelOffer(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean cancelActiveOffer(long id, User u) {
+		try {
+			AvailableRide availRide = availRideRepo.findByAvailRideId(id);
+
+			availRideRepo.delete(availRide);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getOpenOffers(int)
@@ -283,16 +386,22 @@ public class RideServiceImpl implements RideService {
 	@Override
 	public List<AvailableRide> getOpenOffers(int poiId) {
 		List<AvailableRide> openOffers = availRideRepo.findAllByIsOpenTrue();
-
+		
 		Collections.sort(openOffers); // Sorting by date.
 
 		// Sorting by closest to farthest POI
-		PointOfInterest temp = poiService.getAll().get(poiId);
+//		PointOfInterest temp = poiService.getAll().get(poiId);
+		PointOfInterest temp = poiService.getPoi(poiId);
 		openOffers = sortAvailableByPOI(openOffers, temp);
-
+		
 		return openOffers;
 	}
 
+	@Override
+	public List<AvailableRide> getOpenOffersByDestination(int poiId){
+		return availRideRepo.findByDropoffPOI(poiService.getPoi(poiId));
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getOpenOffersForUser(com.revature.rideshare.domain.User)
 	 */
@@ -308,6 +417,9 @@ public class RideServiceImpl implements RideService {
 				openOffers.add(a);
 			}
 		}
+		
+		Collections.sort(openOffers);  // Sorting by date
+		
 		return openOffers;
 	}
 
@@ -435,5 +547,33 @@ public class RideServiceImpl implements RideService {
 
 		return poiByDistance;
 	}
-
+	@Override
+	public ArrayList<AvailableRide> getAvailableRidesByTime(Date starttime, Date endtime){
+		return (ArrayList<AvailableRide>)availRideRepo.findByTimeBetween(starttime, endtime);
+	}
+	@Override
+	public ArrayList<AvailableRide> filterAvailableRidesByDropoffPoi(ArrayList<AvailableRide> rides,PointOfInterest dropoffPoi){
+		ArrayList<AvailableRide> returnList = new ArrayList<AvailableRide>();
+		for(AvailableRide ride:rides){
+			if(ride.getDropoffPOI().getPoiName().equals(dropoffPoi.getPoiName())){
+				returnList.add(ride);
+			}
+		}
+		return returnList;
+	}
+	@Override
+	public ArrayList<AvailableRide> filterAvailableRidesByPickupPoi(ArrayList<AvailableRide> rides,PointOfInterest pickupPoi){
+		ArrayList<AvailableRide> returnList = new ArrayList<AvailableRide>();
+		for(AvailableRide ride:rides){
+			if(ride.getPickupPOI().getPoiName().equals(pickupPoi.getPoiName())){
+				returnList.add(ride);
+			}
+		}
+		return returnList;
+	}
+	@Override
+	public AvailableRide getRideById(long availableRideId){
+		return availRideRepo.findByAvailRideId(availableRideId);
+	}
+	
 }

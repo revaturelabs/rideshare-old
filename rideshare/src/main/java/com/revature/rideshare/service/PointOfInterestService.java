@@ -109,4 +109,26 @@ public class PointOfInterestService {
 	public PointOfInterest getPoi(int id) {
 		return poiRepo.findBypoiId(id);
 	}
+	
+	public PointOfInterest getOnePoiByName(String name) {
+		List<PointOfInterest> pois = poiRepo.findByPoiName(name);
+		if (pois.isEmpty()) {
+			return null;
+		} else {
+			return pois.get(0);
+		}
+	}
+	
+	public PointOfInterest getPoiByStreetAddress(String addressLine1) {
+		List<PointOfInterest> pois = poiRepo.findByAddressLine1(addressLine1);
+		if (pois.isEmpty()) {
+			return null;
+		} else {
+			return pois.get(0);
+		}
+	}
+	
+	public PointOfInterest getPoi(String name){
+		return poiRepo.findBypoiName(name);
+	}
 }

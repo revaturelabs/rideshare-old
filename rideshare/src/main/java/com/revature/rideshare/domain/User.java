@@ -1,6 +1,9 @@
 package com.revature.rideshare.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,12 +16,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.auth0.jwt.JWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "USERS")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
 
 	private static final long serialVersionUID = -2923889374579038772L;
 
@@ -51,6 +57,12 @@ public class User implements Serializable {
 
 	@Column(name = "IS_ADMIN", nullable = false)
 	private boolean isAdmin;
+	
+	@Column(name="IS_BANNED", nullable=false)
+	private boolean isBanned;
+	
+	@Column(name="SLACK_URL")
+	private String slackUrl;
 
 	public User() {
 	}
@@ -67,6 +79,22 @@ public class User implements Serializable {
 		this.email = email;
 		this.slackId = slackId;
 		this.isAdmin = isAdmin;
+	}
+	
+	public User(long userId, String firstName, String lastName, String fullName, PointOfInterest mainPOI,
+			PointOfInterest workPOI, String email, String slackId, boolean isAdmin, boolean isBanned, String slackUrl) {
+		super();
+		this.userId = userId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.fullName = fullName;
+		this.mainPOI = mainPOI;
+		this.workPOI = workPOI;
+		this.email = email;
+		this.slackId = slackId;
+		this.isAdmin = isAdmin;
+		this.isBanned = isBanned;
+		this.slackUrl = slackUrl;
 	}
 
 	public long getUserId() {
@@ -141,25 +169,102 @@ public class User implements Serializable {
 		this.isAdmin = isAdmin;
 	}
 
+	public boolean isBanned() {
+		return isBanned;
+	}
+
+	public void setBanned(boolean isBanned) {
+		this.isBanned = isBanned;
+	}
+
+	public String getSlackUrl() {
+		return slackUrl;
+	}
+
+	public void setSlackUrl(String slackUrl) {
+		this.slackUrl = slackUrl;
+	}
+
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", fullName="
 				+ fullName + ", mainPOI=" + mainPOI + ", workPOI=" + workPOI + ", email=" + email + ", slackId="
-				+ slackId + ", isAdmin=" + isAdmin + "]";
+				+ slackId + ", isAdmin=" + isAdmin + ", isBanned=" + isBanned + ", slackUrl=" + slackUrl + "]";
 	}
+	
+	// Implementations for the methods of the UserDetails interface
 
-	public static User getUserFromToken(String token) {
-		ObjectMapper mapper = new ObjectMapper();
-
-		try {
-			String userJson = JWT.decode(token).getClaim("user").asString();
-			return (User) mapper.readValue(userJson, User.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-
-			return null;
+	/*
+	 * All users will have the role of USER. Administrators will additionally have the role of ADMIN
+	 */
+	@JsonIgnore
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		if (this.isAdmin) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		}
+		return authorities;
 	}
 
+	/*
+	 * UNUSED
+	 * (a.k.a. credentials) This will either be null or the current slack api token for the user
+	 */
+	@JsonIgnore
+	@Override
+	public String getPassword() {
+		return null;
+	}
+
+	/*
+	 * The slackId of a user will be their username
+	 */
+	@JsonIgnore
+	@Override
+	public String getUsername() {
+		return slackId;
+	}
+	
+	/*
+	 * Accounts will never expire
+	 */
+	@JsonIgnore
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	/*
+	 * UNUSED
+	 * This is probably meant to be used for preventing multiple simultaneous logins for a single user.
+	 * Taking advantage of this requires the addition of another field in this class, although that field
+	 * may not need to be persisted to the database.
+	 */
+	@JsonIgnore
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	/*
+	 * Slack API tokens probably do expire eventually, but until the actual expiration date can be determined,
+	 * this will just always return true
+	 */
+	@JsonIgnore
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	/*
+	 * Enabled will be the same as not banned
+	 */
+	@JsonIgnore
+	@Override
+	public boolean isEnabled() {
+		return !isBanned;
+	}
+	
 }
