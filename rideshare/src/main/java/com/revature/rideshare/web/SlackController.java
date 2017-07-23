@@ -2,8 +2,6 @@ package com.revature.rideshare.web;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -49,7 +47,7 @@ public class SlackController {
 	private UserService userService;
 	@Autowired
 	private PointOfInterestService poiService;
-
+	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private CarService carService;
@@ -98,10 +96,8 @@ public class SlackController {
 			request.setUser(u);
 			request.setTime(rideDate);
 			rideService.addRequest(request);
-		} catch (NumberFormatException nfe) {
-
-		}catch (NullPointerException npe){
-
+		} catch (NumberFormatException|NullPointerException e) {
+			logger.error("Exception occurred adding request through slack integration.");
 		}
 	}
 
@@ -125,10 +121,8 @@ public class SlackController {
 			offer.setSeatsAvailable(seats);
 			offer.setTime(offerDate);
 			rideService.addOffer(offer);
-		}catch(NumberFormatException nfe){
-
-		}catch(NullPointerException npe){
-
+		}catch(NumberFormatException|NullPointerException e){
+			logger.error("Exception occurred adding ride through slack integration.");
 		}
 	}
 
@@ -161,7 +155,6 @@ public class SlackController {
 //		int month = Integer.parseInt(date[0]);
 //		int day = Integer.parseInt(date[1]);
 
-		
 		String rideMessage = slackService.newRideMessage(userId, date);
         restTemplate.postForLocation(responseUrl, rideMessage);
 	}
@@ -305,7 +298,7 @@ public class SlackController {
 		ArrayList<Option> options = new ArrayList<Option>();
 
 		// Creating the options and adding them to the list;
-		ArrayList<PointOfInterest> pois = (ArrayList) poiService.getAll();
+		ArrayList<PointOfInterest> pois = (ArrayList<PointOfInterest>) poiService.getAll();
 		for (PointOfInterest poi : pois) {
 			Option o = new Option(poi.getPoiName(), poi.getPoiName().toLowerCase());
 			options.add(o);

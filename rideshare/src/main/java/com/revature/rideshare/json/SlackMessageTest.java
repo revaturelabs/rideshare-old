@@ -23,7 +23,7 @@ public class SlackMessageTest {
 		ArrayList<Option> options = new ArrayList<Option>();
 		
 		// Creating the options and adding them to the list;
-		ArrayList<PointOfInterest> pois = (ArrayList) service.getAll();
+		ArrayList<PointOfInterest> pois = (ArrayList<PointOfInterest>) service.getAll();
 		for (PointOfInterest poi : pois) {
 			Option o = new Option(poi.getPoiName(), poi.getPoiName().toLowerCase());
 			options.add(o);

@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 /**
  * This class is used to create a JSON object for passing messages to the user
+ * by creating Java objects which have the hierarchical structure of a slack message.
+ * <br><br>To create an interactive message, first create a set of options or buttons, then 
+ * attach these to an actions array, then attach the actions array to an attachment.
+ * You can then add that attachment to a SlackJSONBuilder object which can be converted into
+ * String format and sent to a user as a slack message.
  */
 public class SlackJSONBuilder {
 	
@@ -38,7 +43,7 @@ public class SlackJSONBuilder {
 	 */
 	public SlackJSONBuilder() {}
 	
-	public SlackJSONBuilder(String text, String botId, String type, String subtype, String ts, ArrayList attachments) {
+	public SlackJSONBuilder(String text, String botId, String type, String subtype, String ts, ArrayList<Attachment> attachments) {
 		this.text = text;
 		this.bot_id = botId;
 		this.type = type;
@@ -54,7 +59,7 @@ public class SlackJSONBuilder {
 	 * @param response_type
 	 * @param attachments
 	 */
-	public SlackJSONBuilder(String channel, String text, String response_type, ArrayList attachments) {
+	public SlackJSONBuilder(String channel, String text, String response_type, ArrayList<Attachment> attachments) {
 		this.channel = channel;
 		this.text = text;
 		this.response_type = response_type;
@@ -160,8 +165,6 @@ public class SlackJSONBuilder {
 	public void addDelimiters() {
 		for (Attachment attachment : this.attachments) {
 			ArrayList<Action> actions = attachment.getActions();
-			//System.out.println("PRE-PRINT");
-			//System.out.println(actions.toString());
 			for (int i = 0; i < actions.size(); i++) {
 				if (actions.get(i).getType().equals("select")) {
 					ArrayList<Option> actionOptions = actions.get(i).getOptions();
@@ -171,8 +174,6 @@ public class SlackJSONBuilder {
 					}
 				}
 			}
-			//System.out.println("POST-PRINT");
-			//System.out.println(actions.toString());
 		}
 	}
 	

@@ -40,7 +40,7 @@ public class Attachment {
 	 */
 	public Attachment() {}
 	
-	public Attachment(String id, String text, String fallback, String callback_id, String color, String attachment_type, ArrayList actions) {
+	public Attachment(String id, String text, String fallback, String callback_id, String color, String attachment_type, ArrayList<Action> actions) {
 		this.id = id;
 		this.text = text;
 		this.fallback = fallback;
@@ -59,7 +59,7 @@ public class Attachment {
 	 * @param attachment_type
 	 * @param actions
 	 */
-	public Attachment(String text, String fallback, String callback_id, String color, String attachment_type, ArrayList actions) {
+	public Attachment(String text, String fallback, String callback_id, String color, String attachment_type, ArrayList<Action> actions) {
 		this.text = text;
 		this.fallback = fallback;
 		this.callback_id = callback_id;
@@ -68,7 +68,7 @@ public class Attachment {
 		this.actions = actions;
 	}
 	
-	public Attachment(String fallback, String callback_id, String color, String attachment_type, ArrayList actions) {
+	public Attachment(String fallback, String callback_id, String color, String attachment_type, ArrayList<Action> actions) {
 		this.fallback = fallback;
 		this.callback_id = callback_id;
 		this.color = color;

@@ -29,7 +29,27 @@ import com.revature.rideshare.json.Action;
 import com.revature.rideshare.json.Attachment;
 import com.revature.rideshare.json.Option;
 import com.revature.rideshare.json.SlackJSONBuilder;
-
+/**
+ * Used for sending constructing/sending slack messages and parsing
+ * incoming slack messages. 
+ * <br><br>Uses SlackJSONBuilder structure to dynamically
+ * create slack messages with nested options and actions in attachment groups.
+ * <br><br>The attachments are then inserted into the SlackJSONBuilder which is converted
+ * into the message format required by slack (in String format.)
+ * <br><br>Message payloads are parsable version of slack's response to
+ * a user's interaction with a slack message.
+ * *<br><br>Message callbackIds should be the same as their creation name for 
+ * reflection invocation purposes.
+ * <br>If a message's template can't be built from its payload, the message
+ * should have a String-arg constructor with the same name to return logic comparison 
+ * <br>(see methods 
+ * {@link SlackService#handleMessage},
+ * {@link SlackService#isMessageActionable})
+ * @since 7/22/2017
+ * @author Mark Worth
+ * @author Gian-Carlo Barreto
+ * @author Dylan McBee
+ */
 @Component("slackService")
 @Transactional
 public class SlackService{
@@ -56,6 +76,7 @@ public class SlackService{
 	 * for the next two years.
 	 */
 	static {
+		@SuppressWarnings("deprecation")
 		int currentYear = (new Date()).getYear() + 1900;
 		for (int year = currentYear; year < currentYear + 2; year++) {
 			for (int month = 1; month <= 12; month++) {
@@ -87,15 +108,20 @@ public class SlackService{
 	}
 
 	/**
-	 * Creates an interactive message that will be sent to the user.
-	 * The message contains five attachments.
-	 * 		Attachment 1: contains three drop down menus for hour(1 - 12), minutes(00, 15, 30, 45), and meridian(AM, PM
-	 * 		Attachment 2: contains a drop down menu for from POI
-	 * 		Attachment 3: contains a drop down menu for to POI
-	 * 		Attachment 4: contains a drop down menu for number of seats
-	 * 		Attachment 5: contains two buttons: OKAY and CANCEL
-	 * @param userId
-	 * @param date
+	  * Creates an interactive message that will be sent to the user.<br>
+	 * The message contains five attachments.<br>
+	 * 		Attachment 1: contains three drop down menus for:
+	 * 		<ul>	
+	 * 			<li>hour(1 - 12)</li>  
+	 * 			<li>minutes(00, 15, 30, 45)</li>
+	 * 			<li>meridian(AM, PM)</li>
+	 * 		</ul>
+	 * 		Attachment 2: contains a drop down menu for origin POI.<br>
+	 * 		Attachment 3: contains a drop down menu for destination POI.<br>
+	 * 		Attachment 4: contains a drop down menu for number of seats.<br>
+	 * 		Attachment 5: contains two buttons: OKAY and CANCEL<br>
+	 * @param String userId
+	 * @param String date
 	 * @return a JSON string that contains the interactive message for a new ride
 	 */
 	public String newRideMessage(String userId, String date) {
@@ -130,15 +156,20 @@ public class SlackService{
 
 
 	/**
-	 * Creates an interactive message that will be sent to the user.
-	 * The message contains five attachments.
-	 * 		Attachment 1: contains three drop down menus for hour(1 - 12), minutes(00, 15, 30, 45), and meridian(AM, PM
-	 * 		Attachment 2: contains a drop down menu for from POI
-	 * 		Attachment 3: contains a drop down menu for to POI
-	 * 		Attachment 4: contains two buttons: OKAY and CANCEL
-	 * @param userId
-	 * @param date
-	 * @return a JSON string that contains the interactive message for a new request
+	 * Creates an interactive message that will be sent to the user.<br>
+	 * The message contains four attachments.<br>
+	 * 		Attachment 1: contains three drop down menus for:
+	 * 		<ul>	
+	 * 			<li>hour(1 - 12)</li>  
+	 * 			<li>minutes(00, 15, 30, 45)</li>
+	 * 			<li>meridian(AM, PM)</li>
+	 * 		</ul>
+	 * 		Attachment 2: contains a drop down menu for origin POI.<br>
+	 * 		Attachment 3: contains a drop down menu for destination POI.<br>
+	 * 		Attachment 4: contains two buttons: OKAY and CANCEL<br>
+	 * @param String userId
+	 * @param String date
+	 * @return String New slack message.
 	 */
 	public String newRequestMessage(String userId, String date) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -166,7 +197,31 @@ public class SlackService{
 		}
 		return requestMessage;
 	}
-
+	/**
+	 * Creates an interactive message that will be sent to the user.<br>
+	 * The message contains four attachments.<br>
+	 * 		Attachment 1: contains two drop down menus for:
+	 * 		<ul>	
+	 * 			<li>Destination/origin selection</li>  
+	 * 			<li>Destination/origin POI</li>
+	 * 		</ul>
+	 * 		Attachment 2: contains a three drop down menus for start time selection with:<br>
+	 * 		<ul>	
+	 * 			<li>hour(1 - 12)</li>  
+	 * 			<li>minutes(00, 15, 30, 45)</li>
+	 * 			<li>meridian(AM, PM)</li>
+	 * 		</ul>
+	 * 		Attachment 3: contains a drop down menu for end time selection with:<br>
+	 * 		<ul>	
+	 * 			<li>hour(1 - 12)</li>  
+	 * 			<li>minutes(00, 15, 30, 45)</li>
+	 * 			<li>meridian(AM, PM)</li>
+	 * 		</ul>
+	 * 		Attachment 4: contains two buttons: OKAY and CANCEL<br>
+	 * @param String userId
+	 * @param String date
+	 * @return String New slack message.
+	 */
 	public String findRidesMessage(String userId,String date){
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -194,15 +249,21 @@ public class SlackService{
 		}
 		return ridesMessage;
 	}
-	
+	/**
+	 * --Not Implemented, placed here for naming convention clarity in future iterations.--
+	 * <br>Lets a driver find request matching their parameters.
+	 * @param String userId
+	 * @param String date
+	 * @return String New slack message.
+	 */
 	public String findRequestsMessage(String userId,String date){
 		return null;
 	}
 	
 	/**
 	 * Creates the Attachment that contains a drop down menu with the number of seats a ride can have.
-	 * @param callbackId
-	 * @return the seats attachment
+	 * @param String callbackId
+	 * @return Attachment Seats attachment.
 	 */
 	public Attachment createSeatsAttachment(String callbackId){
 		ArrayList<Option> seatOptions = new ArrayList<Option>();
@@ -219,10 +280,9 @@ public class SlackService{
 
 	/**
 	 * Creates a ride in the database using the values that that the user inputted from slack
-	 * @param payload
-	 * @return a confirmation message that contains the values the user inputted.
+	 * @param JsonNode payload
+	 * @return String Confirmation message.
 	 */
-	@SuppressWarnings("deprecation")
 	public String createRideByMessage(JsonNode payload){
 		String message = payload.path("original_message").toString();
 		String userId = payload.path("user").path("id").asText();
@@ -260,8 +320,7 @@ public class SlackService{
 				+ " from " + pickupName + " to " + dropoffName +" with "+seatsAvailable+" seats  has been created";
 				return confirmationMessage;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Exception occurred in creating ride through slack integration.");
 			}
 		}
 		System.out.println("user has no car,slackId is, "+userId+",we have ");
@@ -273,8 +332,8 @@ public class SlackService{
 	/**
 	 * Creates a request confirmation message that contains the values that the user selected
 	 * and creates a ride request in the application.
-	 * @param payload, the slack payload
-	 * @return the confirmation message
+	 * @param JsonNode payload
+	 * @return String Confirmation message.
 	 */
 	public String createRequestByMessage(JsonNode payload) {
 		String userId = payload.path("user").path("id").asText();
@@ -308,11 +367,16 @@ public class SlackService{
 			+ " from " + fromPOI + " to " + toPOI + " has been created";
 			return confirmationMessage;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception occurred when adding request through slack integration.");
 		}
 		return null;
 	}
+	/**
+	 * Returns a boolean to the {@link SlackService#isMessageActionable} method
+	 * to determine if the fields of the message have been filled by the user.
+	 * @param String message
+	 * @return boolean Determines if all fields have been filled.
+	 */
 	public boolean foundRidesByMessage(String message){
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -324,11 +388,15 @@ public class SlackService{
 				return true;
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception occurred when parsing message fields in slack integration.");
 		}
 		return false;
 	}
+	/**
+	 * Returns a message which lets a user select rides matching their criteria.
+	 * @param JsonNode payload
+	 * @return String Confirmation message to be propagated as a message to slack user.
+	 */
 	public String foundRidesByMessage(JsonNode payload){
 		ObjectMapper mapper = new ObjectMapper();
 		String userId=getUserId(payload);
@@ -344,10 +412,6 @@ public class SlackService{
 		String endHour = strings.get(6);
 		String endMinute = strings.get(7);
 		String endMeridian = strings.get(8);
-		//TODO:remove test print statement 
-		for(String string:strings){
-			System.out.println("Form Input: "+string);
-		}
 		Date startTime = createRideDate(dateString,startHour,startMinute,startMeridian);
 		Date endTime = createRideDate(dateString,endHour,endMinute,endMeridian);
 		// Creating the attachments
@@ -367,22 +431,27 @@ public class SlackService{
 		try {
 			requestMessage = mapper.writeValueAsString(rr);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Exception occurred when adding request through slack integration.");
 		}
 		return requestMessage;
 	}
-	
+	/**
+	 *--Not Implemented, placed here for naming convention clarity in future iterations.--
+	 *<br>Follows the flow after findRequestByMessage.
+	 * @param payload
+	 * @return String Confirmation message to be propagated as a message to slack user.
+	 */
 	public String foundRequestsByMessage(JsonNode payload){
 		return "Message not implemented";
 	}
 	
 	/**
-	 * Creates a date object
+	 * Creates a date object constructed with the values from the parameters.
 	 * @param dateString, a string that has the following format: "MM/DD"
-	 * @param hour, the hour from 1 - 12
-	 * @param minute, the minute from 1 - 59
-	 * @param meridian, either AM or PM 
-	 * @return a date object that is constructed with the values from the parameters
+	 * @param String hour (1-12)
+	 * @param String minute (00-59)
+	 * @param String meridian (AM/PM)
+	 * @return Date Representing combination of input parameters.
 	 */
 	@SuppressWarnings("deprecation")
 	public Date createRideDate(String dateString,String hour,String minute,String meridian){
@@ -405,9 +474,9 @@ public class SlackService{
 	}
 	
 	/**
-	 * Gets the "text" fields from each drop down menu in the message
+	 * Gets the text fields from each drop down menu in the message
 	 * @param slackMessage
-	 * @return an ArrayList that contains all the text fields
+	 * @return ArrayList<String> of user selection strings(positions 1-end) and selected date(position 0.)
 	 */
 	public ArrayList<String> getTextFields(JsonNode payload){
 		String message = payload.path("original_message").toString();
@@ -418,8 +487,7 @@ public class SlackService{
 			values = getTextFields(slackMessage);
 			return values;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception occurred when checking user selections through slack integration.");
 		}
 		return null;
 	}
@@ -427,10 +495,21 @@ public class SlackService{
 	public String getUserId(JsonNode payload){
 		return payload.path("user").path("id").asText();
 	}
+	/**
+	 * Extracts responseUrl from a payload (used to send slack message to slack user.)
+	 * @param payload
+	 * @return String Url for response to a slack message.
+	 */
 	public String getMessageUrl(JsonNode payload){
 		return payload.path("response_url").asText();
 	}
-	//only works for interactivemessage payloads
+	/**
+	 * --Only for interactive messages--<br>
+	 * Convert http request into a usable JsonNode.
+	 * @param request
+	 * @return JsonNode Payload which can be parsed for message values.
+	 * @throws UnsupportedEncodingException
+	 */
 	public JsonNode convertMessageRequestToPayload(String request) throws UnsupportedEncodingException{
 		request = URLDecoder.decode(request, "UTF-8");
 		request = request.substring(8);
@@ -444,7 +523,11 @@ public class SlackService{
 			return null;
 		}
 	}
-	
+	/**
+	 * Retrieves message selections a user has made in a message.
+	 * @param slackMessage
+	 * @return ArrayList<String> of user selection strings(positions 1-end) and selected date(position 0.)
+	 */
 	public ArrayList<String> getTextFields(SlackJSONBuilder slackMessage){
 		ArrayList<Attachment> attachments = slackMessage.getAttachments();
 		ArrayList<String> strings = new ArrayList<String>();
@@ -464,7 +547,7 @@ public class SlackService{
 	/**
 	 * Creates an Attachment that contains three drop down menus: hour, minutes, and meridian
 	 * @param callbackId
-	 * @return the time attachment
+	 * @return Attachment Contains time selection drop downs.
 	 */
 	public Attachment createTimeAttachment(String callbackId) {
 		ArrayList<Option> hourOptions = new ArrayList<Option>();
@@ -505,9 +588,9 @@ public class SlackService{
 
 	/**
 	 * Creates an Attachment that contains a drop down menu that is populated with all of the POIs
-	 * @param text, the text that will be displayed above the drop down menu
-	 * @param callbackId
-	 * @return the POI attachment
+	 * @param String text This is displayed above the drop down menu.
+	 * @param String callbackId
+	 * @return Attachment Contains POI drop downs.
 	 */
 	public Attachment createPOIAttachment(String text, String callbackId) {
 		ArrayList<Action> actions = new ArrayList<Action>();
@@ -529,8 +612,8 @@ public class SlackService{
 
 	/**
 	 * Creates an Attachment that contains an "OKAY" and a "CANCEL" button
-	 * @param callbackId
-	 * @return the confirmation/cancel attachment
+	 * @param String callbackId
+	 * @return Attachment Confirm/Cancel
 	 */
 	public Attachment createConfirmationButtonsAttachment(String callbackId) {
 		ArrayList<Action> actions = new ArrayList<Action>();
@@ -544,7 +627,15 @@ public class SlackService{
 
 		return buttonAttachment;
 	}
-	
+	/**
+	 * Creates attachment for passengers to select rides.
+	 * @param Date starttime
+	 * @param Date endtime
+	 * @param String filter
+	 * @param String poiName
+	 * @param String callbackId
+	 * @return Attachment Which lets user select from rides matching their criteria.
+	 */
 	@SuppressWarnings("deprecation")
 	public Attachment createAvailableRidesAttachment(Date starttime, Date endtime,String filter,String poiName,String callbackId){
 		ArrayList<Action> actions = new ArrayList<Action>();
@@ -553,11 +644,6 @@ public class SlackService{
 		String destinationText="";
 		String alternateDestinationText="";
 		ArrayList<AvailableRide> rides = rideService.getAvailableRidesByTime(starttime, endtime);
-		//TODO: remove this testing print statement
-		System.out.println(""+rides.size()+" rides matching the specified time");
-		for(AvailableRide ride:rides){
-			System.out.println(ride.toString());
-		}
 		if(filter.equals("To")){
 			rides=rideService.filterAvailableRidesByDropoffPoi(rides, poi);
 			destinationText=poi.getPoiName();
@@ -596,7 +682,11 @@ public class SlackService{
 		Attachment availableRidesAttachment = new Attachment("AvailableRides","Available Rides","Unable to display available rides", callbackId, "#3AA3E3", "default", actions);
 		return availableRidesAttachment;
 	}
-	
+	/**
+	 * Creates attachment for POI selection.
+	 * @param String callbackId
+	 * @return Attachment Which lets user select their destination/origin (to/from option with POI.)
+	 */
 	public Attachment createPoiSelectDestinationAttachment(String callbackId){
 		ArrayList<Action> actions = new ArrayList<Action>();
 		ArrayList<Option> poiOptions = new ArrayList<Option>();
@@ -620,8 +710,8 @@ public class SlackService{
 	
 	/**
 	 * Process the values that the user submitted in the interactive message
-	 * @param payload
-	 * @return confirmation or error message that will be displayed to the user
+	 * @param JsonNode payload
+	 * @return String Confirmation message to be propagated as a message to slack user.
 	 */
 	public String handleMessage(JsonNode payload){
 		String callbackId=payload.path("callback_id").asText();
@@ -659,17 +749,23 @@ public class SlackService{
 			return "Message does not match any known callbackid, callbackId is "+callbackId;
 		}
 	}
-	
-	//for drivers looking to add passengers
+	/**
+	 * --Not implemented, only here for naming clarity--
+	 * Should be used for a driver to add passengers to their ride.
+	 * @param JsonNode payload
+	 * @return Confirmation message to be propagated as a message to slack user.
+	 */
 	private String addPassengersToRideByMessage(JsonNode payload) {
 		return "Message not implemented";
 	}
-	
-	//for passengers looking to join a ride
+	/**
+	 * Adds a user to a ride selected through slack integration messages.
+	 * @param JsonNode payload
+	 * @return String Confirmation message to be propagated as a message to slack user.
+	 */
 	private String addUserToRideByMessage(JsonNode payload) {
 		SlackJSONBuilder message = this.convertPayloadToSlackJSONBuilder(payload);
 		String userId = this.getUserId(payload);
-		ArrayList<String> strings = this.getTextFields(payload);
 		String rideInfo = message.getAttachments().get(0).getActions().get(0).getText();
 		long rideId = Long.parseLong(rideInfo.split(":")[rideInfo.split(":").length-1]);
 		User u = userService.getUserBySlackId(userId);
@@ -687,6 +783,12 @@ public class SlackService{
 		}
 		return confirmationMessage;
 	}
+	/**
+	 * Converts slack payload into Java object
+	 * (Refer to {@link com.revature.rideshare.json.SlackJSONBuilder})
+	 * @param JsonNode payload
+	 * @return SlackJSONBuilder Usable Java object mapped to slack message.
+	 */
 	public SlackJSONBuilder convertPayloadToSlackJSONBuilder(JsonNode payload){
 		ObjectMapper mapper = new ObjectMapper();
 		String currentMessage = payload.path("original_message").toString();
@@ -700,9 +802,12 @@ public class SlackService{
 	}
 
 	/**
-	 * Checks to see if a message is ready to be processed
-	 * @param payload
-	 * @return true if message all fields in the message are filled, false otherwise
+	 * Checks to see if a message is ready to be processed<br>
+	 * If the template for the message can be built from its payload, this will automatically check.<br><br>
+	 * If not, the message must have a method matching its name, but 
+	 * the argument must be the current message in String format.
+	 * @param JsonNode payload
+	 * @return boolean True if all fields in the message are filled, false otherwise.
 	 */
 	public boolean isMessageActionable(JsonNode payload) {
 		String callbackId = payload.path("callback_id").asText();
@@ -718,7 +823,7 @@ public class SlackService{
 				method = this.getClass().getMethod(callbackId, userId.getClass(),date.getClass());
 				template = (String) method.invoke(this, userId,date);
 				return compareMessages(currentMessage, template);
-			}else{//returns the boolean without template comparison(requires direct logic in named method[payload-args])
+			}else{//returns the boolean without template comparison(requires direct logic in named method[String-arg])
 				method = this.getClass().getMethod(callbackId,currentMessage.getClass());
 				return (Boolean) method.invoke(this,currentMessage);
 			}
@@ -729,20 +834,28 @@ public class SlackService{
 		}
 		return false;
 	}
-
+	/**
+	 * Checks to see if a message is at the end of its message chain for propagating confirmation messages to slack user.
+	 * @param String callbackId
+	 * @return boolean True if message is able to send a confirmation message back to slack user. 
+	 */
 	public boolean isMessageEndOfBranch(String callbackId){
 		return callbackId.equals("newRideMessage")||callbackId.equals("newRequestMessage")||callbackId.equals("foundRidesByMessage")||callbackId.equals("foundRequestsByMessage");
 	}
-	
+	/**
+	 * Checks to see if the template can be built for a particular message from its payload.
+	 * @param String callbackId
+	 * @return boolean True if messsage has a template that can be built off its current message.
+	 */
 	public boolean templateCanBeBuiltFromPayload(String callbackId){
 		return !(callbackId.equals("foundRidesByMessage")||callbackId.equals("foundRequestsByMessage"));
 	}
 
 	/**
 	 * Compares the user's message with the original message template to see if all fields have been filled.
-	 * @param currentMessage
-	 * @param template
-	 * @return true if all fields filled, false otherwise
+	 * @param String currentMessage
+	 * @param String template
+	 * @return boolean True if all fields filled, false otherwise
 	 */
 	public boolean compareMessages(String currentMessage, String template) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -778,8 +891,8 @@ public class SlackService{
 
 	/**
 	 * Checks if a date is a valid date.  A valid date is one that is not prior to today's date
-	 * @param date, the date that is being validated
-	 * @return true if the date is valid, false otherwise
+	 * @param String date which is being validated
+	 * @return boolean True if the date is valid, false otherwise
 	 */
 	@SuppressWarnings("deprecation")
 	public boolean acceptDate(String date) {
@@ -811,10 +924,10 @@ public class SlackService{
 	}
 
 	/**
-	 * Gets the numbers of days in the specified month
-	 * @param year
-	 * @param month
-	 * @return numbers of days in specified month
+	 * Returns the number of days in the specified month.
+	 * @param int year
+	 * @param int month
+	 * @return int Number of days in specified month.
 	 */
 	private static int daysInMonth(int year, int month) {
 		int daysInMonth;
@@ -844,17 +957,17 @@ public class SlackService{
 
 	/**
 	 * Check to see if the date that the user inputed is a valid date
-	 * @param dateString
-	 * @return true if the date is valid, false otherwise
+	 * @param String dateString
+	 * @return boolean True if the date is valid, false otherwise
 	 */
 	public static boolean isValidDate(String dateString) {
 		return dates.contains(dateString);
 	}
 
 	/**
-	 * Checks if the time the user chose has already passed
-	 * @param payload
-	 * @return true if time has passed, false otherwise
+	 * Checks if the time the user chose has already passed.
+	 * @param JsonNode payload
+	 * @return boolean True if time has passed, false otherwise
 	 */
 	public boolean isPreviousTime(JsonNode payload) {
 		String message = payload.path("original_message").toString();
@@ -867,7 +980,6 @@ public class SlackService{
 			// This string array contains six elements:
 			// 		date (mm/dd), hour, minute, meridian, from POI, and to POI
 			strings = getTextFields(slackMessage);
-			String[] dateArray = strings.get(0).split("/");
 			Date userDate = createRideDate(strings.get(0), strings.get(1), strings.get(2), strings.get(3));
 			if (isToday(userDate)) {
 				if (timeHasPassed(userDate))
@@ -881,13 +993,12 @@ public class SlackService{
 
 	/**
 	 * Check if the date is the current date
-	 * @param month
-	 * @param day
-	 * @return true if the date is the current date, false otherwise
+	 * @param Date userDate
+	 * @return boolean True if the date is the current date, false otherwise
 	 */
+	@SuppressWarnings("deprecation")
 	private boolean isToday(Date userDate) {
 		Date today = new Date();
-
 		if (userDate.getMonth() == today.getMonth() && userDate.getDate() == today.getDate())
 			return true;
 		else
@@ -895,10 +1006,11 @@ public class SlackService{
 	}
 
 	/**
-	 * Check if the time that the user chose has already passsed
-	 * @param userDate
-	 * @return true if time has passed, false otherwise
+	 * Check if the time that the user chose has already passed.
+	 * @param Date userDate
+	 * @return boolean True if time has passed, false otherwise.
 	 */
+	@SuppressWarnings("deprecation")
 	private boolean timeHasPassed(Date userDate){
 		Date today = new Date();
 
@@ -910,9 +1022,9 @@ public class SlackService{
 	}
 	
 	/**
-	 * Checks if the slackId is in the database
-	 * @param slackId
-	 * @return a User object if slackId exist, otherwise null
+	 * Checks if the user is in the database.
+	 * @param String slackId
+	 * @return User If user exists with slackId, otherwise null.
 	 */
 	public User isValidUser(String slackId) {
 		return userService.getUserBySlackId(slackId);
