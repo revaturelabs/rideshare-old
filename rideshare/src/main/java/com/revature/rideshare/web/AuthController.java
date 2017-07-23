@@ -2,8 +2,6 @@ package com.revature.rideshare.web;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,45 +105,6 @@ public class AuthController {
 //		return res;
 //	}
 	
-//	@RequestMapping("/login")
-//	public ResponseEntity<String> loginWithSlack(@RequestParam(name="code", required=false) String code,
-//			@RequestParam(name="error", required=false) String error, RequestEntity<String> req) {
-//		System.out.println("got login request");
-//		System.out.println(req);
-//		String url = rideshareUrl + "/";
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.add("WWW-Authenticate", "Bearer realm='Revature RideShare application'");
-//		headers.add("Location", url);
-//		String body = "{slack_error: " + error + "}";
-//		ResponseEntity<String> response = new ResponseEntity<String>(body, headers, HttpStatus.SEE_OTHER);
-//		if (code != null) {
-//			System.out.println("got authorization code");
-//			try {
-//				String slackToken = authService.getSlackAccessToken(code);
-//				System.out.println("got access token");
-//				String slackId = authService.getUserIdentity(slackToken);
-//				System.out.println("got user's slack id");
-//				JsonNode userInfo = authService.getUserInfo(slackToken, slackId);
-//				System.out.println("got user's information");
-//				User u = authService.getUserAccount(slackId, userInfo);
-//				System.out.println("got user account");
-//				String token = authService.createJsonWebToken(u);
-//				System.out.println("got json web token");
-//				RideshareAuthenticationToken auth = new RideshareAuthenticationToken(slackId, token, u, u.getAuthorities());
-//				System.out.println("got authentication");
-//				auth.setAuthenticated(true);
-//				SecurityContextHolder.getContext().setAuthentication(auth);
-//				HttpHeaders successHeaders = new HttpHeaders();
-//				successHeaders.add("Location", url);
-//				successHeaders.add("rideshare-token", token);
-//				response = new ResponseEntity<String>(successHeaders, HttpStatus.SEE_OTHER);
-//			} catch (SlackApiException ex) {
-//				logger.error("Slack API returned an error", ex);
-//			}
-//		}
-//		return response;
-//	}
-	
 	// TODO: update this method to be used after the user has logged in
 //	@RequestMapping("/integrate")
 //	public ResponseEntity<String> integrateWithSlack(OAuth2Authentication authentication) {
@@ -171,33 +130,6 @@ public class AuthController {
 //		}
 //		return response;
 //	}
-
-	/*
-	 * TODO: this method is currently a hackish quick fix, find a better solution
-	 * NOTE: slack user IDs are only unique within a specific team, but
-	 * team IDs are unique across all of slack
-	 */
-	@RequestMapping("/current")
-	public User getCurrentUser(OAuth2Authentication authentication, HttpServletRequest request) {
-		String[] nameTokens = authentication.getName().split(", ");
-		String fullName = nameTokens[0].substring(6);
-		System.out.println(fullName);
-		String slackId = nameTokens[1].substring(3);
-		System.out.println(slackId);
-		String email = nameTokens[2].substring(6, nameTokens[2].length() - 1);
-		System.out.println(email);
-		User u = userService.getUserBySlackId(slackId);
-		if (u == null) {
-			System.out.println("creating new user");
-			u = new User();
-			u.setSlackId(slackId);
-			u.setFullName(fullName);
-			u.setEmail(email);
-			u.setAdmin(false);
-			userService.addUser(u);
-		}
-		return u;
-	}
 
 	@GetMapping("/token")
 	public ResponseEntity<String> getJsonWebToken(OAuth2Authentication authentication) {

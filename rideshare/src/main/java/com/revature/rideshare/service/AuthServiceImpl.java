@@ -32,9 +32,8 @@ public class AuthServiceImpl implements AuthService {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-//	TODO: start using environment variables when this application is deployed
-//	@Value("#{systemEnvironment['RIDESHARE_JWT_SECRET']}")
-	private String jwtSecret = "Richie is obsessed with chickens!";
+	@Value("${rideshare.jwt-secret}")
+	private String jwtSecret;
 	@Value("${slack.identity.client.clientId}")
 	private String slackAppId;
 	@Value("${slack.identity.client.clientSecret}")
@@ -43,16 +42,10 @@ public class AuthServiceImpl implements AuthService {
 	private String slackAppVerificationToken;
 	@Value("${slack.teamId}")
 	private String slackAppTeamId;
-	@Value("${deploy.url}")
+	@Value("${rideshare.deploy-url}")
 	private String rideshareUrl;
 	private String loginRedirectUrl = "https://localhost:8443/auth/login";
 	private String integrationRedirectUrl = "https://localhost:8443/auth/integrate";
-	
-//	@Autowired
-//	OAuth2ClientContext oauth2ClientContext;
-	
-//	@Autowired
-//	AuthorizationCodeResourceDetails slackResource;
 	
 	@Autowired
 	UserService userService;
@@ -74,17 +67,6 @@ public class AuthServiceImpl implements AuthService {
 		this.poiRepo = poiRepo;
 	}
 
-//	@Override
-//	public void setSlackResource(AuthorizationCodeResourceDetails slackResource) {
-//		this.slackResource = slackResource;
-//	}
-	
-//	@Override
-//	@Bean
-//	public OAuth2RestTemplate slackTemplate(OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
-//		return new OAuth2RestTemplate(resource, context);
-//	}
-	
 	/*
 	 * use this when dealing with requesting the identity scopes to authenticate a user
 	 */
@@ -296,7 +278,7 @@ public class AuthServiceImpl implements AuthService {
 			String userJson = jwt.getClaim("user").asString();
 			u = (User) mapper.readValue(userJson, User.class);
 		} catch (IllegalArgumentException | IOException ex) {
-			logger.error("", ex);
+			logger.error("Failed to get user from JSON web token", ex);
 		} catch (JWTVerificationException ex) {
 			logger.error("Got an invalid JSON web token", ex);
 		}
@@ -305,14 +287,7 @@ public class AuthServiceImpl implements AuthService {
 	
 	@Override
 	public User getUserFromToken(String token) {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			String userJson = JWT.decode(token).getClaim("user").asString();
-			return (User) mapper.readValue(userJson, User.class);
-		} catch (Exception ex) {
-			logger.error("Failed to get user from JSON web token", ex);
-			return null;
-		}
+		return verifyJsonWebToken(token);
 	}
 
 }

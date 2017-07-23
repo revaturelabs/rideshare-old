@@ -20,8 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.auth0.jwt.JWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "USERS")
@@ -192,26 +191,13 @@ public class User implements Serializable, UserDetails {
 				+ fullName + ", mainPOI=" + mainPOI + ", workPOI=" + workPOI + ", email=" + email + ", slackId="
 				+ slackId + ", isAdmin=" + isAdmin + ", isBanned=" + isBanned + ", slackUrl=" + slackUrl + "]";
 	}
-
-	public static User getUserFromToken(String token) {
-		ObjectMapper mapper = new ObjectMapper();
-		
-		try {
-			String userJson = JWT.decode(token).getClaim("user").asString();
-			return (User) mapper.readValue(userJson, User.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-
-			return null;
-		}
-	}
 	
 	// Implementations for the methods of the UserDetails interface
 
 	/*
 	 * All users will have the role of USER. Administrators will additionally have the role of ADMIN
 	 */
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -226,6 +212,7 @@ public class User implements Serializable, UserDetails {
 	 * UNUSED
 	 * (a.k.a. credentials) This will either be null or the current slack api token for the user
 	 */
+	@JsonIgnore
 	@Override
 	public String getPassword() {
 		return null;
@@ -234,6 +221,7 @@ public class User implements Serializable, UserDetails {
 	/*
 	 * The slackId of a user will be their username
 	 */
+	@JsonIgnore
 	@Override
 	public String getUsername() {
 		return slackId;
@@ -242,6 +230,7 @@ public class User implements Serializable, UserDetails {
 	/*
 	 * Accounts will never expire
 	 */
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
@@ -253,6 +242,7 @@ public class User implements Serializable, UserDetails {
 	 * Taking advantage of this requires the addition of another field in this class, although that field
 	 * may not need to be persisted to the database.
 	 */
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
@@ -262,6 +252,7 @@ public class User implements Serializable, UserDetails {
 	 * Slack API tokens probably do expire eventually, but until the actual expiration date can be determined,
 	 * this will just always return true
 	 */
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
@@ -270,6 +261,7 @@ public class User implements Serializable, UserDetails {
 	/*
 	 * Enabled will be the same as not banned
 	 */
+	@JsonIgnore
 	@Override
 	public boolean isEnabled() {
 		return !isBanned;

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.rideshare.domain.Car;
 import com.revature.rideshare.domain.User;
+import com.revature.rideshare.service.AuthService;
 import com.revature.rideshare.service.CarService;
 
 @RestController
@@ -20,6 +21,17 @@ public class CarController {
 
 	@Autowired
 	private CarService carService;
+	
+	public void setCarService(CarService carService) {
+		this.carService = carService;
+	}
+
+	@Autowired
+	private AuthService authService;
+
+	public void setAuthService(AuthService authService) {
+		this.authService = authService;
+	}
 
 	@GetMapping
 	public List<Car> getAll() {
@@ -27,16 +39,16 @@ public class CarController {
 	}
 
 	@PostMapping
-	public boolean addCar(@RequestHeader(name = "Authorization") String token, @RequestBody Car newCar) {
-		User u = User.getUserFromToken(token);
+	public boolean addCar(@RequestHeader(name = "X-JWT-RIDESHARE") String token, @RequestBody Car newCar) {
+		User u = authService.getUserFromToken(token);
 		newCar.setUser(u);
 		carService.addCar(newCar);
 		return true;
 	}
 
 	@PostMapping("/updateCar")
-	public boolean updateCar(@RequestHeader(name = "Authorization") String token, @RequestBody Car newCar) {
-		User u = User.getUserFromToken(token);
+	public boolean updateCar(@RequestHeader(name = "X-JWT-RIDESHARE") String token, @RequestBody Car newCar) {
+		User u = authService.getUserFromToken(token);
 		Car oldCar = carService.getCarForUser(u);
 		
 		newCar.setUser(u);
@@ -52,8 +64,8 @@ public class CarController {
 	}
 
 	@GetMapping("/myCar")
-	public Car getCar(@RequestHeader(name = "Authorization") String token) {
-		User u = User.getUserFromToken(token);
+	public Car getCar(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+		User u = authService.getUserFromToken(token);
 		return carService.getCarForUser(u);
 	}
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.domain.User;
+import com.revature.rideshare.service.AuthService;
 import com.revature.rideshare.service.UserService;
 
 @RestController
@@ -22,6 +23,17 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	@Autowired
+	private AuthService authService;
+
+	public void setAuthService(AuthService authService) {
+		this.authService = authService;
+	}
 
 	@GetMapping("/id/{id}")
 	public @ResponseBody User getUser(@PathVariable(value = "id") long id) {
@@ -44,12 +56,12 @@ public class UserController {
 	}
 
 	@RequestMapping("/me")
-	public User getCurrentUser(@RequestHeader(name = "Authorization") String token) {
-		return User.getUserFromToken(token);
+	public User getCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+		return authService.getUserFromToken(token);
 	}
 	
 	@PostMapping("/updateCurrentUser")
-	public void updateUser(@RequestHeader(name = "Authorization") String token, 
+	public void updateUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token, 
 			@RequestBody User user) {
 		userService.updateUser(user);
 	}
