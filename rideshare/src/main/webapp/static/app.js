@@ -14,26 +14,18 @@ import { adminRidesController } from './js/controllers/adminRides.controller.js'
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
 import { userProfileController } from './js/controllers/userProfile.controller.js';
-
-// Clearing the token out of local storage
-localStorage.removeItem('RideShare_auth_token');
+// import { AuthService } from './js/auth.service.js';
 
 //var = function scope
 //const and let = block scope 
 
 const app = angular.module('app', ['ui.router', 'angular-jwt', 'ui.bootstrap.datetimepicker']);
 
+// app.service('authService', ['$window', AuthService]);
+
 app.run(function(authManager, $http) {
 	authManager.checkAuthOnRefresh();
 	authManager.redirectWhenUnauthenticated();
-
-	$http.get('/auth/process')
-		.then(function(res) {
-
-		})
-		.catch(function(reason) {
-			
-		});
 });
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOptionsProvider){
@@ -43,7 +35,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		unauthenticatedRedirectPath: '/',
 		authPrefix: '',
 		tokenGetter: ['options', function(options) {
-			return localStorage.getItem('RideShare_auth_token');
+			return localStorage.getItem('RideShare_auth_token')
 		}],
 		whiteListedDomains: ['maps.googleapis.com']
 	});

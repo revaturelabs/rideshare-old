@@ -1,13 +1,12 @@
-export let authInterceptor = function($q, $window) {
+export let authInterceptor = function($q, authService) {
 	return {
-		response: function(res) {
-			console.log(res);
+		'response': function(res) {
 			let rideshareToken = res.headers('rideshare-token');
 			if (rideshareToken) {
-				$window.localStorage.setItem('RideShare_auth_token', rideshareToken);
+				authService.setToken(rideshareToken);
 			}
 		}//,
-		// responseError: function(rejection) {
+		// 'responseError': function(rejection) {
 		// 	console.log('you got an error')
 		// }
 	};
