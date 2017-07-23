@@ -41,14 +41,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
 
-	@Value("${server.http.port}")
-	private String httpPort;
-	@Value("${server.port}")
-	private String httpsPort;
+//	@Value("${server.http.port}")
+//	private String httpPort;
+//	@Value("${server.port}")
+//	private String httpsPort;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.portMapper().http(Integer.parseInt(httpPort)).mapsTo(Integer.parseInt(httpsPort));
+//		http.portMapper().http(Integer.parseInt(httpPort)).mapsTo(Integer.parseInt(httpsPort));
 
 //		http.requiresChannel().antMatchers("/**").requiresSecure();
 		
