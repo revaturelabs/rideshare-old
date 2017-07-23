@@ -14,12 +14,13 @@ import { adminRidesController } from './js/controllers/adminRides.controller.js'
 import { adminUsersController } from './js/controllers/adminUsers.controller.js';
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
 import { userProfileController } from './js/controllers/userProfile.controller.js';
-// import { AuthService } from './js/auth.service.js';
+import { authFactory } from './js/auth.factory.js';
 
 //var = function scope
 //const and let = block scope 
 
-const app = angular.module('app', ['ui.router', 'angular-jwt', 'ui.bootstrap.datetimepicker']);
+const app = angular.module('app', ['ui.router', 'angular-jwt', 'ui.bootstrap.datetimepicker'])//;
+	.factory('authFactory', ['$http', '$window', 'jwtHelper', authFactory]);
 
 // app.service('authService', ['$window', AuthService]);
 
@@ -34,6 +35,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 		loginPath: '/#/login',
 		unauthenticatedRedirectPath: '/',
 		authPrefix: '',
+		authHeader: 'X-JWT-RIDESHARE',
 		tokenGetter: ['options', function(options) {
 			return localStorage.getItem('RideShare_auth_token')
 		}],
