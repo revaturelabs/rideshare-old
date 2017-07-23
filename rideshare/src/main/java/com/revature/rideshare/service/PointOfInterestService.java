@@ -127,4 +127,8 @@ public class PointOfInterestService {
 			return pois.get(0);
 		}
 	}
+	
+	public PointOfInterest getPoi(String name){
+		return poiRepo.findBypoiName(name);
+	}
 }
