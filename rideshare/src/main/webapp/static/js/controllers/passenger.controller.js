@@ -13,30 +13,31 @@ export let passengerController = function($scope, $http, $state, $location){
 
 	$http.get("user/me").then(function(response){
 		// get current user
-		user = response.data;
+		let user = response.data;
+		$scope.user = response.data;
 	})
 	.then(function(){
 		$http.get('poiController').then(function(response){
 			let allPOI = response.data;
 			let userMainPOI;
 			$scope.allMainPOI = allPOI;
-			
-			if(response.data.mainPOI != null) {
-				$scope.selectedItem = $scope.allMainPoi[user.mainPOI.poiId-1];
-				$scope.updateSort(user.mainPOI);
+
+			if($scope.user.mainPOI != null) {
+				$scope.selectedItem = allPOI[$scope.user.mainPOI.poiId-1];
+				$scope.updateSort($scope.user.mainPOI);
 			} else {
-				$scope.selectedItem = $scope.allMainPOI[0];
-				$scope.updateSort($scope.allMainPOI[0]);
+				$scope.selectedItem = $scope.allPoi[0];
+				$scope.updateSort($scope.allPoi[0]);
 			}
 			
 			// check if the user main POI is null
-			if(user.mainPOI == null){
+			if($scope.user.mainPOI == null){
 				// if null set the default coordinates to 1st address in the
 				// database
 				userMainPOI = {lat: allPOI[0].latitude, lng: allPOI[0].longitude};
 			}else{
 				// get the current user main POI
-				userMainPOI = {lat: user.mainPOI.latitude, lng: user.mainPOI.longitude};
+				userMainPOI = {lat: $scope.user.mainPOI.latitude, lng: $scope.user.mainPOI.longitude};
 			}
 
 			// create markers for all the current POI
@@ -196,9 +197,6 @@ export let passengerController = function($scope, $http, $state, $location){
 	$scope.openOffer = [];
 	$scope.activeRides = [];
 	$scope.pastRides = [];
-
-
-	$scope.updateSort($scope.poiId);
 	
 	// show open requests from a poi
 	$http.get("/ride/offer/open/"+1)

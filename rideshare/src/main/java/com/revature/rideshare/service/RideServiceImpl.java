@@ -390,7 +390,6 @@ public class RideServiceImpl implements RideService {
 		Collections.sort(openOffers); // Sorting by date.
 
 		// Sorting by closest to farthest POI
-//		PointOfInterest temp = poiService.getAll().get(poiId);
 		PointOfInterest temp = poiService.getPoi(poiId);
 		openOffers = sortAvailableByPOI(openOffers, temp);
 		
@@ -465,8 +464,6 @@ public class RideServiceImpl implements RideService {
 		List<PointOfInterest> pois = poiService.getAll();
 
 		int[] poisByDistance = calculateDistance(pois, mpoi);
-		int count = 0;
-
 		for (int i : poisByDistance) {
 			for (int k = 0; k < reqs.size(); k++) {
 				if (reqs.get(k).getDropOffLocation().getPoiId() == i + 1
@@ -484,15 +481,17 @@ public class RideServiceImpl implements RideService {
 	 * @see com.revature.rideshare.service.RideService#sortAvailableByPOI(java.util.List, com.revature.rideshare.domain.PointOfInterest)
 	 */
 	@Override
-	public List<AvailableRide> sortAvailableByPOI(List<AvailableRide> reqs, PointOfInterest poi) {
+	public List<AvailableRide> sortAvailableByPOI(List<AvailableRide> reqs, PointOfInterest mpoi) {
 		List<AvailableRide> temp = new ArrayList<AvailableRide>();
 		List<PointOfInterest> pois = poiService.getAll();
 
-		int[] poisByDistance = calculateDistance(pois, poi);
+		int[] poisByDistance = calculateDistance(pois, mpoi);
 		for (int i : poisByDistance) {
-			for (AvailableRide rq : reqs) {
-				if (rq.getPickupPOI().getPoiId() == i) {
-					temp.add(rq);
+			for (int k = 0; k < reqs.size(); k++) {
+				if (reqs.get(k).getDropoffPOI().getPoiId() == i + 1
+						&& mpoi.getPoiId() == reqs.get(k).getPickupPOI().getPoiId()) {
+					temp.add(reqs.get(k));
+					reqs.remove(k--);
 				}
 			}
 		}
