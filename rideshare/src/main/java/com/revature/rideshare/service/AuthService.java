@@ -3,6 +3,7 @@ package com.revature.rideshare.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.revature.rideshare.dao.PointOfInterestRepository;
 import com.revature.rideshare.domain.User;
+import com.revature.rideshare.exception.BannedUserException;
 import com.revature.rideshare.exception.SlackApiException;
 
 public interface AuthService {
@@ -27,9 +28,9 @@ public interface AuthService {
 
 	JsonNode getUserInfo(String token, String slackId) throws SlackApiException;
 
-	User getUserAccount(String slackId, JsonNode userInfo);
+	User getUserAccount(String slackId, JsonNode userInfo) throws BannedUserException;
 
-	User integrateUser(JsonNode accessResponse);
+	User integrateUser(User u, JsonNode accessResponse);
 
 	String createJsonWebToken(User u);
 

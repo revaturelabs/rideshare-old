@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.dao.PointOfInterestRepository;
 import com.revature.rideshare.domain.User;
+import com.revature.rideshare.exception.BannedUserException;
 import com.revature.rideshare.exception.SlackApiException;
 
 @Component
@@ -198,12 +199,12 @@ public class AuthServiceImpl implements AuthService {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
 		String url = "https://slack.com/api/users.info";
-		String requestUrl = url + "?token=" + token + "&user=" + slackId;
-//		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-//		requestBody.add("token", token);
-//		requestBody.add("user", slackId);
-//		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
-		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
+//		String requestUrl = url + "?token=" + token + "&user=" + slackId;
+//		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
+		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
+		requestBody.add("token", token);
+		requestBody.add("user", slackId);
+		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
 		try {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
@@ -218,7 +219,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public User getUserAccount(String slackId, JsonNode userInfo) {
+	public User getUserAccount(String slackId, JsonNode userInfo) throws BannedUserException {
 		User u = userService.getUserBySlackId(slackId);
 		if (u == null) {
 			u = new User();
@@ -237,49 +238,29 @@ public class AuthServiceImpl implements AuthService {
 			u.setFirstName(userInfo.path("profile").path("first_name").asText());
 			u.setLastName(userInfo.path("profile").path("last_name").asText());
 			u.setFullName(userInfo.path("real_name").asText());
+			if (u.isBanned()) {
+				throw new BannedUserException("This user has been banned from the application.");
+			}
 			userService.updateUser(u);
 		}
 		return u;
 	}
 	
-	// TODO: modify this method to be used after the user has logged in
 	@Override
-	public User integrateUser(JsonNode accessResponse) {
-		User result = null;
+	public User integrateUser(User u, JsonNode accessResponse) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			String slackId = accessResponse.path("user_id").asText();
-			String token = accessResponse.path("access_token").asText();
 			JsonNode incomingWebhook = mapper.readTree(accessResponse.path("incoming_webhook").asText());
 			String webhookUrl = incomingWebhook.path("url").asText();
-			JsonNode userInfo = getUserInfo(token, slackId);
-			User u = userService.getUserBySlackId(slackId);
-			if (u == null) {
-				u = new User();
-				u.setSlackId(slackId);
-				u.setAdmin(false);
-				u.setEmail(userInfo.path("profile").path("email").asText());
-				u.setFirstName(userInfo.path("profile").path("first_name").asText());
-				u.setLastName(userInfo.path("profile").path("last_name").asText());
-				u.setFullName(userInfo.path("real_name").asText());
-				u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
-				u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
-				u.setBanned(false);
-				u.setSlackUrl(webhookUrl);
-				userService.addUser(u);
-			} else {
-				u.setEmail(userInfo.path("profile").path("email").asText());
-				u.setFirstName(userInfo.path("profile").path("first_name").asText());
-				u.setLastName(userInfo.path("profile").path("last_name").asText());
-				u.setFullName(userInfo.path("real_name").asText());
+			if (u.getSlackId().equals(slackId)) {
 				u.setSlackUrl(webhookUrl);
 				userService.updateUser(u);
 			}
-			result = u;
 		} catch (IOException ex) {
-			logger.error("", ex);
+			logger.error("Failed to activate slack integration for " + u, ex);
 		}
-		return result;
+		return u;
 	}
 	
 	@Override
