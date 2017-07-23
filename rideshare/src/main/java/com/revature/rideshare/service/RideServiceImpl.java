@@ -389,7 +389,8 @@ public class RideServiceImpl implements RideService {
 		Collections.sort(openOffers); // Sorting by date.
 
 		// Sorting by closest to farthest POI
-		PointOfInterest temp = poiService.getAll().get(poiId);
+//		PointOfInterest temp = poiService.getAll().get(poiId);
+		PointOfInterest temp = poiService.getPoi(poiId);
 		openOffers = sortAvailableByPOI(openOffers, temp);
 		
 		return openOffers;

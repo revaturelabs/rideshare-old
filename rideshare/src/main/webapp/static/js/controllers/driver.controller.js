@@ -6,6 +6,14 @@ export let driverController = function($scope, $http, $state){
 	// global variables
 	let user;
 	let poiLimit = 0;
+
+	$scope.updateSort = function (item){
+		$http.get("/ride/request/open/"+item.poiId)
+		.then(function(response) {
+			$scope.openRequest = response.data;	
+		});
+	}
+
 	
 	$http.get("/ride")
 	.then(function(response) {
@@ -15,12 +23,13 @@ export let driverController = function($scope, $http, $state){
 		.then(function(response) {
 			// get current user
 			user = response.data;
-			
+
 			if(response.data.mainPOI != null) {
-				$scope.selectedItem = $scope.allPoi[response.data.mainPOI.poiId-1];
-			}
-			else {
+				$scope.selectedItem = $scope.allPoi[user.mainPOI.poiId-1];
+				$scope.updateSort(user.mainPOI);
+			} else {
 				$scope.selectedItem = $scope.allPoi[0];
+				$scope.updateSort($scope.allPoi[0]);
 			}
 		})
 		.then(function(){
@@ -171,14 +180,6 @@ export let driverController = function($scope, $http, $state){
 	$scope.openRequest = [];
 	$scope.activeRides = [];
 	$scope.pastRides = [];
-
-	$scope.updateSort = function (item){
-		$http.get("/ride/request/open/"+item.poiId)
-		.then(function(response) {
-			$scope.openRequest = response.data;	
-		});
-
-	}
 
 	// show open requests from a poi
 	$http.get("/ride/request/open/"+$scope.poiId.id)

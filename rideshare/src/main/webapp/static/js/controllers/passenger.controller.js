@@ -4,6 +4,13 @@ export let passengerController = function($scope, $http, $state, $location){
 	let user;
 	let poiLimit = 0;
 	
+	$scope.updateSort = function (item){
+		$http.get("/ride/offer/open/"+(item.poiId))
+		.then(function(response) {
+			$scope.openOffer = response.data;
+		});
+	}
+
 	$http.get("user/me").then(function(response){
 		// get current user
 		user = response.data;
@@ -13,6 +20,14 @@ export let passengerController = function($scope, $http, $state, $location){
 			let allPOI = response.data;
 			let userMainPOI;
 			$scope.allMainPOI = allPOI;
+			
+			if(response.data.mainPOI != null) {
+				$scope.selectedItem = $scope.allMainPoi[user.mainPOI.poiId-1];
+				$scope.updateSort(user.mainPOI);
+			} else {
+				$scope.selectedItem = $scope.allMainPOI[0];
+				$scope.updateSort($scope.allMainPOI[0]);
+			}
 			
 			// check if the user main POI is null
 			if(user.mainPOI == null){
@@ -175,25 +190,18 @@ export let passengerController = function($scope, $http, $state, $location){
 		
 
 	// Setting mPOI in case a user does not have a mPOI.
-	$scope.poiId = {id : 1};
+	$scope.poiId = {poiId : 1};
 
 	// Setting to empty arrays for correct ng-repeat processing.
 	$scope.openOffer = [];
 	$scope.activeRides = [];
 	$scope.pastRides = [];
 
-	$scope.updateSort = function (item){
-		$http.get("/ride/offer/open/"+2)
-		.then(function(response) {
-			$scope.openOffer = response.data;
-		});
 
-	}
-
-	$scope.updateSort(2);
+	$scope.updateSort($scope.poiId);
 	
 	// show open requests from a poi
-	$http.get("/ride/offer/open/"+$scope.poiId.id)
+	$http.get("/ride/offer/open/"+1)
 	.then(function(response) {
 		$scope.openOffer = response.data;
 	});
@@ -363,4 +371,17 @@ export let passengerController = function($scope, $http, $state, $location){
 				}
 		);
 	}
+	
+	
+	//stops past dates from being selected in date/time picker
+	$scope.startDateBeforeRender = function($dates) {
+		  const todaySinceMidnight = new Date();
+		    todaySinceMidnight.setUTCHours(0,0,0,0);
+		    $dates.filter(function (date) {
+		      return date.utcDateValue < todaySinceMidnight.getTime();
+		    }).forEach(function (date) {
+		      date.selectable = false;
+		    });
+		};
+
 };
