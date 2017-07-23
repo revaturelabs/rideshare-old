@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.invalidateHttpSession(true)
 				.permitAll()
 			.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-			.and().addFilterBefore(slackIdentitySsoFilter(), BasicAuthenticationFilter.class);
+			.and().addFilterBefore(slackSsoFilter(), BasicAuthenticationFilter.class);
 	}
 	
 	@Override
@@ -78,6 +78,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		registration.setFilter(filter);
 		registration.setOrder(-100);
 		return registration;
+	}
+	
+	private Filter slackSsoFilter() {
+		CompositeFilter filter = new CompositeFilter();
+		List<Filter> filters = new ArrayList<>();
+		filters.add(ssoFilter(slackIdentity(), "/login/slack"));
+		filters.add(ssoFilter(slackIntegration(), "/integrate/slack"));
+		filter.setFilters(filters);
+		return filter;
 	}
 	
 	private Filter slackIdentitySsoFilter() {
@@ -102,6 +111,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	@ConfigurationProperties("slack.identity")
 	public ClientResources slackIdentity() {
+		return new ClientResources();
+	}
+	
+	@Bean
+	@ConfigurationProperties("slack.integration")
+	public ClientResources slackIntegration() {
 		return new ClientResources();
 	}
 	
