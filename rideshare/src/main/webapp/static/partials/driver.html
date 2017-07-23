@@ -73,7 +73,7 @@
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapse{{req.requestId}}" >
 						
 					<!-- Beginning of expanded portion -->
-					Note: <i>{{req.notes}} <span ng-show=" req.notes == null"> N/A </span></i>
+					<em>Note:</em> {{req.notes}} <span ng-show=" req.notes == null"> N/A </span>
 
 					<div class="btn-container">
 						<button type="button" class="btn btn-primary"
@@ -89,7 +89,7 @@
 
 		</div>
 
-<!-- panel displays active/accepted rides for driver -->
+		<!-- panel displays active/accepted rides for driver -->
 		<div role="tabpanel" class="tab-pane" id="active">
 
 			<!-- html and angular function used to display open rides -->
@@ -115,14 +115,13 @@
 				<div id="collapseA{{offer.availRideId}}" class="panel-collapse collapse">
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{offer.availRideId}}" >
 						<p>This offer has not yet been assigned to a request.</p>
-						Note: {{offer.notes}}
+						<em>Note:</em> {{offer.notes}} <span ng-show=" offer.notes == null"> N/A </span>
 						<br/>
-						Available Seats: {{offer.seatsAvailable}}
+						<em>Available Seats:</em> {{offer.seatsAvailable}}
 
 						<div class="btn-container">
 								<button type="submit" class="btn btn-primary"
-									ng-click="offerCancel(offer.availRideId)">Cancel Offer</button>
-									
+									ng-click="offerActiveCancel(offer.availRideId)">Cancel Offer</button>	
 						</div>
 
 					</div>
@@ -145,12 +144,15 @@
 					</h4>
 				</div>
 				<div id="collapseA{{ride.availRide.availRideId}}" class="panel-collapse collapse">
-					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
+					<div ng-repeat="request in ride.request" class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
+						<em>Note:</em> {{ride.availRide.notes}} <span ng-show="!ride.availRide.notes"> N/A </span>
+						<br/>
+						<em>Available Seats:</em> {{ride.availRide.seatsAvailable}}
 						
 						<div ng-show="isArray(ride.request)">
 							<em>Passengers:</em>
 							<ul class="passenger-list">
-								<li ng-repeat="request in ride.request">
+								<li>
 									{{request.user.fullName}}
 									<span ng-show="request.notes != null"> ( <i>{{request.notes}}</i> )</span>
 									</li>
@@ -160,14 +162,16 @@
 						<div class="btn-container">
 							<button type="submit" class="btn btn-primary"
 								ng-click="offerCancel(ride.availRide.availRideId)">Cancel Offer</button>
-								
 						</div>
+						<!--<div ng-if="request.time < date" class="btn-container" style="display: inline-block;">
+							<button type="submit" class="btn btn-primary"
+								ng-click="completeRequest(ride.rideId)">Complete Request</button>	
+						</div>-->
 						
-						</div>
-					</div>
 					</div>
 				</div>
-
+			</div>
+			</div>
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="history">
@@ -205,8 +209,7 @@
 								</li>
 							</ul>
 						</div>
-						<br/>
-						Complaint: <i>{{ride.complaint}} <span ng-show=" ride.complaint == null"> N/A </span></i>
+						<!--<br/> Complaint: <i>{{ride.complaint}} <span ng-show=" ride.complaint == null"> N/A </span></i>-->
 						
 					</div>
 				</div>

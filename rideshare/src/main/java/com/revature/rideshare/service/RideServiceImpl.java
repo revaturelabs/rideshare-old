@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,7 @@ import com.revature.rideshare.domain.User;
 
 @Component("rideService")
 public class RideServiceImpl implements RideService {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private RideRepository rideRepo;
@@ -137,6 +140,69 @@ public class RideServiceImpl implements RideService {
 			return false;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#cancelActiveRequest(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean cancelActiveRequest(long id, User u) {
+		try {
+			RideRequest req = rideReqRepo.findOne(id);
+			rideReqRepo.delete(req);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#cancelActiveRequest(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean cancelRideReopenAvailRide(long id, User u) {
+		try {
+			Ride temp = rideRepo.findOne(id);
+			RideRequest req = temp.getRequest();
+			AvailableRide avail = temp.getAvailRide();
+			
+			rideRepo.delete(temp);
+			rideReqRepo.delete(req);
+			
+			avail.setOpen(true);
+			availRideRepo.saveAndFlush(avail);
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#completeRequest(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean completeRequest(long id) {
+		Ride ride = rideRepo.findOne(id);
+		RideRequest req = ride.getRequest();
+		
+		req.setStatus(RequestStatus.SATISFIED);
+		ride.setWasSuccessful(true);
+		
+		RideRequest temp = rideReqRepo.saveAndFlush(req);
+		Ride tempRide = rideRepo.saveAndFlush(ride);
+		if(temp == null || tempRide == null) {
+			return false;
+		}
+		return true;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getOpenRequests(int)
@@ -162,6 +228,26 @@ public class RideServiceImpl implements RideService {
 		return rideReqRepo.findByUser(u);
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#getActiveRequestsForUser(com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public List<RideRequest> getOpenRequestsForUser(User u) {
+		List<RideRequest> allReqs = rideReqRepo.findByUser(u);
+		List<RideRequest> temp = new ArrayList<RideRequest>();
+
+		for (RideRequest r : allReqs) {
+			if (r.getStatus() == RequestStatus.OPEN) {
+				temp.add(r);
+			} else {
+				logger.debug("NOT ADDED\n\n");
+			}
+		}
+
+		return temp;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getActiveRequestsForUser(com.revature.rideshare.domain.User)
 	 */
@@ -277,6 +363,22 @@ public class RideServiceImpl implements RideService {
 			return false;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.revature.rideshare.service.RideService#cancelOffer(long, com.revature.rideshare.domain.User)
+	 */
+	@Override
+	public boolean cancelActiveOffer(long id, User u) {
+		try {
+			AvailableRide availRide = availRideRepo.findByAvailRideId(id);
+
+			availRideRepo.delete(availRide);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see com.revature.rideshare.service.RideService#getOpenOffers(int)
@@ -284,13 +386,14 @@ public class RideServiceImpl implements RideService {
 	@Override
 	public List<AvailableRide> getOpenOffers(int poiId) {
 		List<AvailableRide> openOffers = availRideRepo.findAllByIsOpenTrue();
-
+		
 		Collections.sort(openOffers); // Sorting by date.
 
 		// Sorting by closest to farthest POI
-		PointOfInterest temp = poiService.getAll().get(poiId);
+//		PointOfInterest temp = poiService.getAll().get(poiId);
+		PointOfInterest temp = poiService.getPoi(poiId);
 		openOffers = sortAvailableByPOI(openOffers, temp);
-
+		
 		return openOffers;
 	}
 

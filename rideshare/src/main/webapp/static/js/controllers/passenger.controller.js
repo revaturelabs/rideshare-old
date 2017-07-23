@@ -4,6 +4,13 @@ export let passengerController = function($scope, $http, $state, $location){
 	let user;
 	let poiLimit = 0;
 	
+	$scope.updateSort = function (item){
+		$http.get("/ride/offer/open/"+(item.poiId))
+		.then(function(response) {
+			$scope.openOffer = response.data;
+		});
+	}
+
 	$http.get("user/me").then(function(response){
 		// get current user
 		user = response.data;
@@ -13,6 +20,14 @@ export let passengerController = function($scope, $http, $state, $location){
 			let allPOI = response.data;
 			let userMainPOI;
 			$scope.allMainPOI = allPOI;
+			
+			if(response.data.mainPOI != null) {
+				$scope.selectedItem = $scope.allMainPoi[user.mainPOI.poiId-1];
+				$scope.updateSort(user.mainPOI);
+			} else {
+				$scope.selectedItem = $scope.allMainPOI[0];
+				$scope.updateSort($scope.allMainPOI[0]);
+			}
 			
 			// check if the user main POI is null
 			if(user.mainPOI == null){
@@ -116,7 +131,6 @@ export let passengerController = function($scope, $http, $state, $location){
 					//get the current drop down options id
 					let select1 = document.getElementById("fromPOI");
 					let start = select1.options[select1.selectedIndex].id;
-					console.log(start);
 					 
 					let select2 = document.getElementById("toPOI");
 					let destination = select2.options[select2.selectedIndex].id;
@@ -176,23 +190,18 @@ export let passengerController = function($scope, $http, $state, $location){
 		
 
 	// Setting mPOI in case a user does not have a mPOI.
-	$scope.poiId = {id : 1};
+	$scope.poiId = {poiId : 1};
 
 	// Setting to empty arrays for correct ng-repeat processing.
 	$scope.openOffer = [];
 	$scope.activeRides = [];
 	$scope.pastRides = [];
 
-	$scope.updateSort = function (item){
-		$http.get("/ride/offer/open/"+item.poiId)
-		.then(function(response) {
-			$scope.openOffer = response.data;	
-		});
 
-	}
-
+	$scope.updateSort($scope.poiId);
+	
 	// show open requests from a poi
-	$http.get("/ride/offer/open/"+$scope.poiId.id)
+	$http.get("/ride/offer/open/"+1)
 	.then(function(response) {
 		$scope.openOffer = response.data;
 	});
@@ -209,28 +218,39 @@ export let passengerController = function($scope, $http, $state, $location){
 
 	// accept open offers
 	$scope.acceptOffer = function(id){
-
 		$http.get("/ride/offer/accept/"+id)
 		.then(function(response) {
-
 		});
 
 		setTimeout(function(){$state.reload();}, 500);
 	}
 
-	$scope.cancelRequest = function(rideId) {
-		$http.get('/ride/request/cancel/' + rideId).then((response) => {
+	$scope.cancelRide = function(rideId) {
+		$http.get('/ride/request/cancelRide/' + rideId).then(
+			(response) => {
+				for(let i = 0; i < $scope.activeRides.length; i++){
+					if($scope.activeRides[i].availRide.availRideId == rideId) {
+						$scope.activeRides.splice(i, 1);
+						$scope.$apply;
+					}
+				}
+				setTimeout(function(){$state.reload();}, 500);
+			}
+		);
+	};
+	$scope.date = new Date().getTime();
+	$scope.completeRide = function(rideId) {
+		$http.post('/ride/request/complete/' + rideId).then((response) => {
 			for(let i = 0; i < $scope.activeRides.length; i++){
 				if($scope.activeRides[i].rideId == rideId) {
 					$scope.activeRides.splice(i, 1);
 					$scope.$apply;
 				}
 			}
-
 			setTimeout(function(){$state.reload();}, 500);
 		});
 	};
-
+	
 	$scope.addRequest = function(pickup,dropoff,notes,time) {
 
 		$scope.newRequest = {};
@@ -252,8 +272,6 @@ export let passengerController = function($scope, $http, $state, $location){
 		$scope.newRequest.time = new Date(time);
 		$scope.newRequest.status = 'OPEN';
 		$scope.newRequest.user = user;
-		
-		console.log($scope.newRequest);
 
 		$http.post('/ride/request/add', $scope.newRequest).then(
 			(formResponse) => {
@@ -274,6 +292,15 @@ export let passengerController = function($scope, $http, $state, $location){
 		return 0;
 	}
 	
+	$http.get("/ride/request/active")
+	.then(function(res){
+		$http.get("/ride/request/open")
+		.then(function(response){
+			$scope.activeRequests = response.data;
+			organizeData(res, "active");
+			});
+		});
+	
 	/*
 	 * Organizes Ride list data by combining RideRequests with matching AvailableRide objects.
 	 */
@@ -291,13 +318,13 @@ export let passengerController = function($scope, $http, $state, $location){
 		list.sort(compare); 
 		listReq = [list[0]];
 		for(let i = 0; i < list.length; i++){
-
 			if((currentAvailId != list[i].request.requestId) && i == list.length-1){
 				listReq[counter++].request = temp;
 				temp = [];
 				temp.push(list[i].request);
 				listReq[counter] = list[i];
 				listReq[counter].request = temp;
+				
 			}
 			else if ((currentAvailId == list[i].request.requestId) && i == list.length-1){
 				temp.push(list[i].request);
@@ -305,7 +332,6 @@ export let passengerController = function($scope, $http, $state, $location){
 			}
 			else if((currentAvailId != list[i].request.requestId)){
 				currentAvailId = list[i].request.requestId;
-
 				if(temp.length > 0){
 					listReq[counter++].request = temp;
 					listReq[counter] = list[i];
@@ -316,12 +342,46 @@ export let passengerController = function($scope, $http, $state, $location){
 		}
 		if(reqString == "active") {
 			$scope.activeRides = listReq;
-			
+			for(let i = 0; i < $scope.activeRequests.length; i++) {
+				for(let k = 0; k < $scope.activeRides.length; k++) {
+					if($scope.activeRequests[i].requestId == $scope.activeRides[k].request.requestId){
+						$scope.activeRequests.splice(i, 1);
+						i--;
+						break;
+					}
+				}
+			}
 		}
 		else if (reqString == "history") {
 			$scope.pastRides = listReq;
 		}
 	}
 	
+	$scope.cancelActiveRequest = function(activeReqId){
+		$http.get('/ride/request/cancelActive/' + activeReqId).then(
+				(response) => {
+					for(let i = 0; i < $scope.activeRequests.length; i++){
+						if($scope.activeRequests[i].requestId == activeReqId) {
+							$scope.activeRequests[i].splice(i, 1);
+							$scope.$apply;
+						}
+					}
+					
+					setTimeout(function(){$state.reload();}, 500);
+				}
+		);
+	}
 	
+	
+	//stops past dates from being selected in date/time picker
+	$scope.startDateBeforeRender = function($dates) {
+		  const todaySinceMidnight = new Date();
+		    todaySinceMidnight.setUTCHours(0,0,0,0);
+		    $dates.filter(function (date) {
+		      return date.utcDateValue < todaySinceMidnight.getTime();
+		    }).forEach(function (date) {
+		      date.selectable = false;
+		    });
+		};
+
 };
