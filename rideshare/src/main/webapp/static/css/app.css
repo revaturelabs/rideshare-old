@@ -312,8 +312,9 @@ textarea {
 	min-width: 300px;
 }
 
-.cat-pic {
+.error-pic {
 	margin: auto;
+	text-align: center;
 }
 
 /**********************

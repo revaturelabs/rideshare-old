@@ -49,21 +49,16 @@ public class AuthController {
 	
 	@RequestMapping("/process")
 	public ResponseEntity<String> processAuthentication(OAuth2Authentication authentication) {
-		System.out.println("processing authentication");
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("WWW-Authenticate", "Bearer realm='Revature RideShare application'");
 		ResponseEntity<String> response = new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 		if (authentication != null) {
-			System.out.println("authenticaiton is not null: " + authentication);
-			
 			String token = ((OAuth2AuthenticationDetails) authentication.getDetails()).getTokenValue();
 			String slackId = authentication.getName().split(", ")[1].substring(3);
 			JsonNode userInfo = authService.getUserInfo(token, slackId);
 			try {
 				User u = authService.getUserAccount(slackId, userInfo);
-				System.out.println("authenticated user: " + u);
 				String jwt = authService.createJsonWebToken(u);
-				System.out.println("json web token: " + jwt);
 				RideshareAuthenticationToken auth = new RideshareAuthenticationToken(slackId, jwt, u, u.getAuthorities());
 				auth.setAuthenticated(true);
 				SecurityContextHolder.getContext().setAuthentication(auth);
@@ -130,66 +125,5 @@ public class AuthController {
 //		}
 //		return response;
 //	}
-
-	@GetMapping("/token")
-	public ResponseEntity<String> getJsonWebToken(OAuth2Authentication authentication) {
-		ResponseEntity<String> response = null;
-		System.out.println(authentication);
-		
-		String token = ((OAuth2AuthenticationDetails) authentication.getDetails()).getTokenValue();
-		String[] nameParts = authentication.getName().split(", ");
-		String slackId = nameParts[1].substring(3);
-		JsonNode userInfo = authService.getUserInfo(token, slackId);
-		User u = authService.getUserAccount(slackId, userInfo);
-
-		String jwt = authService.createJsonWebToken(u);
-		System.out.println(jwt);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("rideshare-token", jwt);
-		response = new ResponseEntity<String>(headers, HttpStatus.OK);
-		return response;
-	}
 	
-//	@RequestMapping("/getCode")
-//	public void loginUser(@RequestParam("code") String code, HttpServletResponse response) {
-//		String destination = "/login?error=true";
-//		RestTemplate restTemplate = new RestTemplate();
-//		ObjectMapper mapper = new ObjectMapper();
-//		String accessUrl = "https://slack.com/api/oauth.access?client_id=" + slackAppId + "&client_secret="
-//				+ slackAppSecret + "&code=" + code;
-//		ResponseEntity<String> accessResponse = restTemplate.getForEntity(accessUrl, String.class);
-//		try {
-//			JsonNode root = mapper.readTree(accessResponse.getBody());
-//			String accessToken = root.path("access_token").asText();
-//			String tokenUrl = "https://slack.com/api/users.identity?token=" + accessToken;
-//			RestTemplate requestTemplate = new RestTemplate();
-//			ResponseEntity<String> tokenResponse = requestTemplate.getForEntity(tokenUrl, String.class);
-//			System.out.println(tokenResponse);
-//			JsonNode tokenRoot = mapper.readTree(tokenResponse.getBody());
-//			String userName = tokenRoot.path("user").path("name").asText();
-//			String userId = tokenRoot.path("user").path("id").asText();
-//			System.out.println("userName: " + userName + ", userId: " + userId);
-//			User u = userService.getUserBySlackId(userId);
-//			// TODO:update user information here
-//			if (u == null) {
-//				u = new User();
-//				u.setFullName(userName);
-//				u.setSlackId(userId);
-//				userService.addUser(u);
-//			}
-//			Authentication authentication = new PreAuthenticatedAuthenticationToken(u, "blahblahblah");
-//			// can include authorities as third parameter
-//			SecurityContextHolder.getContext().setAuthentication(authentication);
-//			destination = "/";
-//			response.sendRedirect(destination);
-//		} catch (IOException e) {
-//			e.printStackTrace(); // TODO: change this when logging is set up
-//			try {
-//				response.sendRedirect(destination);
-//			} catch (IOException e1) {
-//				e1.printStackTrace();
-//			}
-//		}
-//	}
-
 }

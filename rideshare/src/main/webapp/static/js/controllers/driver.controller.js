@@ -6,6 +6,14 @@ export let driverController = function($scope, $http, $state){
 	// global variables
 	let user;
 	let poiLimit = 0;
+
+	$scope.updateSort = function (item){
+		$http.get("/ride/request/open/"+item.poiId)
+		.then(function(response) {
+			$scope.openRequest = response.data;	
+		});
+	}
+
 	
 	$http.get("/ride")
 	.then(function(response) {
@@ -15,12 +23,13 @@ export let driverController = function($scope, $http, $state){
 		.then(function(response) {
 			// get current user
 			user = response.data;
-			
+
 			if(response.data.mainPOI != null) {
-				$scope.selectedItem = $scope.allPoi[response.data.mainPOI.poiId-1];
-			}
-			else {
+				$scope.selectedItem = $scope.allPoi[user.mainPOI.poiId-1];
+				$scope.updateSort(user.mainPOI);
+			} else {
 				$scope.selectedItem = $scope.allPoi[0];
+				$scope.updateSort($scope.allPoi[0]);
 			}
 		})
 		.then(function(){
@@ -172,14 +181,6 @@ export let driverController = function($scope, $http, $state){
 	$scope.activeRides = [];
 	$scope.pastRides = [];
 
-	$scope.updateSort = function (item){
-		$http.get("/ride/request/open/"+item.poiId)
-		.then(function(response) {
-			$scope.openRequest = response.data;	
-		});
-
-	}
-
 	// show open requests from a poi
 	$http.get("/ride/request/open/"+$scope.poiId.id)
 	.then(function(response) {
@@ -247,10 +248,7 @@ export let driverController = function($scope, $http, $state){
 
 		$scope.offer.notes = notes;
 		$scope.offer.time = new Date(time);
-		console.log(time);
-		console.log($scope.offer.time);
 		$scope.offer.seatsAvailable = seats;
-		console.log($scope.offer);
 
 		$http.post('/ride/offer/add', $scope.offer).then(
 			(formResponse) => {
@@ -271,7 +269,20 @@ export let driverController = function($scope, $http, $state){
 							$scope.$apply;
 						}
 					}
-					
+					setTimeout(function(){$state.reload();}, 500);
+				}
+		);
+	};
+	
+	$scope.offerActiveCancel = function(activeRideId) {
+		$http.get('/ride/offer/cancelActive/' + activeRideId).then(
+				(response) => {
+					for(let i = 0; i < $scope.activeRides.length; i++){
+						if($scope.activeRides[i].availRide.availRideId == activeRideId) {
+							$scope.activeRides.splice(i, 1);
+							$scope.$apply;
+						}
+					}
 					setTimeout(function(){$state.reload();}, 500);
 				}
 		);
@@ -350,8 +361,21 @@ export let driverController = function($scope, $http, $state){
 			$scope.pastRides = listReq;
 		}
 	}
+
+	$scope.date = new Date().getTime();
+	$scope.completeRequest = function(rideId) {
+		$http.post('/ride/request/complete/' + rideId).then((response) => {
+			for(let i = 0; i < $scope.activeRides.length; i++){
+				if($scope.activeRides[i].rideId == rideId) {
+					$scope.activeRides.splice(i, 1);
+					$scope.$apply;
+				}
+			}
+			setTimeout(function(){$state.reload();}, 500);
+		});
+	};
 	
-	// stops past dates from being selected in date/time picker
+	//stops past dates from being selected in date/time picker
 	$scope.startDateBeforeRender = function($dates) {
 		  const todaySinceMidnight = new Date();
 		    todaySinceMidnight.setUTCHours(0,0,0,0);
