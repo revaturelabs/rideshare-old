@@ -1,3 +1,26 @@
+export let authFactory = function($http, $window, jwtHelper) {
+	return {
+		getToken: function() {
+
+		},
+		requestToken: function() {
+
+		},
+		acquireToken: function() {
+
+		},
+		setToken: function(token) {
+
+		},
+		clearToken: function() {
+
+		},
+		getUser: function() {
+
+		},
+	};
+}
+
 export let AuthService = function($window) {
 	this.getToken = function() {
 		let token = $window.localStorage.getItem('RideShare_auth_token');
