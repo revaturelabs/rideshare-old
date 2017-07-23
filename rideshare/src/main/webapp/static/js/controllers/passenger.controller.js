@@ -116,7 +116,6 @@ export let passengerController = function($scope, $http, $state, $location){
 					//get the current drop down options id
 					let select1 = document.getElementById("fromPOI");
 					let start = select1.options[select1.selectedIndex].id;
-					console.log(start);
 					 
 					let select2 = document.getElementById("toPOI");
 					let destination = select2.options[select2.selectedIndex].id;
@@ -187,10 +186,6 @@ export let passengerController = function($scope, $http, $state, $location){
 		$http.get("/ride/offer/open/"+2)
 		.then(function(response) {
 			$scope.openOffer = response.data;
-			console.log("-.-.-.-.-.-.-.-.-");
-			console.log(response.data);
-			console.log($scope.openOffer);
-			console.log("-.-.-.-.-.-.-.-.-");
 		});
 
 	}
@@ -201,8 +196,6 @@ export let passengerController = function($scope, $http, $state, $location){
 	$http.get("/ride/offer/open/"+$scope.poiId.id)
 	.then(function(response) {
 		$scope.openOffer = response.data;
-		console.log("Populated open offers");
-		console.log($scope.openOffer);
 	});
 
 	$http.get("/ride/request/active")
@@ -217,15 +210,8 @@ export let passengerController = function($scope, $http, $state, $location){
 
 	// accept open offers
 	$scope.acceptOffer = function(id){
-		console.log($scope.openOffer);
 		$http.get("/ride/offer/accept/"+id)
 		.then(function(response) {
-//			for(let i = 0; i < $scope.openOffer.length; i++){
-//				if($scope.openOffer[i].availRideId == id) {
-//					$scope.openOffer.splice(i, 1);
-//					$scope.$apply;
-//				}
-//			}
 		});
 
 		setTimeout(function(){$state.reload();}, 500);
@@ -278,8 +264,6 @@ export let passengerController = function($scope, $http, $state, $location){
 		$scope.newRequest.time = new Date(time);
 		$scope.newRequest.status = 'OPEN';
 		$scope.newRequest.user = user;
-		
-		console.log($scope.newRequest);
 
 		$http.post('/ride/request/add', $scope.newRequest).then(
 			(formResponse) => {
@@ -326,44 +310,30 @@ export let passengerController = function($scope, $http, $state, $location){
 		list.sort(compare); 
 		listReq = [list[0]];
 		for(let i = 0; i < list.length; i++){
-			console.log(list);
 			if((currentAvailId != list[i].request.requestId) && i == list.length-1){
 				listReq[counter++].request = temp;
 				temp = [];
 				temp.push(list[i].request);
 				listReq[counter] = list[i];
 				listReq[counter].request = temp;
-				console.log("if 1");
-				console.log(list);
 				
 			}
 			else if ((currentAvailId == list[i].request.requestId) && i == list.length-1){
 				temp.push(list[i].request);
 				listReq[counter].request = temp;
-				console.log("if 2");
-				console.log(list);
 			}
 			else if((currentAvailId != list[i].request.requestId)){
 				currentAvailId = list[i].request.requestId;
-				console.log("if 3");
-				console.log(list);
 				if(temp.length > 0){
 					listReq[counter++].request = temp;
 					listReq[counter] = list[i];
 					temp = [];
-					console.log("if 4");
-					console.log(list);
 				}
 			} 
 			if(i != list.length-1) temp.push(list[i].request);
 		}
 		if(reqString == "active") {
 			$scope.activeRides = listReq;
-			
-			console.log("-----------HELLO---------");
-			console.log($scope.activeRides);
-			console.log($scope.activeRequests);
-			console.log("-----------HELLO---------");
 			for(let i = 0; i < $scope.activeRequests.length; i++) {
 				for(let k = 0; k < $scope.activeRides.length; k++) {
 					if($scope.activeRequests[i].requestId == $scope.activeRides[k].request.requestId){
@@ -373,40 +343,15 @@ export let passengerController = function($scope, $http, $state, $location){
 					}
 				}
 			}
-			
-			console.log("-----------HE2222LLO---------");
-			console.log($scope.activeRequests);
-			console.log("-----------HE2222LLO---------");
 		}
 		else if (reqString == "history") {
 			$scope.pastRides = listReq;
 		}
 	}
 	
-//	$scope.cancelRequest = function(activeReqId){
-//		$http.get('/ride/request/cancel/' + activeReqId).then(
-//				(response) => {
-//					for(let i = 0; i < $scope.activeRequests.length; i++){
-//						for(let j = 0; j < $scope.activeRequests[i].request.length; j++){
-//							if($scope.activeRequests[i].request[j].requestId == activeReqId) {
-//								console.log($scope.activeRequests[i].request);
-//								$scope.activeRequests[i].request.splice(j, 1);
-//								console.log($scope.activeRequests[i].request);
-//								$scope.$apply;
-//							}
-//						}
-//					}
-//					
-//					setTimeout(function(){$state.reload();}, 500);
-//				}
-//		);
-//	}
-	
 	$scope.cancelActiveRequest = function(activeReqId){
 		$http.get('/ride/request/cancelActive/' + activeReqId).then(
 				(response) => {
-					console.log(activeReqId);
-					console.log($scope.activeRequests);
 					for(let i = 0; i < $scope.activeRequests.length; i++){
 						if($scope.activeRequests[i].requestId == activeReqId) {
 							$scope.activeRequests[i].splice(i, 1);
@@ -414,7 +359,7 @@ export let passengerController = function($scope, $http, $state, $location){
 						}
 					}
 					
-					setTimeout(function(){console.log($scope.activeRequests[0].request.length + " " + "HERE");$state.reload();}, 500);
+					setTimeout(function(){$state.reload();}, 500);
 				}
 		);
 	}

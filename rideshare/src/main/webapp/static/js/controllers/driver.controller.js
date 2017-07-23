@@ -247,10 +247,7 @@ export let driverController = function($scope, $http, $state){
 
 		$scope.offer.notes = notes;
 		$scope.offer.time = new Date(time);
-		console.log(time);
-		console.log($scope.offer.time);
 		$scope.offer.seatsAvailable = seats;
-		console.log($scope.offer);
 
 		$http.post('/ride/offer/add', $scope.offer).then(
 			(formResponse) => {
@@ -271,7 +268,6 @@ export let driverController = function($scope, $http, $state){
 							$scope.$apply;
 						}
 					}
-					console.log("offerCancel........");
 					setTimeout(function(){$state.reload();}, 500);
 				}
 		);
@@ -286,7 +282,6 @@ export let driverController = function($scope, $http, $state){
 							$scope.$apply;
 						}
 					}
-					console.log("offerActiveCancel........");
 					setTimeout(function(){$state.reload();}, 500);
 				}
 		);
