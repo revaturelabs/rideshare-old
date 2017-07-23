@@ -1,26 +1,13 @@
-export let slackLoginController = function($scope, $http, $state) {
-
-	$scope.checkAuth = function() {
-		$http.get("/auth/check")
+export let slackLoginController = function($scope, $http, $state, $log, authFactory) {
+	$http.get('/auth/process')
 		.then(function(res) {
-			if (res.data !== null && res.data === true) {
-				$scope.authenticated = true;
-				$state.go('main.passenger');
-			} else {
-				$scope.authenticated = false;
-			}
+			let token = res.headers('rideshare-token');
+			// localStorage.setItem('RideShare_auth_token', token);
+			authFactory.setToken(token);
+			$state.go('main.passenger');
 		})
-		.catch(function() {
-			$scope.authenticated = false;
+		.catch(function(reason) {
+			$log.error(reason);
+			authFactory.clearToken();
 		});
-	}
-	$scope.checkAuth();
-
-
-	$http.get("/auth/token")
-	.then(function(res) {
-		// put res (token) in localstorage
-		localStorage.setItem('RideShare_auth_token', res.headers('token'));
-	});
-
 }
