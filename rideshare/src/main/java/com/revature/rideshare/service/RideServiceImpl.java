@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,7 @@ import com.revature.rideshare.domain.User;
 
 @Component("rideService")
 public class RideServiceImpl implements RideService {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private RideRepository rideRepo;
@@ -144,7 +147,6 @@ public class RideServiceImpl implements RideService {
 	public boolean cancelActiveRequest(long id, User u) {
 		try {
 			RideRequest req = rideReqRepo.findOne(id);
-			System.out.println("REQ TO DELETE \n\n\n\n\n\n\n" + req.toString() + "\n\n\n");
 			rideReqRepo.delete(req);
 			return true;
 		} catch (Exception e) {
@@ -160,9 +162,6 @@ public class RideServiceImpl implements RideService {
 	public boolean cancelRideReopenAvailRide(long id, User u) {
 		try {
 			Ride temp = rideRepo.findOne(id);
-			System.out.println(temp.toString());
-			System.out.println(temp.getAvailRide().toString());
-			System.out.println(temp.getRequest().toString());
 			RideRequest req = temp.getRequest();
 			AvailableRide avail = temp.getAvailRide();
 			
@@ -238,13 +237,10 @@ public class RideServiceImpl implements RideService {
 		List<RideRequest> temp = new ArrayList<RideRequest>();
 
 		for (RideRequest r : allReqs) {
-			System.out.println(r.toString());
 			if (r.getStatus() == RequestStatus.OPEN) {
 				temp.add(r);
-				System.out.println("ADDED\n\n");
-			}
-			else{
-				System.out.println("NOT ADDED\n\n");
+			} else {
+				logger.debug("NOT ADDED\n\n");
 			}
 		}
 

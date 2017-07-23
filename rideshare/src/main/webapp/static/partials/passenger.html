@@ -113,7 +113,7 @@
 				<div id="collapseA{{req.requestId}}" class="panel-collapse collapse">
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{req.requestId}}" >
 						<p>This request has not yet been assigned to a offer.</p>
-						Note: {{req.notes}}
+						Note: <i>{{req.notes}} <span ng-show="!req.notes"> N/A </span></i>
 						<br/>
 
 						<div class="btn-container">

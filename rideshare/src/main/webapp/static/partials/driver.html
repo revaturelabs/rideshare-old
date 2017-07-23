@@ -115,13 +115,13 @@
 				<div id="collapseA{{offer.availRideId}}" class="panel-collapse collapse">
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{offer.availRideId}}" >
 						<p>This offer has not yet been assigned to a request.</p>
-						Note: {{offer.notes}}
+						Note: <i>{{offer.notes}} <span ng-show=" offer.notes == null"> N/A </span></i>
 						<br/>
 						Available Seats: {{offer.seatsAvailable}}
 
 						<div class="btn-container">
 								<button type="submit" class="btn btn-primary"
-									ng-click="offerActiveCancel(offer.availRideId)">Cancel Offer {{offer.availRideId}}</button>	
+									ng-click="offerActiveCancel(offer.availRideId)">Cancel Offer</button>	
 						</div>
 
 					</div>
@@ -145,6 +145,9 @@
 				</div>
 				<div id="collapseA{{ride.availRide.availRideId}}" class="panel-collapse collapse">
 					<div ng-repeat="request in ride.request" class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
+						Note: <i>{{ride.availRide.notes}} <span ng-show="!ride.availRide.notes"> N/A </span></i>
+						<br/>
+						Available Seats: {{ride.availRide.seatsAvailable}}
 						
 						<div ng-show="isArray(ride.request)">
 							<em>Passengers:</em>
@@ -160,10 +163,10 @@
 							<button type="submit" class="btn btn-primary"
 								ng-click="offerCancel(ride.availRide.availRideId)">Cancel Offer</button>
 						</div>
-						<div ng-if="request.time < date" class="btn-container" style="display: inline-block;">
+						<!--<div ng-if="request.time < date" class="btn-container" style="display: inline-block;">
 							<button type="submit" class="btn btn-primary"
 								ng-click="completeRequest(ride.rideId)">Complete Request</button>	
-						</div>
+						</div>-->
 						
 					</div>
 				</div>
@@ -206,8 +209,7 @@
 								</li>
 							</ul>
 						</div>
-						<br/>
-						Complaint: <i>{{ride.complaint}} <span ng-show=" ride.complaint == null"> N/A </span></i>
+						<!--<br/> Complaint: <i>{{ride.complaint}} <span ng-show=" ride.complaint == null"> N/A </span></i>-->
 						
 					</div>
 				</div>
