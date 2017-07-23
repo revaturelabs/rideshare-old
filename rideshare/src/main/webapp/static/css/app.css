@@ -312,6 +312,10 @@ textarea {
 	min-width: 300px;
 }
 
+.cat-pic {
+	margin: auto;
+}
+
 /**********************
 	Panels
 **********************/
@@ -342,4 +346,31 @@ textarea {
 
 .panel-body {
 	background-color: #f8f8f8;
+}
+
+.panel-body table tr td:first-child{
+	padding-right: 2em;
+}
+
+/**********************
+	Maps
+**********************/
+#wrapper {
+	position: relative;
+	margin-bottom: 2.3em;
+}
+
+#over_map {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 99;
+}
+
+#mapText {
+	margin-top: 1em;
+	margin-left: 1em;
+	font-size: 1.5em;
+	color: #202020;
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }

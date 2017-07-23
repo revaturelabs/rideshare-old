@@ -2,7 +2,7 @@
   "name": "rideshare",
   "version": "0.0.1",
   "description": "The Revature RideShare Web Application",
-  "homepage": "",
+  "homepage": "https://github.com/genesisb17/RideShare",
   "main": "NONEXISTENT.js",
   "scripts": {
     "start": "npm run watch:dev",
@@ -28,16 +28,11 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@uirouter/angularjs": "^1.0.5",
-    "@uirouter/core": "^5.0.5",
-    "angular": "^1.6.5",
-    "angular-bootstrap-datetimepicker": "^1.1.4",
+    "angular": "1.5.7",
     "angular-jwt": "^0.1.9",
-    "angularjs-bootstrap-datetimepicker": "^1.1.4",
     "moment": "^2.18.1"
   },
   "devDependencies": {
-    "@uirouter/visualizer": "^4.0.0",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.1",
@@ -47,7 +42,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "eslint": "^4.1.1",
     "eslint-loader": "^1.9.0",
-    "extract-text-webpack-plugin": "^2.1.2",
+    "html-loader": "^0.4.5",
     "html-webpack-plugin": "^2.29.0",
     "webpack": "^3.1.0",
     "webpack-dev-server": "^2.5.0"
