@@ -56,7 +56,7 @@
 			
 		<!-- accordion used for display  -->	
 		<div class="panel-group" id="accordionOpen">
-			<div class="panel panel-default"  ng-repeat="req in openRequest track by $index" style = "border: none">
+			<div class="panel panel-default"  ng-repeat="req in openRequest" style = "border: none">
 				<div class="panel-heading" data-toggle="collapse" data-target = "#collapse{{req.requestId}}" >
 					<h4 class="panel-title">
 						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionOpen" href="#collapse{{req.requestId}}" target="_self" style="text-decoration:none">
@@ -98,7 +98,7 @@
 			</ul>
 						
 			<div class="panel-group" id="accordionActive">
-			<div class="panel panel-default" ng-repeat="offer in activeOffers track by $index" style = "border: none">
+			<div class="panel panel-default" ng-repeat="offer in activeOffers" style = "border: none">
 				<div class="panel-heading" data-toggle="collapse" data-target = "#collapseA{{offer.availRideId}}" style = "background-color: #fafafa;">
 					<h4 class="panel-title">
 						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionActive" href="#collapseA{{offer.availRideId}}" target="_self" style="text-decoration:none">
@@ -128,7 +128,7 @@
 				</div>
 			</div>
 
-			<div class="panel panel-default" ng-repeat="ride in activeRides track by $index" style = "border: none">
+			<div class="panel panel-default" ng-repeat="ride in activeRides" style = "border: none">
 				<div class="panel-heading" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
 					<h4 class="panel-title">
 						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionActive" href="#collapseA{{ride.availRide.availRideId}}" target="_self" style="text-decoration:none">
@@ -144,7 +144,7 @@
 					</h4>
 				</div>
 				<div id="collapseA{{ride.availRide.availRideId}}" class="panel-collapse collapse">
-					<div ng-repeat="request in ride.request track by $index" class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
+					<div ng-repeat="request in ride.request" class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
 						<em>Note:</em> {{ride.availRide.notes}} <span ng-show="!ride.availRide.notes"> N/A </span>
 						<br/>
 						<em>Available Seats:</em> {{ride.availRide.seatsAvailable}}
@@ -182,7 +182,7 @@
 			</ul>
 
 			<div class="panel-group" id="accordionPast">
-			<div class="panel panel-default" ng-repeat="ride in pastRides track by $index" style = "border: none">
+			<div class="panel panel-default" ng-repeat="ride in pastRides" style = "border: none">
 				<div class="panel-heading" data-toggle="collapse" data-target = "#collapseP{{ride.availRide.availRideId}}" >
 					<h4 class="panel-title">
 						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionPast" href="#collapseP{{ride.availRide.availRideId}}" target="_self" style="text-decoration:none">
@@ -203,7 +203,7 @@
 						<div ng-show="isArray(ride.request)">
 							<em>Passengers:</em>
 							<ul class="passenger-list">
-								<li ng-repeat="request in ride.request track by $index">
+								<li ng-repeat="request in ride.request">
 									{{request.user.fullName}}
 									<span ng-show="request.notes != null"> ( <i>{{request.notes}}</i> )</span>
 								</li>
@@ -245,7 +245,7 @@
 <!-- 								</select> -->
 								<select id="fromPOI" class="form-control" ng-model="pickup">
 									<option value="" disabled selected>Starting point</option>
-									<option ng-repeat="x in allMainPOI track by $index"
+									<option ng-repeat="x in allMainPOI"
 										ng-selected="start{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
 										x.poiName }}</option>
 								</select>
@@ -260,7 +260,7 @@
 <!-- 								</select> -->
 								<select id="toPOI" class="form-control" ng-model="dropoff">
 									<option value="" disabled selected>Destination</option>
-									<option ng-repeat="x in allMainPOI track by $index"
+									<option ng-repeat="x in allMainPOI"
 										ng-selected="destination{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
 										x.poiName }}</option>
 								</select>

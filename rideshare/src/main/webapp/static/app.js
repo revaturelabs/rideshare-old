@@ -82,9 +82,11 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 				adminAccess: function() {
 					return new Promise((resolve, reject) => {
 						if (authFactory.isAdmin()) {
-							resolve('You are an admin');
+							console.log('You are an admin')
+							resolve(true);
 						} else {
-							reject('You are not an admin');
+							console.log('You are not an admin')
+							reject(false);
 						}
 					});
 				}
@@ -100,9 +102,11 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 				adminAccess: function() {
 					return new Promise((resolve, reject) => {
 						if (authFactory.isAdmin()) {
-							resolve('You are an admin');
+							console.log('You are an admin')
+							resolve(true);
 						} else {
-							reject('You are not an admin');
+							console.log('You are not an admin')
+							reject(false);
 						}
 					});
 				}
@@ -118,9 +122,11 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 				adminAccess: function() {
 					return new Promise((resolve, reject) => {
 						if (authFactory.isAdmin()) {
-							resolve('You are an admin');
+							console.log('You are an admin')
+							resolve(true);
 						} else {
-							reject('You are not an admin');
+							console.log('You are not an admin')
+							reject(false);
 						}
 					});
 				}

@@ -9,9 +9,5 @@ export let slackLoginController = function($scope, $http, $state, $log, authFact
 		.catch(function(reason) {
 			$log.error(reason);
 			authFactory.clearToken();
-		})
-		.then(function() {
-			$log.info(authFactory.decodeToken());
-			$log.info(authFactory.getUser());
 		});
 }

@@ -77,3 +77,4 @@ Servers*
 rideshare/slackbot.js
 /rideshare/RideShare.log
 /rideshare/src/main/resources/static
+rideshare/run-local.sh
