@@ -73,7 +73,7 @@
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapse{{req.requestId}}" >
 						
 					<!-- Beginning of expanded portion -->
-					Note: <i>{{req.notes}} <span ng-show=" req.notes == null"> N/A </span></i>
+					<em>Note:</em> {{req.notes}} <span ng-show=" req.notes == null"> N/A </span>
 
 					<div class="btn-container">
 						<button type="button" class="btn btn-primary"
@@ -115,9 +115,9 @@
 				<div id="collapseA{{offer.availRideId}}" class="panel-collapse collapse">
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapseA{{offer.availRideId}}" >
 						<p>This offer has not yet been assigned to a request.</p>
-						Note: <i>{{offer.notes}} <span ng-show=" offer.notes == null"> N/A </span></i>
+						<em>Note:</em> {{offer.notes}} <span ng-show=" offer.notes == null"> N/A </span>
 						<br/>
-						Available Seats: {{offer.seatsAvailable}}
+						<em>Available Seats:</em> {{offer.seatsAvailable}}
 
 						<div class="btn-container">
 								<button type="submit" class="btn btn-primary"
@@ -145,9 +145,9 @@
 				</div>
 				<div id="collapseA{{ride.availRide.availRideId}}" class="panel-collapse collapse">
 					<div ng-repeat="request in ride.request" class="panel-body" data-toggle="collapse" data-target = "#collapseA{{ride.availRide.availRideId}}" >
-						Note: <i>{{ride.availRide.notes}} <span ng-show="!ride.availRide.notes"> N/A </span></i>
+						<em>Note:</em> {{ride.availRide.notes}} <span ng-show="!ride.availRide.notes"> N/A </span>
 						<br/>
-						Available Seats: {{ride.availRide.seatsAvailable}}
+						<em>Available Seats:</em> {{ride.availRide.seatsAvailable}}
 						
 						<div ng-show="isArray(ride.request)">
 							<em>Passengers:</em>
