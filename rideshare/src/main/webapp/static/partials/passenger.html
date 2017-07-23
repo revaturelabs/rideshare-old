@@ -39,14 +39,13 @@
 
 			<!-- Select location to filter available rides --> 
 			<div class="input-group location-selector">
-				<span class="input-group-addon">Location</span>
+				<span class="input-group-addon">Origin</span>
 				<select class="form-control" ng-model="selectedItem"
 					ng-options="poi.poiName for poi in allPoi track by poi.poiId" ng-change="updateSort(selectedItem)">{{poi[0].poiName}}</select>
 			</div>
 
 			<ul class="tabbed-list">
-
-				<li ng-if="openRequest.length == 0">No open requests for this
+				<li ng-if="openOffer.length == 0">No open requests for this
 					point of interest</li>
 			</ul>
 			
