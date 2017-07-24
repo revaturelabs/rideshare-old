@@ -360,7 +360,7 @@ export let passengerController = function($scope, $http, $state, $location){
 				(response) => {
 					for(let i = 0; i < $scope.activeRequests.length; i++){
 						if($scope.activeRequests[i].requestId == activeReqId) {
-							$scope.activeRequests[i].splice(i, 1);
+							$scope.activeRequests.splice(i, 1);
 							$scope.$apply;
 						}
 					}
