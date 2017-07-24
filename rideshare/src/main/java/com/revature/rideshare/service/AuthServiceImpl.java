@@ -32,20 +32,20 @@ public class AuthServiceImpl implements AuthService {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-//	@Value("${rideshare.jwt-secret}")
-	private String jwtSecret = "RichieIsObsessedWithChickens!";
-	@Value("${slack.identity.client.clientId}")
+	@Value("#{systemEnvironment['RIDESHARE_JWT_SECRET']}")
+	private String jwtSecret;
+	@Value("#{systemEnvironment['RIDESHARE_SLACK_ID']}")
 	private String slackAppId;
-	@Value("${slack.identity.client.clientSecret}")
+	@Value("#{systemEnvironment['RIDESHARE_SLACK_SECRET']}")
 	private String slackAppSecret;
-	@Value("${slack.verificationToken}")
+	@Value("#{systemEnvironment['RIDESHARE_SLACK_VERIFICATION']}")
 	private String slackAppVerificationToken;
-	@Value("${slack.teamId}")
+	@Value("#{systemEnvironment['RIDESHARE_SLACK_TEAM']}")
 	private String slackAppTeamId;
 	@Value("${rideshare.deploy-url}")
 	private String rideshareUrl;
-//	private String loginRedirectUrl = "https://localhost:8443/auth/login";
-//	private String integrationRedirectUrl = "https://localhost:8443/auth/integrate";
+	private String loginRedirectUrl = "https://localhost:8443/auth/login";
+	private String integrationRedirectUrl = "https://localhost:8443/auth/integrate";
 	
 	@Autowired
 	UserService userService;
