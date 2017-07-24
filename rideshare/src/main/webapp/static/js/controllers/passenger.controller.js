@@ -13,7 +13,7 @@ export let passengerController = function($scope, $http, $state, $location){
 
 	$http.get("user/me").then(function(response){
 		// get current user
-		let user = response.data;
+		user = response.data;
 		$scope.user = response.data;
 	})
 	.then(function(){
