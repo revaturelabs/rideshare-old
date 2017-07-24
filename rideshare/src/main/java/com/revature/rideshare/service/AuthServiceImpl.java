@@ -44,12 +44,36 @@ public class AuthServiceImpl implements AuthService {
 	private String slackAppTeamId;
 	@Value("${rideshare.deploy-url}")
 	private String rideshareUrl;
-	private String loginRedirectUrl = "https://localhost:8443/auth/login";
-	private String integrationRedirectUrl = "https://localhost:8443/auth/integrate";
+//	private String loginRedirectUrl = "https://localhost:8443/auth/login";
+//	private String integrationRedirectUrl = "https://localhost:8443/auth/integrate";
 	
 	@Autowired
 	UserService userService;
 	
+	public void setJwtSecret(String jwtSecret) {
+		this.jwtSecret = jwtSecret;
+	}
+
+	public void setSlackAppId(String slackAppId) {
+		this.slackAppId = slackAppId;
+	}
+
+	public void setSlackAppSecret(String slackAppSecret) {
+		this.slackAppSecret = slackAppSecret;
+	}
+
+	public void setSlackAppVerificationToken(String slackAppVerificationToken) {
+		this.slackAppVerificationToken = slackAppVerificationToken;
+	}
+
+	public void setSlackAppTeamId(String slackAppTeamId) {
+		this.slackAppTeamId = slackAppTeamId;
+	}
+
+	public void setRideshareUrl(String rideshareUrl) {
+		this.rideshareUrl = rideshareUrl;
+	}
+
 	@Autowired
 	PointOfInterestRepository poiRepo;
 	
