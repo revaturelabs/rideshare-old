@@ -64,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.invalidateHttpSession(true)
 				.permitAll()
 			.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-			.and().addFilterBefore(slackSsoFilter(), BasicAuthenticationFilter.class);
+			.and().addFilterBefore(slackIdentitySsoFilter(), BasicAuthenticationFilter.class);
 	}
 	
 	@Override
