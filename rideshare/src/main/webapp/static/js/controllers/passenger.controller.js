@@ -56,7 +56,9 @@ export let passengerController = function($scope, $http, $state, $location){
 				
 				
 				for(let x = 0; x < markers.length; x++){
-					let id = x+1;
+					//get the current poiId for the selected marker
+					let id = allPOI[x].poiId;
+					
 					document.getElementById("mapText").innerHTML = 'Choose Start Point';
 					
 					// add event listener to each marker on the map
@@ -116,17 +118,32 @@ export let passengerController = function($scope, $http, $state, $location){
 					//get the current drop down options id
 					let select1 = document.getElementById("fromPOI");
 					let start = select1.options[select1.selectedIndex].id;
-					console.log(start);
 					 
 					let select2 = document.getElementById("toPOI");
 					let destination = select2.options[select2.selectedIndex].id;
 					
 					directionsDisplay.setMap(map);
 					
+					let startLat;
+					let startLng;
+					let destLat;
+					let destLng;
+					for(let x = 0; x < allPOI.length; x++){
+						//get the start poi latitude and longitude
+						if(start == allPOI[x].poiId){
+							startLat = allPOI[x].latitude;
+							startLng = allPOI[x].longitude;
+						}
+						if(destination == allPOI[x].poiId){
+							destLat = allPOI[x].latitude;
+							destLng = allPOI[x].longitude; 
+						}
+					}
+					
 					let request = {
 							//get the longitude and latitude to match the selected poi
-							origin: {lat: allPOI[start].latitude, lng: allPOI[start].longitude},
-							destination: {lat: allPOI[destination].latitude, lng: allPOI[destination].longitude},
+							origin: {lat: startLat, lng: startLng},
+							destination: {lat: destLat, lng: destLng},
 							travelMode: 'DRIVING'
 					}
 					

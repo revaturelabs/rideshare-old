@@ -196,7 +196,7 @@
 								<select id="fromPOI" class="form-control" ng-model="pickup">
 									<option value="" disabled selected>Destination</option>
 									<option ng-repeat="x in allMainPOI"
-										ng-selected="start{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+										ng-selected="start{{ x.poiId }}" id="{{ x.poiId }}">{{
 										x.poiName }}</option>
 								</select>
 							</td>
@@ -209,7 +209,7 @@
 								<select id="toPOI" class="form-control" ng-model="dropoff">
 									<option value="" disabled selected>Destination</option>
 									<option ng-repeat="x in allMainPOI"
-										ng-selected="destination{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+										ng-selected="destination{{ x.poiId }}" id="{{ x.poiId }}">{{
 										x.poiName }}</option>
 								</select>
 
