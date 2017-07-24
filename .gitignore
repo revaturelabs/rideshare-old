@@ -75,3 +75,9 @@ Servers*
 /rideshare/src/main/webapp/static/main.bundle.js
 /rideshare/RideShare.log
 /rideshare/src/main/resources/static
+/rideshare/.classpath
+/rideshare/.factorypath
+/rideshare/.springBeans
+/rideshare/build.sh
+/rideshare/setup.sh
+/rideshare/run-local.sh
