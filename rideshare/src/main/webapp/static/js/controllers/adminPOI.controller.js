@@ -61,17 +61,18 @@ export let adminPoiController = function ($scope, $http, $state) {
 		// extract latitude and longitude with google maps api
 		xhr.onload = function (response) {
 			var result = JSON.parse(xhr.responseText);
-
-			$scope.poi.latitude = result.results[0].geometry.location.lat;
-			$scope.poi.longitude = result.results[0].geometry.location.lng;
-			$http.post("/poiController/addPoi", $scope.poi)
-				.then((formResponse) => {
-					$state.go('main.adminPoi');
-					document.getElementById("addPoi-form").reset();
-				},
-				(failedResponse) => {
-					alert('failure');
-				})
+			if (result.length !== 0) {
+				$scope.poi.latitude = result.results[0].geometry.location.lat;
+				$scope.poi.longitude = result.results[0].geometry.location.lng;
+				$http.post("/poiController/addPoi", $scope.poi)
+					.then((formResponse) => {
+						document.getElementById("addPoi-form").reset();
+						$state.reload();
+					},
+					(failedResponse) => {
+						alert('failure');
+					})
+			}
 		}
 		xhr.send();
 	}   // end of addPoi() function
@@ -81,7 +82,7 @@ export let adminPoiController = function ($scope, $http, $state) {
 		// later add modal asks "Are you sure you want to remove this POI?"
 		$http.post("/poiController/removePoi", $scope.allpois[index])
 			.then((response) => {
-				$state.go('main.adminPoi');
+				$state.reload();
 			},
 			(failedResponse) => {
 				alert('failure');

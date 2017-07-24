@@ -78,19 +78,20 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			templateUrl : 'partials/adminRides.html',
 			controller : adminRidesController,
 			data: { requiresLogin: true },
-			resolve: {
-				adminAccess: function() {
-					return new Promise((resolve, reject) => {
-						if (authFactory.isAdmin()) {
-							console.log('You are an admin')
-							resolve(true);
-						} else {
-							console.log('You are not an admin')
-							reject(false);
-						}
-					});
-				}
-			}
+			// resolve: {
+			// 	adminAccess: function() {
+			// 		return new Promise((resolve, reject) => {
+			// 			console.log('in resolver');
+			// 			if (authFactory.isAdmin()) {
+			// 				console.log('You are an admin');
+			// 				resolve(true);
+			// 			} else {
+			// 				console.log('You are not an admin');
+			// 				reject(false);
+			// 			}
+			// 		});
+			// 	}
+			// }
 		})
 		
 		.state('main.adminUsers', {
@@ -98,19 +99,19 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			templateUrl: 'partials/adminUsers.html',
 			controller : adminUsersController,
 			data: { requiresLogin: true },
-			resolve: {
-				adminAccess: function() {
-					return new Promise((resolve, reject) => {
-						if (authFactory.isAdmin()) {
-							console.log('You are an admin')
-							resolve(true);
-						} else {
-							console.log('You are not an admin')
-							reject(false);
-						}
-					});
-				}
-			}
+			// resolve: {
+			// 	adminAccess: function() {
+			// 		return new Promise((resolve, reject) => {
+			// 			if (authFactory.isAdmin()) {
+			// 				console.log('You are an admin')
+			// 				resolve(true);
+			// 			} else {
+			// 				console.log('You are not an admin')
+			// 				reject(false);
+			// 			}
+			// 		});
+			// 	}
+			// }
 		})
 		
 		.state('main.adminPoi',{
@@ -118,19 +119,19 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, jwtOption
 			templateUrl : 'partials/adminPOI.html',
 			controller : adminPoiController,
 			data: { requiresLogin: true },
-			resolve: {
-				adminAccess: function() {
-					return new Promise((resolve, reject) => {
-						if (authFactory.isAdmin()) {
-							console.log('You are an admin')
-							resolve(true);
-						} else {
-							console.log('You are not an admin')
-							reject(false);
-						}
-					});
-				}
-			}
+			// resolve: {
+			// 	adminAccess: function() {
+			// 		return new Promise((resolve, reject) => {
+			// 			if (authFactory.isAdmin()) {
+			// 				console.log('You are an admin')
+			// 				resolve(true);
+			// 			} else {
+			// 				console.log('You are not an admin')
+			// 				reject(false);
+			// 			}
+			// 		});
+			// 	}
+			// }
 		})
     
 		.state('main.userProfile', {

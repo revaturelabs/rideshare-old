@@ -160,8 +160,10 @@
 							<button type="submit" class="btn btn-primary"
 								ng-click="cancelRide(ride.rideId)">Cancel Ride</button>
 								
-							<button ng-if="request.time < date" type="submit" class="btn btn-primary"
+							<button type="submit" class="btn btn-primary"
 								ng-click="completeRide(ride.rideId)">Complete Request</button>	
+							<!--<button ng-if="request.time < date" type="submit" class="btn btn-primary"
+								ng-click="completeRide(ride.rideId)">Complete Request</button>	-->
 						</div>
 						
 						</div>
@@ -194,7 +196,7 @@
 				</div>
 				<div id="collapseP{{ride.request.requestId}}" class="panel-collapse collapse">
 					<div class="panel-body" data-toggle="collapse" data-target = "#collapseP{{ride.request.requestId}}" >
-						<em>Note:</em> {{ride.request.request.notes}} <span ng-show="!ride.request.notes"> N/A </span>
+						<em>Note:</em> {{ride.request.request.notes}} <span ng-show="ride.request.notes == null"> N/A </span>
 						<br/>
 
 						<em>Driver:</em>
@@ -233,9 +235,9 @@
 						<tr>
 							<td>
 								<select id="fromPOI" class="form-control" ng-model="pickup">
-									<option value="" disabled selected>Destination</option>
+									<option value="" disabled selected>Starting Point</option>
 									<option ng-repeat="x in allMainPOI"
-										ng-selected="start{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+										ng-selected="start{{ x.poiId }}" id="{{ x.poiId }}" data-poiId="{{ x.poiId }}">{{
 										x.poiName }}</option>
 								</select>
 							</td>
@@ -248,7 +250,7 @@
 								<select id="toPOI" class="form-control" ng-model="dropoff">
 									<option value="" disabled selected>Destination</option>
 									<option ng-repeat="x in allMainPOI"
-										ng-selected="destination{{ x.poiId }}" id="{{ x.poiId - 1}}">{{
+										ng-selected="destination{{ x.poiId }}" id="{{ x.poiId }}" data-poiId="{{ x.poiId }}">{{
 										x.poiName }}</option>
 								</select>
 
