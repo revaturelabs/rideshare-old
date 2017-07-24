@@ -81,3 +81,5 @@ Servers*
 /rideshare/build.sh
 /rideshare/setup.sh
 /rideshare/run-local.sh
+rideshare/deploy-keystore.p12
+rideshare/keystore.p12
