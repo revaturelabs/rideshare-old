@@ -32,8 +32,8 @@ public class AuthServiceImpl implements AuthService {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	@Value("${rideshare.jwt-secret}")
-	private String jwtSecret;
+//	@Value("${rideshare.jwt-secret}")
+	private String jwtSecret = "RichieIsObsessedWithChickens!";
 	@Value("${slack.identity.client.clientId}")
 	private String slackAppId;
 	@Value("${slack.identity.client.clientSecret}")
