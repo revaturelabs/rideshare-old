@@ -1,13 +1,12 @@
 package com.revature.rideshare.web;
 
-import java.security.Principal;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
@@ -42,12 +41,13 @@ public class AuthController {
 	}
 
 	@RequestMapping("/check")
-	public Boolean isAuthenticated(Principal principal) {
-		return principal != null;
+	public Boolean isAuthenticated(Authentication authentication) {
+		return (authentication != null && authentication.isAuthenticated());
 	}
 	
 	@RequestMapping("/process")
 	public ResponseEntity<String> processAuthentication(OAuth2Authentication authentication) {
+		System.out.println(authentication);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("WWW-Authenticate", "Bearer realm='Revature RideShare application'");
 		ResponseEntity<String> response = new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
@@ -57,7 +57,9 @@ public class AuthController {
 			JsonNode userInfo = authService.getUserInfo(token, slackId);
 			try {
 				User u = authService.getUserAccount(slackId, userInfo);
+				System.out.println(u);
 				String jwt = authService.createJsonWebToken(u);
+				System.out.println(jwt);
 				RideshareAuthenticationToken auth = new RideshareAuthenticationToken(slackId, jwt, u, u.getAuthorities());
 				auth.setAuthenticated(true);
 				SecurityContextHolder.getContext().setAuthentication(auth);

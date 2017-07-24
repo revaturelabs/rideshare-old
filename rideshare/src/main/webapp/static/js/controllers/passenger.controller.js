@@ -1,5 +1,5 @@
 export let passengerController = function($scope, $http, $state, $location){
-
+	$scope.activeRequests = [];
 	// global variables
 	let user;
 	let poiLimit = 0;
@@ -132,12 +132,12 @@ export let passengerController = function($scope, $http, $state, $location){
 					//get the current drop down options id
 					let select1 = document.getElementById("fromPOI");
 					let start = select1.options[select1.selectedIndex].id;
-					 
+					
 					let select2 = document.getElementById("toPOI");
 					let destination = select2.options[select2.selectedIndex].id;
 					
 					directionsDisplay.setMap(map);
-					
+
 					let request = {
 							//get the longitude and latitude to match the selected poi
 							origin: {lat: allPOI[start].latitude, lng: allPOI[start].longitude},
@@ -360,7 +360,7 @@ export let passengerController = function($scope, $http, $state, $location){
 				(response) => {
 					for(let i = 0; i < $scope.activeRequests.length; i++){
 						if($scope.activeRequests[i].requestId == activeReqId) {
-							$scope.activeRequests[i].splice(i, 1);
+							$scope.activeRequests.splice(i, 1);
 							$scope.$apply;
 						}
 					}

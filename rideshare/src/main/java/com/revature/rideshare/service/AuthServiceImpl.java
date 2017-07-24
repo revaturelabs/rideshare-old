@@ -208,8 +208,8 @@ public class AuthServiceImpl implements AuthService {
 			u.setSlackId(slackId);
 			u.setAdmin(false);
 			u.setEmail(userInfo.path("profile").path("email").asText());
-			u.setFirstName(userInfo.path("profile").path("first_name").asText());
-			u.setLastName(userInfo.path("profile").path("last_name").asText());
+//			u.setFirstName(userInfo.path("profile").path("first_name").asText());
+//			u.setLastName(userInfo.path("profile").path("last_name").asText());
 			u.setFullName(userInfo.path("real_name").asText());
 			u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
 			u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
@@ -217,8 +217,8 @@ public class AuthServiceImpl implements AuthService {
 			userService.addUser(u);
 		} else {
 			u.setEmail(userInfo.path("profile").path("email").asText());
-			u.setFirstName(userInfo.path("profile").path("first_name").asText());
-			u.setLastName(userInfo.path("profile").path("last_name").asText());
+//			u.setFirstName(userInfo.path("profile").path("first_name").asText());
+//			u.setLastName(userInfo.path("profile").path("last_name").asText());
 			u.setFullName(userInfo.path("real_name").asText());
 			if (u.isBanned()) {
 				throw new BannedUserException("This user has been banned from the application.");
