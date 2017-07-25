@@ -536,12 +536,12 @@ public class RideServiceImpl implements RideService {
 		// -1 because it does not include the current poi
 		int[] poiByDistance = new int[pois.size() - 1];
 
-		int counter = pois.size() - 2;
+		int counter = 0;
 
 		// creates an array of POI ids in order from closest to farthest away.
 		while (iter.hasNext()) {
 			Map.Entry me = (Map.Entry) iter.next();
-			poiByDistance[counter--] = (Integer) me.getValue();
+			poiByDistance[counter++] = (Integer) me.getValue();
 		}
 
 		return poiByDistance;
