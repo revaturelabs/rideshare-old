@@ -131,7 +131,7 @@
 					<h4 class="panel-title">
 						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionActive" href="#collapseA{{ride.availRide.availRideId}}" target="_self" style="text-decoration:none">
 						
-							{{ ride.availableRide.car.user.fullName }} <em>@</em> {{ride.availRide.time | date: 'h:mm a MMM dd'}}
+							{{ ride.availRide.car.user.fullName }} <em>@</em> {{ride.availRide.time | date: 'h:mm a MMM dd'}}
 							<br/>
 
 							{{ride.availRide.pickupPOI.poiName}}
@@ -184,7 +184,7 @@
 					<h4 class="panel-title">
 						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionPast" href="#collapseP{{ride.request.requestId}}" target="_self" style="text-decoration:none">
 						
-						{{ ride.availableRide.car.user.fullName }} <em>@</em> {{ride.request.time | date: 'h:mm a MMM dd'}}
+						{{ ride.availRide.car.user.fullName }} <em>@</em> {{ride.request.time | date: 'h:mm a MMM dd'}}
 						<br/>
 
 						{{ride.request.pickupLocation.poiName}}
