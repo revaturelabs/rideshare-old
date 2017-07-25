@@ -22,13 +22,13 @@ public interface AuthService {
 	 */
 	JsonNode getSlackAccessResponse(String code) throws SlackApiException;
 
-	String getUserIdentity(String token) throws SlackApiException;
+	JsonNode getUserIdentity(String token) throws SlackApiException;
 
 	JsonNode getUserProfile(String token, String slackId) throws SlackApiException;
 
 	JsonNode getUserInfo(String token, String slackId) throws SlackApiException;
 
-	User getUserAccount(String slackId, JsonNode userInfo) throws BannedUserException;
+	User getUserAccount(JsonNode userIdentity, JsonNode userInfo) throws BannedUserException;
 
 	User integrateUser(User u, JsonNode accessResponse);
 

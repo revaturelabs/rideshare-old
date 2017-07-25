@@ -35,9 +35,11 @@ public class User implements Serializable, UserDetails {
 	private long userId;
 
 	@Column(name = "FIRST_NAME")
+	@JsonIgnore
 	private String firstName;
 
 	@Column(name = "LAST_NAME")
+	@JsonIgnore
 	private String lastName;
 
 	@Column(name = "FULL_NAME", nullable = false)

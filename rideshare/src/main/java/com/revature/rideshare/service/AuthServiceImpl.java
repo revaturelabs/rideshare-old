@@ -44,35 +44,10 @@ public class AuthServiceImpl implements AuthService {
 	private String slackAppTeamId;
 	@Value("${rideshare.deploy-url}")
 	private String rideshareUrl;
-	private String loginRedirectUrl = "https://localhost:8443/auth/login";
-	private String integrationRedirectUrl = "https://localhost:8443/auth/integrate";
+	private String integrationRedirectUrl = "https://localhost:8088/auth/integrate";
 	
 	@Autowired
 	UserService userService;
-	
-	public void setJwtSecret(String jwtSecret) {
-		this.jwtSecret = jwtSecret;
-	}
-
-	public void setSlackAppId(String slackAppId) {
-		this.slackAppId = slackAppId;
-	}
-
-	public void setSlackAppSecret(String slackAppSecret) {
-		this.slackAppSecret = slackAppSecret;
-	}
-
-	public void setSlackAppVerificationToken(String slackAppVerificationToken) {
-		this.slackAppVerificationToken = slackAppVerificationToken;
-	}
-
-	public void setSlackAppTeamId(String slackAppTeamId) {
-		this.slackAppTeamId = slackAppTeamId;
-	}
-
-	public void setRideshareUrl(String rideshareUrl) {
-		this.rideshareUrl = rideshareUrl;
-	}
 
 	@Autowired
 	PointOfInterestRepository poiRepo;
@@ -100,14 +75,14 @@ public class AuthServiceImpl implements AuthService {
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
 		String url = "https://slack.com/api/oauth.access";
-		String requestUrl = url + "?client_id=" + slackAppId + "&client_secret=" + slackAppSecret + "&code=" + code
-				+ "&redirect_uri=" + loginRedirectUrl;
-//		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-//		requestBody.add("client_id", slackAppId);
-//		requestBody.add("client_secret", slackAppSecret);
-//		requestBody.add("code", code);
-//		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
-		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
+//		String requestUrl = url + "?client_id=" + slackAppId + "&client_secret=" + slackAppSecret + "&code=" + code
+//				+ "&redirect_uri=" + loginRedirectUrl;
+		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
+		requestBody.add("client_id", slackAppId);
+		requestBody.add("client_secret", slackAppSecret);
+		requestBody.add("code", code);
+		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+//		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
 		System.out.println(response.getBody());
 		try {
 			JsonNode body = mapper.readTree(response.getBody());
@@ -131,14 +106,14 @@ public class AuthServiceImpl implements AuthService {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
 		String url = "https://slack.com/api/oauth.access";
-		String requestUrl = url + "?cient_id=" + slackAppId + "&client_secret=" + slackAppSecret + "&code=" + code
-				+ "&redirect_uri=" + integrationRedirectUrl;
-//		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-//		requestBody.add("client_id", slackAppId);
-//		requestBody.add("client_secret", slackAppSecret);
-//		requestBody.add("code", code);
-//		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
-		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
+//		String requestUrl = url + "?cient_id=" + slackAppId + "&client_secret=" + slackAppSecret + "&code=" + code
+//				+ "&redirect_uri=" + integrationRedirectUrl;
+		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
+		requestBody.add("client_id", slackAppId);
+		requestBody.add("client_secret", slackAppSecret);
+		requestBody.add("code", code);
+		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+//		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
 		try {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
@@ -153,20 +128,20 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public String getUserIdentity(String token) throws SlackApiException {
+	public JsonNode getUserIdentity(String token) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
-		String result = null;
+		JsonNode result = null;
 		String url = "https://slack.com/api/users.identity";
-		String requestUrl = url + "?token=" + token;
-//		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-//		requestBody.add("token", token);
-//		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
-		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
+//		String requestUrl = url + "?token=" + token;
+		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
+		requestBody.add("token", token);
+		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
+//		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
 		try {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
-				result = body.path("user").path("id").asText();
+				result = body.path("user");
 			} else {
 				throw new SlackApiException("Failed to get user identity from Slack - " + body.path("error").asText());
 			}
@@ -225,25 +200,33 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public User getUserAccount(String slackId, JsonNode userInfo) throws BannedUserException {
+	public User getUserAccount(JsonNode userIdentity, JsonNode userInfo) throws BannedUserException {
+		String slackId = userIdentity.path("id").asText();
+		String firstname = null;
+		String lastname = null;
+		if (userInfo != null) {
+			firstname = userInfo.path("profile").path("first_name").asText();
+			lastname = userInfo.path("profile").path("last_name").asText();
+		}
 		User u = userService.getUserBySlackId(slackId);
 		if (u == null) {
 			u = new User();
 			u.setSlackId(slackId);
 			u.setAdmin(false);
-			u.setEmail(userInfo.path("profile").path("email").asText());
-//			u.setFirstName(userInfo.path("profile").path("first_name").asText());
-//			u.setLastName(userInfo.path("profile").path("last_name").asText());
-			u.setFullName(userInfo.path("real_name").asText());
+			u.setEmail(userIdentity.path("email").asText());
+			u.setFirstName(firstname);
+			u.setLastName(lastname);
+			u.setFullName(userIdentity.path("name").asText());
 			u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
 			u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
 			u.setBanned(false);
 			userService.addUser(u);
+			logger.info("Created new account for " + u);
 		} else {
-			u.setEmail(userInfo.path("profile").path("email").asText());
-//			u.setFirstName(userInfo.path("profile").path("first_name").asText());
-//			u.setLastName(userInfo.path("profile").path("last_name").asText());
-			u.setFullName(userInfo.path("real_name").asText());
+			u.setEmail(userIdentity.path("email").asText());
+			u.setFirstName(firstname);
+			u.setLastName(lastname);
+			u.setFullName(userIdentity.path("name").asText());
 			if (u.isBanned()) {
 				throw new BannedUserException("This user has been banned from the application.");
 			}

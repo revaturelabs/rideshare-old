@@ -6,7 +6,6 @@ import java.util.List;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -64,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.invalidateHttpSession(true)
 				.permitAll()
 			.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-			.and().addFilterBefore(slackSsoFilter(), BasicAuthenticationFilter.class);
+			.and().addFilterBefore(slackIdentitySsoFilter(), BasicAuthenticationFilter.class);
 	}
 	
 	@Override
