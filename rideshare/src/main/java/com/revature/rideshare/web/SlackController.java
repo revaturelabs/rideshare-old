@@ -67,6 +67,7 @@ public class SlackController {
 	 */
 	@PostMapping("/findRides")
 	public void sendFindRidesMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request){
+		System.out.println("send find rides message: " + request);
 		RestTemplate restTemplate = new RestTemplate();
 		String confirmationMessage = slackFormatService.isValidUserAndDate(userId,text);
 		if(!confirmationMessage.equals("ok")){
@@ -100,6 +101,7 @@ public class SlackController {
 	 */
 	@PostMapping("/newride")
 	public void sendRideMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
+		System.out.println("send ride message: " + request);
 		RestTemplate restTemplate = new RestTemplate();
 		String confirmationMessage = slackFormatService.isValidUserAndDate(userId,text);
 		if(!confirmationMessage.equals("ok")){
@@ -122,6 +124,7 @@ public class SlackController {
 	 */
 	@PostMapping("/newrequest")
 	public void sendRequestMessage(@RequestParam(name = "user_id") String userId, @RequestParam(name = "response_url") String responseUrl, @RequestParam String text, @RequestBody String request) throws UnsupportedEncodingException{
+		System.out.println("send request message: " + request);
 		RestTemplate restTemplate = new RestTemplate();
 		String confirmationMessage = slackFormatService.isValidUserAndDate(userId,text);
 		if(!confirmationMessage.equals("ok")){
@@ -148,6 +151,7 @@ public class SlackController {
 	 */
 	@PostMapping("/postcheck")
 	public void postCheck(@RequestBody String request){
+		System.out.println("post check: " + request);
 		JsonNode payload = slackService.convertMessageRequestToPayload(request);
 		RestTemplate restTemplate = new RestTemplate();
 		int attachId = payload.path("attachment_id").asInt() - 1;
