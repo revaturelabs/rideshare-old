@@ -83,3 +83,5 @@ Servers*
 /rideshare/run-local.sh
 rideshare/deploy-keystore.p12
 rideshare/keystore.p12
+rideshare/deploySpringBootApp.sh
+rideshare/startSpringBootApp.sh
