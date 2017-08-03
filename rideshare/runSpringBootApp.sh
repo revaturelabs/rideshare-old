@@ -1,4 +1,7 @@
 #!/bin/sh
+npm i
+npm run build
+mvn clean package
 export RIDESHARE_KEYSTORE_NAME=dev-keystore.p12
 export RIDESHARE_KEYSTORE_PASSWORD=vUP2p2zXvr7gEGFZTlYD
 export RIDESHARE_DATABASE_URL=jdbc:oracle:thin:@localhost:1521:xe
