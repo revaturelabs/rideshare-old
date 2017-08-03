@@ -40,17 +40,35 @@ module.exports = (env = {}) => {
               presets: [ 'env' ]
             }
           }
+        },
+        {
+          test: /\.html$/,
+          use: [ 'html-loader' ]
+        },
+        {
+          test: /\.css$/,
+          use: [
+            { loader: 'style-loader' },
+            { loader: 'css-loader' }
+          ]
+        },
+        {
+          test: /\.(eot|svg)$/,
+          use: [ 'file-loader?name=[name].[hash:20].[ext]' ]
+        },
+        {
+          test: /\.(jpg|png|gif|otf|ttf|woff|woff2|cur|ani)$/,
+          use: [ 'url-loader?name=[name].[hash:20].[ext]&limit=10000' ]
         }
       ]
     },
     plugins: [
       new CopyWebpackPlugin(
         [
-          { from: `${source}/css`, to: `${output}/css` },
+          { from: `${source}/css/fonts`, to: `${output}/css/fonts` },
           { from: `${source}/images`, to: `${output}/images` },
-          { from: `${source}/partials`, to: `${output}/partials` },
+          // { from: `${source}/partials`, to: `${output}/partials` },
           { from: `${source}/js/googleMapAPI`, to: `${output}/js/googleMapAPI` },
-          { from: `${source}/js/moment.js`, to: `${output}/js/moment.js` },
           { from: `${source}/index.html`, to: `${output}/index.html` },
         ]
       ),

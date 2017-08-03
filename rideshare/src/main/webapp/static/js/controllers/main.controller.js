@@ -1,17 +1,11 @@
-export let mainController = function($scope, $http, $state, $location, authFactory){
+export let mainController = function($scope, $http, $state, $location, authManager, authFactory){
 	// view that is the parent of all the main views
 	$scope.isAdmin = authFactory.isAdmin();
 
 	$scope.logout = function() {
-		localStorage.removeItem('RideShare_auth_token');
-		$http.post('/logout', {})
-		.then(function() {
-			$location.path("/");
-		})
-		.catch(function(data) {
-			console.log("Logout failed");
-			self.authenticated = false;
-		});
+		authFactory.clearToken();
+		authFactory.clearSessionId();
+		$http.post('/logout', {}).then((res) => { authManager.unauthenticate(); });
 	};
 
 }

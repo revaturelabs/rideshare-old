@@ -1,4 +1,4 @@
-export let authFactory = function($window, $log, jwtHelper) {
+export let authFactory = function($window, $log, $cookies, jwtHelper) {
 	return {
 		getToken: function() {
 			return $window.localStorage.getItem('RideShare_auth_token');
@@ -8,6 +8,12 @@ export let authFactory = function($window, $log, jwtHelper) {
 		},
 		clearToken: function() {
 			$window.localStorage.removeItem('RideShare_auth_token');
+		},
+		getSessionId: function() {
+			return $cookies.get('JSESSIONID');
+		},
+		clearSessionId: function() {
+			$cookies.remove('JSESSIONID');
 		},
 		decodeToken: function() {
 			let result = null;
