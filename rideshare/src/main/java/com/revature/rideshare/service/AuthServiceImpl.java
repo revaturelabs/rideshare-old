@@ -23,8 +23,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rideshare.dao.PointOfInterestRepository;
+import com.revature.rideshare.dao.UserRepository;
 import com.revature.rideshare.domain.User;
-import com.revature.rideshare.exception.BannedUserException;
 import com.revature.rideshare.exception.SlackApiException;
 
 @Component
@@ -44,10 +44,9 @@ public class AuthServiceImpl implements AuthService {
 	private String slackAppTeamId;
 	@Value("${rideshare.deploy-url}")
 	private String rideshareUrl;
-	private String integrationRedirectUrl = "https://localhost:8088/auth/integrate";
 	
 	@Autowired
-	UserService userService;
+	UserRepository userRepo;
 
 	@Autowired
 	PointOfInterestRepository poiRepo;
@@ -56,9 +55,8 @@ public class AuthServiceImpl implements AuthService {
 		super();
 	}
 
-	@Override
-	public void setUserService(UserService userService) {
-		this.userService = userService;
+	public void setUserRepo(UserRepository userRepo) {
+		this.userRepo = userRepo;
 	}
 
 	@Override
@@ -66,78 +64,15 @@ public class AuthServiceImpl implements AuthService {
 		this.poiRepo = poiRepo;
 	}
 
-	/*
-	 * use this when dealing with requesting the identity scopes to authenticate a user
-	 */
 	@Override
-	public String getSlackAccessToken(String code) throws SlackApiException {
-		RestTemplate client = new RestTemplate();
-		ObjectMapper mapper = new ObjectMapper();
-		String result = null;
-		String url = "https://slack.com/api/oauth.access";
-//		String requestUrl = url + "?client_id=" + slackAppId + "&client_secret=" + slackAppSecret + "&code=" + code
-//				+ "&redirect_uri=" + loginRedirectUrl;
-		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-		requestBody.add("client_id", slackAppId);
-		requestBody.add("client_secret", slackAppSecret);
-		requestBody.add("code", code);
-		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
-//		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
-		System.out.println(response.getBody());
-		try {
-			JsonNode body = mapper.readTree(response.getBody());
-			if (body.path("ok").asBoolean()) {
-				result = body.path("access_token").asText();
-			} else {
-				throw new SlackApiException("Failed to retrieve Slack access token - " + body.path("error").asText());
-			}
-		} catch (IOException ex) {
-			logger.error("", ex);
-		}
-		return result;
-	}
-	
-	/*
-	 * use this when requesting the incoming-webhook and commands scopes to integrate with slack
-	 */
-	@Override
-	public JsonNode getSlackAccessResponse(String code) throws SlackApiException {
-		RestTemplate client = new RestTemplate();
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode result = null;
-		String url = "https://slack.com/api/oauth.access";
-//		String requestUrl = url + "?cient_id=" + slackAppId + "&client_secret=" + slackAppSecret + "&code=" + code
-//				+ "&redirect_uri=" + integrationRedirectUrl;
-		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
-		requestBody.add("client_id", slackAppId);
-		requestBody.add("client_secret", slackAppSecret);
-		requestBody.add("code", code);
-		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
-//		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
-		try {
-			JsonNode body = mapper.readTree(response.getBody());
-			if (body.path("ok").asBoolean()) {
-				result = body;
-			} else {
-				throw new SlackApiException("Failed to get access response from Slack - " + body.path("error").asText());
-			}
-		} catch (IOException ex) {
-			logger.error("", ex);
-		}
-		return result;
-	}
-	
-	@Override
-	public JsonNode getUserIdentity(String token) throws SlackApiException {
+	public JsonNode getSlackIdentity(String token) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
 		String url = "https://slack.com/api/users.identity";
-//		String requestUrl = url + "?token=" + token;
 		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
 		requestBody.add("token", token);
 		ResponseEntity<String> response = client.postForEntity(url, requestBody, String.class);
-//		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
 		try {
 			JsonNode body = mapper.readTree(response.getBody());
 			if (body.path("ok").asBoolean()) {
@@ -152,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public JsonNode getUserProfile(String token, String slackId) throws SlackApiException {
+	public JsonNode getSlackProfile(String token, String slackId) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
@@ -175,13 +110,11 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public JsonNode getUserInfo(String token, String slackId) throws SlackApiException {
+	public JsonNode getSlackInfo(String token, String slackId) throws SlackApiException {
 		RestTemplate client = new RestTemplate();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode result = null;
 		String url = "https://slack.com/api/users.info";
-//		String requestUrl = url + "?token=" + token + "&user=" + slackId;
-//		ResponseEntity<String> response = client.getForEntity(requestUrl, String.class);
 		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
 		requestBody.add("token", token);
 		requestBody.add("user", slackId);
@@ -200,7 +133,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	@Override
-	public User getUserAccount(JsonNode userIdentity, JsonNode userInfo) throws BannedUserException {
+	public User getUserAccount(JsonNode userIdentity, JsonNode userInfo) {
 		String slackId = userIdentity.path("id").asText();
 		String firstname = null;
 		String lastname = null;
@@ -208,7 +141,7 @@ public class AuthServiceImpl implements AuthService {
 			firstname = userInfo.path("profile").path("first_name").asText();
 			lastname = userInfo.path("profile").path("last_name").asText();
 		}
-		User u = userService.getUserBySlackId(slackId);
+		User u = userRepo.findBySlackId(slackId);
 		if (u == null) {
 			u = new User();
 			u.setSlackId(slackId);
@@ -220,21 +153,45 @@ public class AuthServiceImpl implements AuthService {
 			u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
 			u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
 			u.setBanned(false);
-			userService.addUser(u);
+			userRepo.saveAndFlush(u);
 			logger.info("Created new account for " + u);
 		} else {
 			u.setEmail(userIdentity.path("email").asText());
 			u.setFirstName(firstname);
 			u.setLastName(lastname);
 			u.setFullName(userIdentity.path("name").asText());
-			if (u.isBanned()) {
-				throw new BannedUserException("This user has been banned from the application.");
-			}
-			userService.updateUser(u);
+			userRepo.saveAndFlush(u);
 		}
 		return u;
 	}
 	
+	
+	
+	@Override
+	public User getUserAccount(String fullname, String slackId, String email) {
+		User u = userRepo.findBySlackId(slackId);
+		if (u == null) {
+			u = new User();
+			u.setSlackId(slackId);
+			u.setAdmin(false);
+			u.setEmail(email);
+			u.setFullName(fullname);
+			u.setMainPOI(poiRepo.findByPoiName("Icon at Dulles").get(0));
+			u.setWorkPOI(poiRepo.findByPoiName("Revature Office").get(0));
+			u.setBanned(false);
+			userRepo.saveAndFlush(u);
+			logger.info("Created new account for " + u);
+		} else {
+			u.setEmail(email);
+			u.setFullName(fullname);
+			userRepo.saveAndFlush(u);
+		}
+		return u;
+	}
+
+	/*
+	 * This method is currently unused.
+	 */
 	@Override
 	public User integrateUser(User u, JsonNode accessResponse) {
 		try {
@@ -244,7 +201,7 @@ public class AuthServiceImpl implements AuthService {
 			String webhookUrl = incomingWebhook.path("url").asText();
 			if (u.getSlackId().equals(slackId)) {
 				u.setSlackUrl(webhookUrl);
-				userService.updateUser(u);
+				userRepo.saveAndFlush(u);
 			}
 		} catch (IOException ex) {
 			logger.error("Failed to activate slack integration for " + u, ex);
