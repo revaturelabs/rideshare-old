@@ -6,10 +6,8 @@ import java.util.List;
 import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,11 +19,14 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.filter.CompositeFilter;
+
+import com.revature.rideshare.security.ClientResource;
+import com.revature.rideshare.security.RideshareAuthoritiesExtractor;
+import com.revature.rideshare.security.RidesharePrincipalExtractor;
 
 /**
  *
@@ -51,11 +52,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 //		http.requiresChannel().antMatchers("/**").requiresSecure();
 		
-		http.authorizeRequests()
-				.antMatchers("/admin**", "/partials/adminPOI.html", "/partials/adminRides.html",
-						"/partials/adminUsers.html").hasRole("ADMIN")
-				.antMatchers("/partials/**", "/car**", "/ride**", "/user**", "/poiController**").hasRole("USER")
-				.antMatchers("/login**", "/auth/**").permitAll()
+		http.antMatcher("/**")
+			.authorizeRequests()
+				.antMatchers("/admin**").hasRole("ADMIN")
+				.antMatchers("/car**", "/ride**", "/user**", "/poiController**").hasRole("USER")
+				.antMatchers("/auth/identity**").authenticated()
+				.antMatchers("/", "/index.html", "/app.bundle.js", "/auth/check**", "/login**", "/slack**").permitAll()
 			.and().logout()
 				.logoutUrl("/logout")
 				.logoutSuccessUrl("/")
@@ -68,8 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/css/**", "/images/**", "/slack/**", "/app.bundle.js", "/partials/slackLogin.html",
-				"/partials/error.html");
+//		web.ignoring().antMatchers("/slack/**", "/app.bundle.js");
 	}
 	
 	@Bean
@@ -80,15 +81,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return registration;
 	}
 	
-	private Filter slackSsoFilter() {
-		CompositeFilter filter = new CompositeFilter();
-		List<Filter> filters = new ArrayList<>();
-		filters.add(ssoFilter(slackIdentity(), "/login/slack"));
-		filters.add(ssoFilter(slackIntegration(), "/integrate/slack"));
-		filter.setFilters(filters);
-		return filter;
-	}
-	
 	private Filter slackIdentitySsoFilter() {
 		CompositeFilter filter = new CompositeFilter();
 		List<Filter> filters = new ArrayList<>();
@@ -97,42 +89,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return filter;
 	}
 	
-	private Filter ssoFilter(ClientResources client, String path) {
+	private Filter ssoFilter(ClientResource client, String path) {
 		OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
 		OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
 		filter.setRestTemplate(template);
 		UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(),
 				client.getClient().getClientId());
 		tokenServices.setRestTemplate(template);
+		tokenServices.setPrincipalExtractor(new RidesharePrincipalExtractor());
+		tokenServices.setAuthoritiesExtractor(new RideshareAuthoritiesExtractor());
 		filter.setTokenServices(tokenServices);
 		return filter;
 	}
 	
 	@Bean
 	@ConfigurationProperties("slack.identity")
-	public ClientResources slackIdentity() {
-		return new ClientResources();
+	public ClientResource slackIdentity() {
+		return new ClientResource();
 	}
 	
 	@Bean
 	@ConfigurationProperties("slack.integration")
-	public ClientResources slackIntegration() {
-		return new ClientResources();
+	public ClientResource slackIntegration() {
+		return new ClientResource();
 	}
 	
-	class ClientResources {
-		@NestedConfigurationProperty
-		private AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails();
-		
-		@NestedConfigurationProperty
-		private ResourceServerProperties resource = new ResourceServerProperties();
-
-		public AuthorizationCodeResourceDetails getClient() {
-			return client;
-		}
-
-		public ResourceServerProperties getResource() {
-			return resource;
-		}
-	}
 }
