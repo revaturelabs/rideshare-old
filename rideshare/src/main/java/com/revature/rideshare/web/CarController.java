@@ -39,7 +39,7 @@ public class CarController {
 	}
 
 	@PostMapping
-	public boolean addCar(@RequestHeader(name = "X-JWT-RIDESHARE") String token, @RequestBody Car newCar) {
+	public boolean addCar(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token, @RequestBody Car newCar) {
 		User u = authService.getUserFromToken(token);
 		newCar.setUser(u);
 		carService.addCar(newCar);
@@ -47,7 +47,7 @@ public class CarController {
 	}
 
 	@PostMapping("/updateCar")
-	public boolean updateCar(@RequestHeader(name = "X-JWT-RIDESHARE") String token, @RequestBody Car newCar) {
+	public boolean updateCar(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token, @RequestBody Car newCar) {
 		User u = authService.getUserFromToken(token);
 		Car oldCar = carService.getCarForUser(u);
 		
@@ -64,7 +64,7 @@ public class CarController {
 	}
 
 	@GetMapping("/myCar")
-	public Car getCar(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public Car getCar(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return carService.getCarForUser(u);
 	}

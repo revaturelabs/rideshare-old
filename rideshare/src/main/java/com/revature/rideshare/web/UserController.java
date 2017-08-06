@@ -56,12 +56,12 @@ public class UserController {
 	}
 
 	@RequestMapping("/me")
-	public User getCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public User getCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		return authService.getUserFromToken(token);
 	}
 	
 	@PostMapping("/updateCurrentUser")
-	public void updateUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token, 
+	public void updateUser(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token, 
 			@RequestBody User user) {
 		userService.updateUser(user);
 	}

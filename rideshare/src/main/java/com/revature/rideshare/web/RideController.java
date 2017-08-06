@@ -44,14 +44,14 @@ public class RideController {
 	
 	// REQUESTS
 	@GetMapping("/request")
-	public List<RideRequest> getRequestsForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public List<RideRequest> getRequestsForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.getRequestsForUser(u);
 	}
 
 	@GetMapping("/request/accept/{id}")
 	public boolean acceptRequest(@PathVariable(value = "id") long id,
-			@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+			@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.acceptRequest(id, u);
 	}
@@ -61,7 +61,7 @@ public class RideController {
 	 */
 	@GetMapping("/request/cancelRide/{id}")
 	public boolean cancelRide(@PathVariable(value = "id") long id,
-			@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+			@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.cancelRideReopenAvailRide(id, u);
 	}
@@ -72,7 +72,7 @@ public class RideController {
 	 */
 	@GetMapping("/request/cancel/{id}")
 	public boolean cancelRequest(@PathVariable(value = "id") long id,
-			@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+			@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.cancelRequest(id, u);
 	}
@@ -82,7 +82,7 @@ public class RideController {
 	 */
 	@GetMapping("/request/cancelActive/{id}")
 	public boolean cancelActiveRequest(@PathVariable(value = "id") long id,
-			@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+			@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.cancelActiveRequest(id, u);
 	}
@@ -105,7 +105,7 @@ public class RideController {
 	 * Takes in a User and retrieves all active RideRequests for said User.
 	 */
 	@GetMapping("/request/open")
-	public List<RideRequest> getOpenRequest(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public List<RideRequest> getOpenRequest(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.getOpenRequestsForUser(u);
 	}
@@ -116,20 +116,20 @@ public class RideController {
 	}
 
 	@GetMapping("/request/active")
-	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public List<Ride> getActiveRequestsForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.getActiveRequestsForUser(u);
 	}
 
 	@GetMapping("/request/history")
-	public List<Ride> getRequestHistoryForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public List<Ride> getRequestHistoryForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.getRequestHistoryForUser(u);
 	}
 
 	// OFFERS
 	@GetMapping("/offer")
-	public List<AvailableRide> getOffersForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public List<AvailableRide> getOffersForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.getOffersForUser(u);
 	}
@@ -141,7 +141,7 @@ public class RideController {
 
 	@GetMapping("/offer/accept/{id}")
 	public boolean acceptOffer(@PathVariable(value = "id") long id,
-			@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+			@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.acceptOffer(id, u);
 	}
@@ -152,7 +152,7 @@ public class RideController {
 	 */
 	@GetMapping("/offer/cancel/{id}")
 	public boolean cancelOffer(@PathVariable(value = "id") long id,
-			@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+			@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.cancelOffer(id, u);
 	}
@@ -162,7 +162,7 @@ public class RideController {
 	 */
 	@GetMapping("/offer/cancelActive/{id}")
 	public boolean cancelActiveOffer(@PathVariable(value = "id") long id,
-			@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+			@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.cancelActiveOffer(id, u);
 	}
@@ -173,19 +173,19 @@ public class RideController {
 	}
 
 	@GetMapping("/offer/open")
-	public List<AvailableRide> getOpenOffers(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public List<AvailableRide> getOpenOffers(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.getOpenOffersForUser(u);
 	}
 
 	@GetMapping("/offer/active")
-	public List<Ride> getActiveOffersForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public List<Ride> getActiveOffersForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.getActiveOffersForUser(u);
 	}
 
 	@GetMapping("/offer/history")
-	public List<Ride> getOfferHistoryForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE") String token) {
+	public List<Ride> getOfferHistoryForCurrentUser(@RequestHeader(name = "X-JWT-RIDESHARE-USER") String token) {
 		User u = authService.getUserFromToken(token);
 		return rideService.getOfferHistoryForUser(u);
 	}
