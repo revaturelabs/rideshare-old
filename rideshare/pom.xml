@@ -100,8 +100,6 @@
 			<artifactId>ojdbc7</artifactId>
 			<version>12.1.0</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-jwt</artifactId> 
-			</dependency> -->
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
@@ -124,25 +122,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-			</plugin> -->
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin> -->
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin> -->
 		</plugins>
 	</build>
 </project>
