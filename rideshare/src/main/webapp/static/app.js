@@ -12,7 +12,6 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 /* Styles */
 import './css/app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'bootstrap/dist/css/bootstrap-theme.min.css';
 import 'angular-bootstrap-datetimepicker/src/css/datetimepicker.css';
 
 /* Client Application Components */

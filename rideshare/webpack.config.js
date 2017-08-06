@@ -65,11 +65,10 @@ module.exports = (env = {}) => {
     plugins: [
       new CopyWebpackPlugin(
         [
-          { from: `${source}/css/fonts`, to: `${output}/css/fonts` },
-          { from: `${source}/images`, to: `${output}/images` },
-          // { from: `${source}/partials`, to: `${output}/partials` },
-          { from: `${source}/js/googleMapAPI`, to: `${output}/js/googleMapAPI` },
-          { from: `${source}/index.html`, to: `${output}/index.html` },
+          // { from: `${source}/css/fonts`, to: `${output}/css/fonts` },
+          // { from: `${source}/images`, to: `${output}/images` },
+          // { from: `${source}/js/googleMapAPI`, to: `${output}/js/googleMapAPI` },
+          { from: `${source}/index.html`, to: `${output}/index.html` }
         ]
       ),
       new webpack.NoEmitOnErrorsPlugin()

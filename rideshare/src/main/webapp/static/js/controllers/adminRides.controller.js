@@ -1,7 +1,7 @@
 export let adminRidesController = function($scope, $http, $state) {
 	$scope.activeRides = {};
-    $scope.rideHistory = {};
-    $scope.ride = {}; 
+	$scope.rideHistory = {};
+	$scope.ride = {}; 
     
     
 	// retrieve all active Rides to populate accordion table
