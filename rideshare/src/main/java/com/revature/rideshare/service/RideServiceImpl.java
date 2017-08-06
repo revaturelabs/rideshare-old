@@ -511,7 +511,7 @@ public class RideServiceImpl implements RideService {
 	private int[] calculateDistance(List<PointOfInterest> pois, PointOfInterest mpoi) {
 		double mLat = Math.abs(mpoi.getLatitude());
 		double mLong = Math.abs(mpoi.getLongitude());
-		Map<Double, Integer> map = new TreeMap();
+		Map<Double, Integer> map = new TreeMap<>();
 
 		// Calculating distance: sqrt( (|x1|-|x2|) + (|y1|-|y2|)^2 )
 		// distance is then stored in a Treemap which naturally orders.

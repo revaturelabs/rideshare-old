@@ -194,7 +194,9 @@ public class User implements Serializable, UserDetails {
 				+ slackId + ", isAdmin=" + isAdmin + ", isBanned=" + isBanned + ", slackUrl=" + slackUrl + "]";
 	}
 	
-	// Implementations for the methods of the UserDetails interface
+	/*
+	 *  Implementations for the methods of the UserDetails interface
+	 */
 
 	/*
 	 * All users will have the role of USER. Administrators will additionally have the role of ADMIN
@@ -211,8 +213,8 @@ public class User implements Serializable, UserDetails {
 	}
 
 	/*
-	 * UNUSED
-	 * (a.k.a. credentials) This will either be null or the current slack api token for the user
+	 * (a.k.a. credentials) UNUSED
+	 * This could possibly be used to get the Slack API token for an authenticated user
 	 */
 	@JsonIgnore
 	@Override
