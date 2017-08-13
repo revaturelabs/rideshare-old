@@ -66,7 +66,7 @@ module.exports = (env = {}) => {
       new CopyWebpackPlugin(
         [
           // { from: `${source}/css/fonts`, to: `${output}/css/fonts` },
-          // { from: `${source}/images`, to: `${output}/images` },
+          { from: `${source}/images`, to: `${output}/images` },
           // { from: `${source}/js/googleMapAPI`, to: `${output}/js/googleMapAPI` },
           { from: `${source}/index.html`, to: `${output}/index.html` }
         ]

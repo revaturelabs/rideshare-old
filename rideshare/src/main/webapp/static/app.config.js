@@ -21,8 +21,8 @@ export let setup = function($stateRegistry, $http, $log, $state, $urlService, au
 
 	// authFactory.clearToken();
 
-	authManager.checkAuthOnRefresh();
-	authManager.redirectWhenUnauthenticated();
+	// authManager.checkAuthOnRefresh();
+	// authManager.redirectWhenUnauthenticated();
 
 	let token = authFactory.getToken();
 	let sessionId = authFactory.getSessionId();
