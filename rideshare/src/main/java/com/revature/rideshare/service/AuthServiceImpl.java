@@ -42,8 +42,6 @@ public class AuthServiceImpl implements AuthService {
 	private String slackAppVerificationToken;
 	@Value("#{systemEnvironment['RIDESHARE_SLACK_TEAM']}")
 	private String slackAppTeamId;
-	@Value("${rideshare.deploy-url}")
-	private String rideshareUrl;
 	
 	@Autowired
 	UserRepository userRepo;
@@ -55,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
 		super();
 	}
 
+	@Override
 	public void setUserRepo(UserRepository userRepo) {
 		this.userRepo = userRepo;
 	}
