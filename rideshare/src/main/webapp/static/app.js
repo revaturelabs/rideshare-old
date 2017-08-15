@@ -17,6 +17,7 @@ import 'angular-bootstrap-datetimepicker/src/css/datetimepicker.css';
 /* Client Application Components */
 import { configure, setup } from './app.config.js';
 import { authFactory } from './js/auth.factory.js';
+import { authInterceptor } from './js/auth.interceptor.js';
 
 //var = function scope
 //const and let = block scope
@@ -30,10 +31,13 @@ const app = angular.module('app', [
 	'ui.bootstrap.datetimepicker'
 ]).factory('authFactory', [
 	'$window',
-	'$log',
 	'$cookies',
+	'$log',
 	'jwtHelper',
 	authFactory // this must always be the last element of this array
+]).factory('authInterceptor', [
+	'authFactory',
+	authInterceptor
 ]);
 
 app.config([

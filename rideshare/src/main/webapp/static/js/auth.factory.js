@@ -1,4 +1,4 @@
-export let authFactory = function($window, $log, $cookies, jwtHelper) {
+export let authFactory = function($window, $cookies, $log, jwtHelper) {
 	return {
 		getToken: function() {
 			return $window.localStorage.getItem('RideShare_auth_token');
@@ -8,12 +8,6 @@ export let authFactory = function($window, $log, $cookies, jwtHelper) {
 		},
 		clearToken: function() {
 			$window.localStorage.removeItem('RideShare_auth_token');
-		},
-		getSessionId: function() {
-			return $cookies.get('JSESSIONID');
-		},
-		clearSessionId: function() {
-			$cookies.remove('JSESSIONID');
 		},
 		decodeToken: function() {
 			let result = null;
@@ -39,6 +33,25 @@ export let authFactory = function($window, $log, $cookies, jwtHelper) {
 				}
 			}
 			return result;
+		},
+		getRoles: function() {
+			let result = [];
+			let token = $window.localStorage.getItem('RideShare_auth_token');
+			if (token) {
+				try {
+					let payload = jwtHelper.decodeToken(token);
+					let user = JSON.parse(payload.user);
+					if (!user.banned) {
+						result.push('USER');
+					}
+					if (user.admin) {
+						result.push('ADMIN');
+					}
+					return result;
+				} catch (err) {
+					$log.error('Failed to retrieve user roles from JSON web token: ' + err);
+				}
+			}
 		},
 		isAdmin: function() {
 			let result = false;

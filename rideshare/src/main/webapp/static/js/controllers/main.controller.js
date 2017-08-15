@@ -4,8 +4,15 @@ export let mainController = function($scope, $http, $state, $location, authManag
 
 	$scope.logout = function() {
 		authFactory.clearToken();
-		authFactory.clearSessionId();
 		$http.post('/logout', {}).then((res) => { authManager.unauthenticate(); });
 	};
+
+	$scope.authTest = function() {
+		$http.get('/admin/users')
+			.then((res) => {
+				console.log(res);
+				console.log(res.data);
+			})
+	}
 
 }

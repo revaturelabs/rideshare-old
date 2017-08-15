@@ -38,16 +38,10 @@ public class AuthController {
 		return (authentication != null && authentication.isAuthenticated());
 	}
 	
-	@GetMapping("/test")
-	public ResponseEntity<Principal> testAuthentication(Authentication authentication, Principal principal) {
-		ResponseEntity<Principal> response = null;
-		System.out.println("authentication: " + authentication);
-		System.out.println("principal: " + principal);
-		return response;
-	}
-	
 	@GetMapping("/identity")
 	public ResponseEntity<String> getIdentityToken(Authentication authentication, Principal principal) {
+		System.out.println("principal: " + principal);
+		System.out.println("authentication: " + authentication);
 		HttpHeaders headers = new HttpHeaders();
 		User u = userService.getUserBySlackId(principal.getName());
 		String jwt = authService.createJsonWebToken(u);

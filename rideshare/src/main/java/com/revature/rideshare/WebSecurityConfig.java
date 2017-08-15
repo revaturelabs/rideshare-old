@@ -12,7 +12,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -26,10 +25,12 @@ import org.springframework.web.filter.CompositeFilter;
 
 import com.revature.rideshare.security.ClientResource;
 import com.revature.rideshare.security.RideshareAuthoritiesExtractor;
+import com.revature.rideshare.security.RideshareIdentityHeaderWriter;
 import com.revature.rideshare.security.RidesharePrincipalExtractor;
 
 /**
- *
+ * This class is used to configure the login and logout behavior as well as 
+ * the authorization for all of the server API resources.
  * @author Eric Christie
  * @created July 9, 2017
  */
@@ -40,18 +41,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
-
-//	@Value("${server.http.port}")
-//	private String httpPort;
-//	@Value("${server.port}")
-//	private String httpsPort;
+	
+	@Autowired
+	RideshareAuthoritiesExtractor rideshareAuthoritiesExtractor;
+	
+	@Autowired
+	RideshareIdentityHeaderWriter rideshareIdentityHeaderWriter;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-//		http.portMapper().http(Integer.parseInt(httpPort)).mapsTo(Integer.parseInt(httpsPort));
-
-//		http.requiresChannel().antMatchers("/**").requiresSecure();
-		
 		http.antMatcher("/**")
 			.authorizeRequests()
 				.antMatchers("/admin**").hasRole("ADMIN")
@@ -64,13 +62,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.clearAuthentication(true)
 				.invalidateHttpSession(true)
 				.permitAll()
+			.and().headers()
+				.addHeaderWriter(rideshareIdentityHeaderWriter)
 			.and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 			.and().addFilterBefore(slackIdentitySsoFilter(), BasicAuthenticationFilter.class);
-	}
-	
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-//		web.ignoring().antMatchers("/slack/**", "/app.bundle.js");
 	}
 	
 	@Bean
@@ -97,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				client.getClient().getClientId());
 		tokenServices.setRestTemplate(template);
 		tokenServices.setPrincipalExtractor(new RidesharePrincipalExtractor());
-		tokenServices.setAuthoritiesExtractor(new RideshareAuthoritiesExtractor());
+		tokenServices.setAuthoritiesExtractor(rideshareAuthoritiesExtractor);
 		filter.setTokenServices(tokenServices);
 		return filter;
 	}

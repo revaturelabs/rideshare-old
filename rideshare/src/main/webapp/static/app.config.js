@@ -14,53 +14,35 @@ export let configure = function($stateRegistryProvider, $urlServiceProvider, jwt
 	});
 
 	$httpProvider.interceptors.push('jwtInterceptor');
+	$httpProvider.interceptors.push('authInterceptor');
 };
 
 export let setup = function($stateRegistry, $http, $log, $state, $urlService, authManager, authFactory) {
-	console.log('setting up');
-
-	// authFactory.clearToken();
+	let token = authFactory.getToken();
+	if (angular.isUndefined(token) || token === null || token === 'null') {
+		$log.info('no token found, checking authentication');
+		$http.get('/auth/check')
+			.then((res) => {
+				if (res.data) {
+					$log.info('authentication confirmed, obtaining identity token');
+					$http.get('/auth/identity')
+						.then((res) => {
+							authFactory.setToken(res.data);
+							if (!authFactory.isBanned()) {
+								authManager.authenticate();
+							}
+						})
+						.catch((reason) => {
+							$log.error('Failed to get identity token of authenticated user. ' + reason);
+						});
+				}
+			})
+			.then(() => { routing($stateRegistry, $urlService, true, authFactory.isBanned(), authFactory.isAdmin()); });
+	} else {
+		$log.info('token found, configuring routes');
+		routing($stateRegistry, $urlService, false, authFactory.isBanned(), authFactory.isAdmin());
+	}
 
 	// authManager.checkAuthOnRefresh();
 	// authManager.redirectWhenUnauthenticated();
-
-	let token = authFactory.getToken();
-	let sessionId = authFactory.getSessionId();
-	console.log(token === null)
-	console.log(sessionId)
-
-	if (angular.isDefined(sessionId) && sessionId !== null && sessionId !== 'null') {
-		console.log('Found JSESSIONID Cookie')
-		if (!authManager.isAuthenticated()) {
-			$http.get('/auth/identity')
-				.then((res) => {
-					authFactory.setToken(res.data);
-					authManager.authenticate();
-				})
-				.catch((reason) => {
-					$log.error('Failed to get identity of authenticated user. ' + reason);
-				});
-		}
-		if (authFactory.isBanned()) {
-			routing($stateRegistry, null);
-			$urlService.rules.initial({
-				state: 'error',
-				params: { reason: 'ban' }
-			});
-		} else if (authFactory.isAdmin()) {
-			routing($stateRegistry, 'ADMIN');
-			$urlService.rules.initial({ state: 'main.passenger' });
-		} else {
-			routing($stateRegistry, 'USER');
-			$urlService.rules.initial({ state: 'main.passenger' });
-		}
-	} else {
-		console.log('No JSESSIONID Cookie')
-		routing($stateRegistry, null);
-		$urlService.rules.initial({ state: 'slackLogin' });
-	}
-	$urlService.rules.otherwise({
-    state: 'error',
-    params: { reason: 'nopage' }
-  });
 };

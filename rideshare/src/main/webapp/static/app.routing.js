@@ -9,7 +9,31 @@ import { adminUsersController } from './js/controllers/adminUsers.controller.js'
 import { adminPoiController } from './js/controllers/adminPOI.controller.js';
 import { userProfileController } from './js/controllers/userProfile.controller.js';
 
-export let routing = function($stateRegistry, accessRights) {
+export let routing = function($stateRegistry, $urlService, isAuthenticated, isBanned, isAdmin) {
+	console.log('setting up routes')
+	registerRoutes($stateRegistry, isAdmin);
+
+	if (!isAuthenticated) {
+		$urlService.rules.initial({ state: 'slackLogin' });
+	} else if (isBanned) {
+		$urlService.rules.initial({
+			state: 'error',
+			params: { reason: 'ban' }
+		});
+	} else if (isAdmin) {
+		// the page an admin is redirected to could differ from the page normal users get sent to
+		$urlService.rules.initial({ state: 'main.passenger' });
+	} else {
+		$urlService.rules.initial({ state: 'main.passenger' });
+	}
+	$urlService.rules.otherwise({
+		state: 'error',
+		params: { reason: 'nopage' }
+	});
+}
+
+let registerRoutes = function($stateRegistry, isAdmin) {
+	/* Register views that should be available before authentication */
 	$stateRegistry.register({
 		name: 'slackLogin',
 		url: '/login',
@@ -25,28 +49,38 @@ export let routing = function($stateRegistry, accessRights) {
 		data: { requiresLogin: false }
 	});
 
-	if (accessRights === 'ADMIN') {
-		$stateRegistry.register({
-			name: 'main',
-			url: '/main',
-			template: require('./partials/main.html'),
-			controller: mainController,
-			data: { requiresLogin: true }
-		});
-		$stateRegistry.register({
-			name: 'main.passenger',
-			url: '/passenger',
-			template: require('./partials/passenger.html'),
-			controller: passengerController,
-			data: { requiresLogin: true }
-		});
-		$stateRegistry.register({
-			name: 'main.driver',
-			url: '/driver',
-			template: require('./partials/driver.html'),
-			controller: driverController,
-			data: { requiresLogin: true }
-		});
+	/* Register views that should be available to all authenticated users */
+	$stateRegistry.register({
+		name: 'main',
+		url: '/main',
+		template: require('./partials/main.html'),
+		controller: mainController,
+		data: { requiresLogin: true }
+	});
+	$stateRegistry.register({
+		name: 'main.passenger',
+		url: '/passenger',
+		template: require('./partials/passenger.html'),
+		controller: passengerController,
+		data: { requiresLogin: true }
+	});
+	$stateRegistry.register({
+		name: 'main.driver',
+		url: '/driver',
+		template: require('./partials/driver.html'),
+		controller: driverController,
+		data: { requiresLogin: true }
+	});
+	$stateRegistry.register({
+		name: 'main.userProfile',
+		url: '/userProfile',
+		template: require('./partials/userProfile.html'),
+		controller: userProfileController,
+		data: { requiresLogin: true }
+	});
+
+	if (isAdmin) {
+		/* Register views that are exclusively for administrators */
 		$stateRegistry.register({
 			name: 'main.adminRides',
 			url: '/adminRides', 
@@ -68,46 +102,10 @@ export let routing = function($stateRegistry, accessRights) {
 			controller: adminPoiController,
 			data: { requiresLogin: true }
 		});
-		$stateRegistry.register({
-			name: 'main.userProfile',
-			url: '/userProfile',
-			template: require('./partials/userProfile.html'),
-			controller: userProfileController,
-			data: { requiresLogin: true }
-		});
-	} else if (accessRights === 'USER') {
-		$stateRegistry.register({
-			name: 'main',
-			url: '/main',
-			template: require('./partials/main.html'),
-			controller: mainController,
-			data: { requiresLogin: true }
-		});
-		$stateRegistry.register({
-			name: 'main.passenger',
-			url: '/passenger',
-			template: require('./partials/passenger.html'),
-			controller: passengerController,
-			data: { requiresLogin: true }
-		});
-		$stateRegistry.register({
-			name: 'main.driver',
-			url: '/driver',
-			template: require('./partials/driver.html'),
-			controller: driverController,
-			data: { requiresLogin: true }
-		});
-		$stateRegistry.register({
-			name: 'main.userProfile',
-			url: '/userProfile',
-			template: require('./partials/userProfile.html'),
-			controller: userProfileController,
-			data: { requiresLogin: true }
-		});
 	}
 };
 
 export let logoutRedirector = function($stateRegistry, $state) {
-	$state.go('login');
+	$state.go('slackLogin');
 	$stateRegistry.deregister('main');
 };
